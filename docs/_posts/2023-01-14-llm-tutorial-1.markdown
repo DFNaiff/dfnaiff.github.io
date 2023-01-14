@@ -11,4 +11,7 @@ In the process of studying more in-depth language models, I am following the [cu
 The first exercise in that curriculum involves creating a language model from scratch, and training it on the works of Shakespeare.
 Following the "learning by writing" philosophy, I decided to create a tutorial for large language models. The first part can be in the link above.
 
+I'm still learning how to use Jekyll, so I'm having a hard time exporting the Notion file to here. As soon as this is done
+that post will be available here.
+
 Any useful comments you can just contact me.

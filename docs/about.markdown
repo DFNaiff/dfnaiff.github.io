@@ -5,7 +5,9 @@ categories: Info
 permalink: /about/
 ---
 
-Hi, I'm Danilo Naiff, and this is a personal webpage where I show some of my work, and other thoughts that I may have.
+<img src="/figs/profilepicture.jpeg" alt="drawing" width="200"/>
+
+Hi, I'm Danilo de Freitas Naiff, and this is a personal webpage where I show some of my work, and other thoughts that I may have.
 
 ## Curriculum
 
