@@ -491,7 +491,8 @@ Is that the end of history? For GPT-3, which is the base of models such as ChatG
 - *Scale*: I cannot stress this enough. GPT-3 is monstrously big. In the [original paper](https://arxiv.org/pdf/2005.14165.pdf), it has a vocabulary size of $$n_{vocab} = 50257$$, a context window size of $$n_{ctx} = 2048$$, and the largest model uses $$n_T = 96, d=12288, n_h=96$$, giving a total number of parameters on the order of 175 billion (more exactly, I estimated $$n_{params} = 175223784799$$). Moreover, the training data is monstrous, with the batch size for the largest model being 3.8 milllion items, with total token size in training amounting to 300 billions tokens, taken for instance, from the [entire Wikipedia](https://www.wikipedia.org/) or from a monstrous [web crawling database](https://commoncrawl.org/). Training in such a scale is a large engineering endeavor, and the training costs on the order of [millions of dollars](https://heits.digital/articles/gpt3-overview).
 - *Sparse attention mask:*. Instead of using the full causal mask, GPT-3 alternates between the full causal mask and the *banded* causal mask. This allows for efficient computation of the banded causal mask layers.
 
-And that’s it. You can use GPT-3 in the [OpenAI playground](https://beta.openai.com/playground).
-
-Now, this will not get us to ChatGPT. In fact, ChatGPT comes from tuning GPT-3 using a particular procedure, called *reinforcement learning with human feedback* (RLHF). The objective of the second part (to be coming soon) is getting from GPT-3 to ChatGPT.
+And that’s it. You can use GPT-3 in the [OpenAI playground](https://beta.openai.com/playground), if you use *davinci*. This is because
+more recent models, as well as ChatGPT, comes from tuning GPT-3 using a particular procedure, called
+*reinforcement learning with human feedback* (RLHF). The objective of the second part (to be coming soon) is to explain this
+technique, getting us from GPT-3 to ChatGPT.
 I
