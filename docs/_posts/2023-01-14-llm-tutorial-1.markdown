@@ -7,9 +7,9 @@ categories: jekyll update
 
 # Preamble
 
-In the process of studying more in-depth language models, I am following the [curriculum by Jacob Hilton](https://github.com/jacobhilton/deep_learning_curriculum).
+In the process of studying more in depth language models, I am following the [curriculum by Jacob Hilton](https://github.com/jacobhilton/deep_learning_curriculum).
 The first exercise in that curriculum involves creating a language model from scratch, and training it on the works of Shakespeare.
-Following the "learning by writing" philosophy, I decided to create a tutorial for large language models. The first part, which is "getting to GPT", can be in the link above. I intend to write a "from GPT to ChatGPT" part later. The Notion link for the post can be found [here](https://dfnaiff.notion.site/A-Tutorial-on-Language-Models-1b14a09d5b234b6ab6bb2cffe6d3d8fb).
+Following the "learning by writing" philosophy, I decided to create a tutorial for large language models. The first part, which is "getting to GPT", can be in the link above. I intend to write a "from GPT to ChatGPT" part later.
 
 # What is this tutorial.
 
