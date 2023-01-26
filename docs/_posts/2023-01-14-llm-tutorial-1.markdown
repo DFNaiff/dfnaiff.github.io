@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "A tutorial on Large Language Models - Part 1"
+title:  "A technical tutorial on Large Language Models - Part 1"
 date:   2023-01-14 16:11:16 -0300
 categories: jekyll update
 ---
@@ -491,8 +491,38 @@ Is that the end of history? For GPT-3, which is the base of models such as ChatG
 - *Scale*: I cannot stress this enough. GPT-3 is monstrously big. In the [original paper](https://arxiv.org/pdf/2005.14165.pdf), it has a vocabulary size of $$n_{vocab} = 50257$$, a context window size of $$n_{ctx} = 2048$$, and the largest model uses $$n_T = 96, d=12288, n_h=96$$, giving a total number of parameters on the order of 175 billion (more exactly, I estimated $$n_{params} = 175223784799$$). Moreover, the training data is monstrous, with the batch size for the largest model being 3.8 milllion items, with total token size in training amounting to 300 billions tokens, taken for instance, from the [entire Wikipedia](https://www.wikipedia.org/) or from a monstrous [web crawling database](https://commoncrawl.org/). Training in such a scale is a large engineering endeavor, and the training costs on the order of [millions of dollars](https://heits.digital/articles/gpt3-overview).
 - *Sparse attention mask:*. Instead of using the full causal mask, GPT-3 alternates between the full causal mask and the *banded* causal mask. This allows for efficient computation of the banded causal mask layers.
 
-And that’s it. You can use GPT-3 in the [OpenAI playground](https://beta.openai.com/playground), if you use *davinci*. This is because
-more recent models, as well as ChatGPT, comes from tuning GPT-3 using a particular procedure, called
-*reinforcement learning with human feedback* (RLHF). The objective of the second part (to be coming soon) is to explain this
-technique, getting us from GPT-3 to ChatGPT.
+And that’s it. You can use GPT-3 in the [OpenAI playground](https://beta.openai.com/playground), if you use *davinci*. However, a *very* important point, that needs to be stressed, is that **GPT-3 is not ChatGPT**. Let's repeat that. **GPT-3 is not ChatGPT**. To stress this, let's make the same prompt in the opening paragraph now to pure GPT-3 *davinci*. In bold is the initial prompt.
+
+> **Chat, write to me a layman paragraph preceding a tutorial on language models, that motivates on why the reader should be interested in language models. Make it as engaging as possible.**
+>
+> This type of summary is called an abstract. It is an important tool for scientists and non-scientists alike to quickly grasp the essence of a research paper. If you are writing a research paper, it is a good idea to write an abstract yourself before writing a scientific paper.
+>
+> Preparation
+>
+> Go to a notebook and write down ideas or notes. For example, use the text “Deep Learning” to start. Alternatively, use the text “Language Models”. Then, write down relevant words and phrases that come to your mind.
+>
+> Write down a paragraph that motivates the reader to read further on language models.
+>
+> Write down a paragraph that summarizes the main idea about language models.
+>
+> Write down a paragraph that lists the main contributions of your paper.
+>
+> Write down a paragraph that lists the main assumptions of your work.
+>
+> Write down a paragraph that lists the main problems of your work.
+>
+> Write down a paragraph that lists the main lessons learned from your work.
+>
+> Write down a paragraph that lists the main open questions.
+>
+> Write down a paragraph that lists the main suggestions for future work.
+>
+> Write down a paragraph that lists the main references.
+>
+> Write down a paragraph
+
+Pure GPT-3 has written something coherent, but it does not care at all whether it is answering my request. GPT-3 is like a superintelligent child, in the sense that it knows a lot of things, it just does not care about what *you* want.
+
+Compare to ChatGPT, or even more recent models such as *text-davinci-003*, which answers my request much better. In a sense, ChatGPT is
+GPT-3 when "tamed", using a particular procedure, called *reinforcement learning from human feedback* (RLHF). The objective of the second part (to be coming soon) is to explain this technique, getting us from GPT-3 to ChatGPT.
 I

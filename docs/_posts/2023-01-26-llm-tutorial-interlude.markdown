@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "A tutorial on Large Language Models - Interlude on RLHF"
+title:  "A technical tutorial on Large Language Models - Interlude on RLHF"
 date:   2023-01-26 12:00:00 -0300
 categories: jekyll update
 ---
