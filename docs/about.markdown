@@ -5,10 +5,19 @@ categories: Info
 permalink: /about/
 ---
 
+<!--
 <img src="/figs/profilepicture.jpeg" alt="drawing" width="200"/>
+-->
 
 Hi, I'm Danilo de Freitas Naiff, and this is a personal webpage where I show some of my work, and other thoughts that I may have.
+For more about me and my work, see:
 
+[Github](https://github.com/DFNaiff) \
+[Linkedin](https://www.linkedin.com/in/danilo-naiff) \
+[Google Scholar](https://scholar.google.com/citations?user=UgDxpKgAAAAJ&hl)
+
+
+<!--
 ## Curriculum
 
 ### Professional.
@@ -29,3 +38,4 @@ also participating in a side project involving road traffic estimation.
 My Bachelor's was
 both in Mathematics and Materials Engineering, at Universidade Federal do Rio de Janeiro, working in research internships that range from hydrogen
 diffusion models in steels to the use of Gaussian processes for radiation dose estimation, among others.
+-->
