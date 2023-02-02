@@ -2,16 +2,20 @@
 layout: page
 title: AI Linkpost
 categories: Info
-permalink: /ailinkpost/
+permalink: /links/
 ---
 
 Artificial intelligence is moving fast, far too fast. So this is always useful.
+
+# Unassorted links
 
 01/02 - [Samip Dahal LLM](https://twitter.com/samipddd/status/1620887558136946689) also using web-browser to get information. Another one
 
 30/01 - [ChatGPT gets tamer. Again.](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)
 
 28/01 - [ChatGPT passes a whole lot of professional exams.](https://www.businessinsider.com/list-here-are-the-exams-chatgpt-has-passed-so-far-2023-1#wharton-mba-exam-1)
+
+27/01 - [Multi-ON](https://multion.ai/), yet another LLM web-browsing.
 
 26/01 - [Text-to-4d](https://arxiv.org/pdf/2301.11280.pdf) [dynamic scene generation](https://make-a-video3d.github.io/).
 
@@ -23,4 +27,27 @@ Artificial intelligence is moving fast, far too fast. So this is always useful.
 
 16/01 - [Text-driven Image editing.](https://github.com/haha-lisa/RDM-Region-Aware-Diffusion-Model)
 
+10/01 - [CharacterAI.](https://beta.character.ai/)
+
 09/01 - [ChatGPT gets tamer.](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)
+
+# Twitter reviews
+
+## AI Pub
+[25/01-31/01](https://twitter.com/ai__pub/status/1620526455414493184)
+
+[11/01-25/01](https://twitter.com/ai__pub/status/1618344912432533504)
+
+[02/01-11/01](https://twitter.com/ai__pub/status/1613269212935647232)
+
+## DAIR.AI
+
+[23/01-29/01](https://twitter.com/dair_ai/status/1619716423819104261)
+
+[16/01-22/01](https://twitter.com/dair_ai/status/1617219624306720771)
+
+[9/01-15/01](https://twitter.com/dair_ai/status/1614676675106570242)
+
+# Product List
+
+[AI Product Index](https://github.com/dair-ai/AI-Product-Index#ai-product-index)
