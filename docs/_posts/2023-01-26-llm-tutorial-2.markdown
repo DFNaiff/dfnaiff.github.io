@@ -1,13 +1,15 @@
 ---
 layout: post
-title:  "A technical tutorial on Large Language Models - Interlude on RLHF"
+title:  "A technical tutorial on Large Language Models - Part 2"
 date:   2023-01-26 12:00:00 -0300
-categories: jekyll update
+categories:
 ---
+
+[Part 1]({% link _posts/2023-01-14-llm-tutorial-1.markdown %})
 
 # Preamble
 
-In part 1, I said that I would get to ChatGPT. Actually, I lied a bit. ChatGPT exact training was not published, yet, just [a general overview](https://openai.com/blog/chatgpt/). However, OpenAI claims that ChatGPT setup is very similar to the one in the [InstructGPT](https://openai.com/blog/instruction-following/) series, so we will follow the [original InstructGPT paper](https://arxiv.org/pdf/2203.02155.pdf). Yet, to understand that, we need to understand reinforcement learning from human feedback (RLHF), so this is the focus of this part.
+In part 1, I said that I would get to ChatGPT. Actually, I lied a bit. ChatGPT exact training was not published, yet, just [a general overview](https://openai.com/blog/chatgpt/). However, OpenAI claims that ChatGPT setup is very similar to the one in the [InstructGPT](https://openai.com/blog/instruction-following/) series, so we will follow the [original InstructGPT paper](https://arxiv.org/pdf/2203.02155.pdf). Yet, to understand that, we need to understand reinforcement learning from human feedback (RLHF), so this is the focus of this part. In fact, understanding RLHF, there isn't much else in the path to ChatGPT, if we're to be honest.
 
 # Reinforcement learning - A primer.
 
@@ -150,4 +152,7 @@ The loss is then minimized using minibatch gradient descent, and the resulting l
 4. Use the learned reward function $$\hat{r}_\phi$$ to optimize the policy $$\pi_\theta$$ by maximizing $$J(\pi;\hat{r}_\phi)$$ using some reinforcement learning algorithm.
 5. Repeat from 1
 
-In the next post, we will use this idea to actually explain ChatGPT training in detail, starting from the base GPT model.
+## RLHF on GPT Models.
+Now, given a base GPT model $M_\theta$ trained on next-token predction as in the first part, we can use the RLHF framework by, for a given user input $s$, and a GPT output $a$ from $M(\theta)$, letting that be a single episode with trajectory $(s, a)$. This way, the state of the episode is the input given by the user, and the action is the output given by the model. And that is it, really. Get some contractors to rank preferences, and we have ChatGPT. In practice, there are some tricks like making contractors rank multiple preferences at once, pre-training (from the base model) in custom question/answer pairs, and so on. But the essence is the same, really.
+
+Finally, what we did was just describing how GPT came to be. We have not even glanced at what GPT (and ChatGPT) *has* become. What is it that GPT does when interact with the user? Answering that "it predicts the next token" is unsatisfactory, because this only describes the process creating GPT, not the creature. Sort of like answering "what humans are" by saying we propagate our genes, since we are created by evolution. I intend to write about this next, but this is much more speculative, and will be probably wrong, so, for the sake of a technical tutorial, this is enough.

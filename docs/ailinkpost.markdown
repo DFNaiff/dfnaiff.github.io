@@ -9,8 +9,11 @@ Artificial intelligence is moving fast, far too fast. So this is always useful.
 
 # Unassorted links
 
+## February
+
 01/02 - [Samip Dahal LLM](https://twitter.com/samipddd/status/1620887558136946689) also using web-browser to get information. Another one
 
+## January
 30/01 - [ChatGPT gets tamer. Again.](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)
 
 28/01 - [ChatGPT passes a whole lot of professional exams.](https://www.businessinsider.com/list-here-are-the-exams-chatgpt-has-passed-so-far-2023-1#wharton-mba-exam-1)
@@ -20,6 +23,9 @@ Artificial intelligence is moving fast, far too fast. So this is always useful.
 26/01 - [Text-to-4d](https://arxiv.org/pdf/2301.11280.pdf) [dynamic scene generation](https://make-a-video3d.github.io/).
 
 26/01 - [MusicLM](https://google-research.github.io/seanet/musiclm/examples/) from Google, generating music from text.
+
+24/01 - [DreamerV3](https://danijar.com/project/dreamerv3/) and [AdA](https://sites.google.com/view/adaptive-agent/). Comentary on both
+can be found [here](https://sites.google.com/view/adaptive-agent/).
 
 22/01 - [ActGPT](https://yihui.dev/actgpt) also browsing the web.
 
@@ -41,6 +47,8 @@ Artificial intelligence is moving fast, far too fast. So this is always useful.
 [02/01-11/01](https://twitter.com/ai__pub/status/1613269212935647232)
 
 ## DAIR.AI
+
+[30/01-05/02](https://twitter.com/dair_ai/status/1622261778632564739)
 
 [23/01-29/01](https://twitter.com/dair_ai/status/1619716423819104261)
 

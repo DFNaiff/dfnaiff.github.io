@@ -2,7 +2,7 @@
 layout: post
 title:  "Visualizing Layer Normalization"
 date:   2023-01-15 17:49:16 -0300
-categories: jekyll update
+categories:
 ---
 
 # Introduction

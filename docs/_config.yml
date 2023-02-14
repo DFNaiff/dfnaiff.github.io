@@ -31,10 +31,10 @@ theme: minima
 plugins:
   - jekyll-feed
 markdown: kramdown
-kramdown:
-  math_engine: katex
-katex:
-  path_to_js: "./assets/js"
+# kramdown:
+#  math_engine: katex
+# katex:
+#   path_to_js: "./assets/js"
 minima:
   social_links:
     - { platform: github,  user_url: "https://github.com/DFNaiff" }

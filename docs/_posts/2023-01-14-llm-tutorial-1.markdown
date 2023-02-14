@@ -2,8 +2,10 @@
 layout: post
 title:  "A technical tutorial on Large Language Models - Part 1"
 date:   2023-01-14 16:11:16 -0300
-categories: jekyll update
+categories:
 ---
+
+[Part 2]({% link _posts/2023-01-26-llm-tutorial-2.markdown %})
 
 # Preamble
 
