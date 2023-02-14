@@ -5,11 +5,13 @@ categories: Info
 permalink: /links/
 ---
 
-Artificial intelligence is moving fast, far too fast. So this is always useful.
+Artificial intelligence is moving fast, far too fast. So this is always useful. Dates are mostly guesses of when I've first heard of.
 
 # Unassorted links
 
 ## February
+
+14/02 - [GPT-powered Bing](https://www.bing.com/new?form=MY028Z&OCID=MY028Z). Instructions for using already can be found [here](https://www.webnots.com/how-to-try-new-bing-chat-ai-and-get-early-access/), although I tested them and they did not work. Also, fascinated by [Sidney](https://twitter.com/kliu128/status/1623472922374574080) and it's [trantum](https://twitter.com/marvinvonhagen/status/1625520707768659968) for being ousted.
 
 01/02 - [Samip Dahal LLM](https://twitter.com/samipddd/status/1620887558136946689) also using web-browser to get information. Another one
 
