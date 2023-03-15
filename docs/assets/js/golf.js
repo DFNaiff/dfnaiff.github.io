@@ -42,7 +42,7 @@ function updateAttractorRepellerPositions() {
     engine.world.bodies
         .filter(body => body.label === 'attractor')
         .forEach((attractor, i) => {
-            const baseSpeed =  (attractor.charge == ATTRACTOR_CHARGE ? ATTRACTOR_SPEED : REPELLER_SPEED); 
+            const baseSpeed =  (attractor.charge == ATTRACTOR_CHARGE ? ATTRACTOR_SPEED : REPELLER_SPEED);
             const baseAmplitude = (attractor.charge == ATTRACTOR_CHARGE ? ATTRACTOR_AMPLITUDE : REPELLER_AMPLITUDE);
             const speed = baseSpeed * (i % 2 === 0 ? 1 : -1);
             attractor.position.y = 200 + Math.sin(t * speed) * baseAmplitude;
@@ -111,18 +111,26 @@ function capVelocity(launchVector) {
         launchVector.y = launchVector.x*MAX_INITIAL_SPEED/launchNorm;
     }
 }
-canvas.addEventListener('mousedown', (event) => {
+
+function handleStart(event) {
+    event.preventDefault();
     isStarted = true;
     isMouseDown = true;
-    mouseDownPosition = { x: event.clientX, y: event.clientY };
-});
+    const { clientX, clientY } = event.touches ? event.touches[0] : event;
+    mouseDownPosition = { x: clientX, y: clientY };
+}
 
-canvas.addEventListener('mouseup', (event) => {
+canvas.addEventListener('mousedown', handleStart);
+canvas.addEventListener('touchstart', handleStart);
+
+function handleEnd(event) {
+    event.preventDefault();
     if (isMouseDown) {
-        const mouseUpPosition = { x: event.clientX, y: event.clientY };
-        launchVector = {
+        const { clientX, clientY } = event.changedTouches ? event.changedTouches[0] : event;
+        const mouseUpPosition = { x: clientX, y: clientY };
+        const launchVector = {
             x: -(mouseDownPosition.x - mouseUpPosition.x) * 0.1,
-            y: -(mouseDownPosition.y - mouseUpPosition.y) * 0.1
+            y: -(mouseDownPosition.y - mouseUpPosition.y) * 0.1,
         };
         capVelocity(launchVector);
         if (!isPlaying) {
@@ -133,11 +141,19 @@ canvas.addEventListener('mouseup', (event) => {
         Matter.Body.setVelocity(ball, launchVector);
         isMouseDown = false;
     }
-});
+}
 
-canvas.addEventListener('mousemove', (event) => {
-    mouseCurrentPosition = { x: event.clientX, y: event.clientY };
-});
+canvas.addEventListener('mouseup', handleEnd);
+canvas.addEventListener('touchend', handleEnd);
+
+function handleMove(event) {
+    event.preventDefault();
+    const { clientX, clientY } = event.touches ? event.touches[0] : event;
+    mouseCurrentPosition = { x: clientX, y: clientY };
+}
+
+canvas.addEventListener('mousemove', handleMove);
+canvas.addEventListener('touchmove', handleMove);
 
 function drawLaunchGuide(currentPosition) {
     ctx.beginPath();
@@ -167,8 +183,8 @@ function gameLoop() {
     const deltaTime = TIME_STEP;
 
     if (isStarted) {
-        Engine.update(engine, deltaTime * 1000);   
-        updateAttractorRepellerPositions(); 
+        Engine.update(engine, deltaTime * 1000);
+        updateAttractorRepellerPositions();
     }
 
     if (isPlaying) {
