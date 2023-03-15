@@ -1,0 +1,16 @@
+---
+layout: post
+title:  "Graviational Gold - A game with GPT-4"
+date:   2023-03-15 20:00:00 -0300
+categories:
+---
+
+[GPT-4 just launched yesterday](https://openai.com/research/gpt-4), if you didn't already knew of it. I used it to
+create a minigame and I'm truly amazed. I acted mostly as a supervisor than anything,
+because the code almost in its entirety is due to GPT-4.
+
+Sometimes GPT-4 commited errors, but usually he himself corrected it. Of course,
+here and there I corrected some errors myself, but they where minor. It was honestly
+95% GPT and 5% me.
+
+I'm kind of speechless, if I am to be honest. Just leaving the game here. It is on the "Golf" tab.
