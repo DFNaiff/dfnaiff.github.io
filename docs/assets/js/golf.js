@@ -6,7 +6,7 @@ const engine = Engine.create();
 engine.gravity = { x: 0, y: 0 }
 
 const ball = Bodies.circle(50, canvas.height / 2, 10, { restitution: 0.5, label: 'ball' });
-const target = Bodies.rectangle(canvas.width - 50, canvas.height / 2, 20, 80, { isStatic: true, label: 'target' });
+const target = Bodies.rectangle(canvas.width - 50, canvas.height / 2, 20, 20, { isStatic: true, label: 'target' });
 
 World.add(engine.world, [ball, target]);
 
