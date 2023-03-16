@@ -28,7 +28,7 @@ function setupLevel(level) {
         .forEach(attractor => World.remove(engine.world, attractor));
 
     const minDistance = 100;
-    for (let i = 0; i < 2 * level + 1; i++) {
+    for (let i = 0; i < 2 * level + 2; i++) {
         let x, y;
         do {
             x = getRandomPosition(200, canvas.width - 200);
