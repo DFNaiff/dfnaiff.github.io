@@ -18,13 +18,24 @@ let currentLevel = 0;
 let deathCount = 0;
 let levelCount = 1;
 
+function getRandomPosition(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 function setupLevel(level) {
     engine.world.bodies
         .filter(body => body.label === 'attractor')
         .forEach(attractor => World.remove(engine.world, attractor));
 
-    for (let i = 0; i < 2*level + 1; i++) {
-        const attractor = Bodies.circle(200 + 100 * i, 200, 10, { isStatic: true, label: 'attractor' });
+    const minDistance = 100;
+    for (let i = 0; i < 2 * level + 1; i++) {
+        let x, y;
+        do {
+            x = getRandomPosition(200, canvas.width - 200);
+            y = getRandomPosition(100, canvas.height - 100);
+        } while (Math.hypot(x - ball.position.x, y - ball.position.y) < minDistance || Math.hypot(x - target.position.x, y - target.position.y) < minDistance);
+
+        const attractor = Bodies.circle(x, y, 10, { isStatic: true, label: 'attractor' });
         attractor.charge = i % 2 === 0 ? ATTRACTOR_CHARGE : REPELLER_CHARGE;
         World.add(engine.world, attractor);
     }
@@ -39,14 +50,10 @@ function nextLevel() {
 function updateAttractorRepellerPositions() {
     const t = engine.timing.timestamp * 0.001;
 
-    engine.world.bodies
-        .filter(body => body.label === 'attractor')
-        .forEach((attractor, i) => {
-            const baseSpeed =  (attractor.charge == ATTRACTOR_CHARGE ? ATTRACTOR_SPEED : REPELLER_SPEED);
-            const baseAmplitude = (attractor.charge == ATTRACTOR_CHARGE ? ATTRACTOR_AMPLITUDE : REPELLER_AMPLITUDE);
-            const speed = baseSpeed * (i % 2 === 0 ? 1 : -1);
-            attractor.position.y = 200 + Math.sin(t * speed) * baseAmplitude;
-        });
+//    target.position.y = 200 + Math.sin(t * ATTRACTOR_SPEED) * ATTRACTOR_AMPLITUDE;
+//    ball.circleRadius = Math.max(2, 10 - currentLevel);
+//    target.bounds.max.x = target.bounds.min.x + Math.max(2, 20 - 2 * currentLevel);
+//    target.bounds.max.y = target.bounds.min.y + Math.max(2, 20 - 2 * currentLevel);
 }
 
 function applyCoulombsLaw() {
@@ -156,17 +163,50 @@ canvas.addEventListener('mousemove', handleMove);
 canvas.addEventListener('touchmove', handleMove);
 
 function drawLaunchGuide(currentPosition) {
+    const launchVector = {
+        x: (mouseDownPosition.x - currentPosition.x) * 0.1,
+        y: (mouseDownPosition.y - currentPosition.y) * 0.1,
+    };
+    capVelocity(launchVector);
+
+    const guideEndPoint = {
+        x: ball.position.x - launchVector.x * 10,
+        y: ball.position.y - launchVector.y * 10,
+    };
+
     ctx.beginPath();
-    ctx.moveTo(mouseDownPosition.x - 270 , mouseDownPosition.y - 90);
-    ctx.lineTo(currentPosition.x - 270, currentPosition.y - 90);
+    ctx.moveTo(ball.position.x, ball.position.y);
+    ctx.lineTo(guideEndPoint.x, guideEndPoint.y);
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
     ctx.lineWidth = 2;
     ctx.stroke();
+
+    const arrowheadLength = -10;
+    const arrowheadAngle = Math.atan2(launchVector.y, launchVector.x) + Math.PI / 6;
+    const arrowheadEndPoint1 = {
+        x: guideEndPoint.x - arrowheadLength * Math.cos(arrowheadAngle),
+        y: guideEndPoint.y - arrowheadLength * Math.sin(arrowheadAngle),
+    };
+    const arrowheadEndPoint2 = {
+        x: guideEndPoint.x - arrowheadLength * Math.cos(arrowheadAngle - Math.PI / 3),
+        y: guideEndPoint.y - arrowheadLength * Math.sin(arrowheadAngle - Math.PI / 3),
+    };
+
+    ctx.beginPath();
+    ctx.moveTo(guideEndPoint.x, guideEndPoint.y);
+    ctx.lineTo(arrowheadEndPoint1.x, arrowheadEndPoint1.y);
+    ctx.lineTo(arrowheadEndPoint2.x, arrowheadEndPoint2.y);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fill();
 }
 
 function resetGame() {
     if (hasLost) {
         deathCount++;
+    }
+    if (hasWon) {
+        setupLevel(currentLevel);
     }
     Matter.Body.setPosition(ball, { x: 50, y: canvas.height / 2 });
     Matter.Body.setVelocity(ball, { x: 0, y: 0 });
@@ -176,7 +216,6 @@ function resetGame() {
     hasWon = false;
     hasLost = false;
 
-    setupLevel(currentLevel);
 }
 
 function gameLoop() {
@@ -207,12 +246,12 @@ function gameLoop() {
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
     drawGameObjects();
     requestAnimationFrame(gameLoop);
 }
 
 function drawGameObjects() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawCircle(ball);
     drawRectangle(target);
 
@@ -241,6 +280,29 @@ function drawRectangle(body) {
     ctx.fillRect(position.x - width / 2, position.y - height / 2, width, height);
 }
 
+function drawBackground() {
+    ctx.fillStyle = 'green';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 70, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(centerX, 0);
+    ctx.lineTo(centerX, canvas.height);
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+
+}
+
 function drawCounters() {
     ctx.font = '20px Arial';
     ctx.fillStyle = 'black';
@@ -248,6 +310,42 @@ function drawCounters() {
     ctx.fillText(`Deaths: ${deathCount}`, canvas.width - 10, 30);
     ctx.fillText(`Level: ${levelCount}`, canvas.width - 10, 60);
 }
+
+document.getElementById('reset-level').addEventListener('click', () => {
+    resetGame();
+  });
+  
+  document.getElementById('reset-game').addEventListener('click', () => {
+    currentLevel = 0;
+    deathCount = 0;
+    levelCount = 1
+    resetGame();
+  });
+  
+  // Add touch event listeners for mobile devices
+  document.getElementById('reset-level').addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    resetLevel();
+  });
+  
+  document.getElementById('reset-game').addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    currentLevel = 0;
+    deathCount = 0;
+    levelCount = 1
+    resetGame();
+  });
+
+  document.getElementById('instructions-button').addEventListener('click', () => {
+    const instructionsElement = document.getElementById('instructions');
+    if (instructionsElement.style.display === 'none') {
+        instructionsElement.style.display = 'block';
+        document.getElementById('instructions-button').textContent = 'Hide Instructions';
+    } else {
+        instructionsElement.style.display = 'none';
+        document.getElementById('instructions-button').textContent = 'Show Instructions';
+    }
+});
 
 setupLevel(currentLevel);
 gameLoop();
