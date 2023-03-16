@@ -115,7 +115,7 @@ function capVelocity(launchVector) {
     launchNorm = Math.sqrt(launchX + launchY);
     if (launchNorm > MAX_INITIAL_SPEED){
         launchVector.x = launchVector.x*MAX_INITIAL_SPEED/launchNorm;
-        launchVector.y = launchVector.x*MAX_INITIAL_SPEED/launchNorm;
+        launchVector.y = launchVector.y*MAX_INITIAL_SPEED/launchNorm;
     }
 }
 
