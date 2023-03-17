@@ -40,7 +40,6 @@ function computeForce(charge1, charge2) {
   let v1v2 = p5.Vector.dot(charge1.velocity, charge2.velocity);
   let darwinForceMagnitude = 2 * darwinConstant * v1v2 * charge1.charge * charge2.charge / (distanceSq * distanceSq);
 //   let darwinForce = r.normalize().mult(darwinForceMagnitude);
-
     let force = r.normalize().mult(forceMagnitude + darwinForceMagnitude)
 //  let totalForce = force.add(darwinForce)
   return force;
@@ -160,7 +159,7 @@ function restartSimulation() {
   const initialSpeed = parseFloat(initialSpeedInput.value());
 
   if (!isNaN(numParticles) && !isNaN(newK) && !isNaN(newD) && !isNaN(newMass) && !isNaN(newDt) && !isNaN(newB) && !isNaN(initialSpeed)) {    k = newK;
-    d = newD;
+    darwinConstant = newD;
     dt = newDt;
     B = newB;
     charges = [];
