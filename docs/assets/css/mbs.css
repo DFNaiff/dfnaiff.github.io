@@ -1,0 +1,19 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1 {
+    margin: 20px 0;
+  }
+  
+  div {
+    margin-bottom: 10px;
+  }
+  
+  #simulation-container {
+    display: inline-block;
+  }
+  
