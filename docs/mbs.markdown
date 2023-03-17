@@ -14,31 +14,27 @@ permalink: /mbs/
 <h1>Quasielectrostatic Simulation</h1>
 <div>
 <label for="num-particles">Number of particles:</label>
-<input type="number" id="num-particles" value="10" min="1">
+<input type="number" id="num-particles" class="number-input" value="10" min="1">
 </div>
 <div>
-<label for="k-constant">k constant:</label>
-<input type="number" id="k-constant" value="100" step="0.1">
-<br>
-<label for="darwin-constant">darwin constant:</label>
-<input type="number" id="darwin-constant" value="0" step="0.1">
-<br>
-<label for="magnetic-field">Magnetic Field (B):</label>
-<input type="number" id="magnetic-field" value="0" step="0.1">
-<br>
-<label for="mass">Mass:</label>
-<input type="number" id="mass" value="1.0" step="0.1">
-<label for="time-step-size">Time Step Size:</label>
-<input type="number" id="time-step-size" value="0.1" step="0.01">
+<label for="k-constant">K:</label>
+<input type="number" id="k-constant" value="100" class="number-input" step="0.1">
+<label for="darwin-constant">D:</label>
+<input type="number" id="darwin-constant" value="0" class="number-input" step="0.1">
+<label for="magnetic-field">B:</label>
+<input type="number" id="magnetic-field" value="0" class="number-input" step="0.1">
+<label for="mass">M:</label>
+<input type="number" id="mass" value="1.0" class="number-input" step="0.1">
 </div>
 <div>
-<label for="tracked-ball">Tracked Ball:</label>
-<input type="number" id="tracked-ball" value="0">
-<label for="trace-line-size">Trace Line Size:</label>
-<input type="number" id="trace-line-size" value="100">
+<label for="time-step-size">Step Size:</label>
+<input type="number" id="time-step-size" value="0.1" class="number-input" step="0.01">
+<label for="trace-line-size">Trace Size:</label>
+<input type="number" id="trace-line-size" class="number-input" value="100">
+<label for="initial-speed">Initial Speed:</label>
+<input type="number" id="initial-speed" class="number-input" value="1">
 <div>
 <button id="restart-button">Restart Simulation</button>
-<button id="restart-tracked-ball-button">Update Tracked Ball</button>
 </div>
 </div>
 <div id="simulation-container"></div>

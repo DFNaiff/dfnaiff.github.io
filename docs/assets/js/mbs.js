@@ -135,18 +135,17 @@ let numParticlesInput;
 let kConstantInput;
 let darwinConstantInput;
 let restartButton;
-let trackedBallInput;
 let traceLineSizeInput;
 let massInput;
 let timeStepSizeInput;
 let magneticFieldInput;
+let initialSpeedInput;
 
 // Storing data
 let totalEnergy = [];
 let energyPlotHeight = 100;
 
 // Tracing variables
-let trackedBall = 0; // The index of the tracked ball
 let pastPositions = [];
 let maxPastPositions = 100;
 
@@ -158,9 +157,9 @@ function restartSimulation() {
   const newMass = parseFloat(massInput.value());
   const newDt = parseFloat(timeStepSizeInput.value());
   const newB = parseFloat(magneticFieldInput.value());
+  const initialSpeed = parseFloat(initialSpeedInput.value());
 
-  if (!isNaN(numParticles) && !isNaN(newK) && !isNaN(newD) && !isNaN(newMass) && !isNaN(newDt) && !isNaN(newB)) {
-    k = newK;
+  if (!isNaN(numParticles) && !isNaN(newK) && !isNaN(newD) && !isNaN(newMass) && !isNaN(newDt) && !isNaN(newB) && !isNaN(initialSpeed)) {    k = newK;
     d = newD;
     dt = newDt;
     B = newB;
@@ -169,7 +168,11 @@ function restartSimulation() {
     // Initialize the moving charges with the new values
     for (let i = 0; i < numParticles; i++) {
       let position = createVector(random(width), random(height));
-      let velocity = createVector(random(-1, 1), random(-1, 1));
+      
+      // Randomize the velocity direction and apply the user-defined initial speed
+      let angle = random(TWO_PI);
+      let velocity = createVector(initialSpeed * cos(angle), initialSpeed * sin(angle));
+      
       let charge = 10;
       charges.push(new MovingCharge(position, velocity, charge, newMass));
     }
@@ -203,23 +206,15 @@ function setup() {
   darwinConstantInput = select('#darwin-constant')
   restartButton = select('#restart-button');
   traceLineSizeInput = select('#trace-line-size');
-  trackedBallInput = select('#tracked-ball');
-  restartTrackedBallButton = select('#restart-tracked-ball-button');
   massInput = select('#mass');
   timeStepSizeInput = select('#time-step-size');
   magneticFieldInput = select('#magnetic-field');
-
+  initialSpeedInput = select('#initial-speed');
+  
   // Add event listener to restart the simulation
   restartButton.mousePressed(restartSimulation);
   
-  // Add event listener to update the tracked ball
-  restartTrackedBallButton.mousePressed(() => {
-    const newTrackedBall = parseInt(trackedBallInput.value());
-    if (!isNaN(newTrackedBall) && newTrackedBall >= 0 && newTrackedBall < charges.length) {
-      trackedBall = newTrackedBall;
-      pastPositions = [];
-    }
-  });  
+  
 }
 
 function draw() {
