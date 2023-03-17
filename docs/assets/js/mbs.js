@@ -173,6 +173,7 @@ function restartSimulation() {
       let charge = 10;
       charges.push(new MovingCharge(position, velocity, charge, newMass));
     }
+    pastPositions = Array(charges.length).fill().map(() => []);
   }
 }
 
@@ -184,13 +185,15 @@ function setup() {
   // Initialize the charged box
   box = new ChargedBox(width, height);
 
-  // Initialize the moving charges
+  // Initialize the moving charges and pastPositions
   for (let i = 0; i < 10; i++) {
     let position = createVector(random(width), random(height));
     let velocity = createVector(random(-1, 1), random(-1, 1));
     let charge = 10;
     charges.push(new MovingCharge(position, velocity, charge));
+    pastPositions.push([]);
   }
+
   // Set canvas size to 400x400
   resizeCanvas(300, 300 + energyPlotHeight);
 
@@ -231,40 +234,43 @@ function draw() {
       traceLineSize = 100; // Default value
     }
   
-    // Draw the trace lines for the tracked ball
-    for (let i = 0; i < pastPositions.length - 1; i++) {
-      let alpha = map(i, 0, pastPositions.length - 1, 0, 255);
-      stroke(0, 0, 255, alpha);
-      line(pastPositions[i].x, pastPositions[i].y, pastPositions[i + 1].x, pastPositions[i + 1].y);
+    for (let p = 0; p < charges.length; p++) {
+      for (let i = 0; i < pastPositions[p].length - 1; i++) {
+        let alpha = map(i, 0, pastPositions[p].length - 1, 0, 255);
+        stroke(0, 0, 255, alpha);
+        line(pastPositions[p][i].x, pastPositions[p][i].y, pastPositions[p][i + 1].x, pastPositions[p][i + 1].y);
+      }
     }
   
     // Update the simulation
     updateSimulation(charges, box, dt);
   
-    // Store the past position of the tracked ball
-    pastPositions.push(charges[trackedBall].position.copy());
-    if (pastPositions.length > traceLineSize) {
-      pastPositions.shift();
+    // Store the past position for all particles
+    for (let p = 0; p < charges.length; p++) {
+      pastPositions[p].push(charges[p].position.copy());
+      if (pastPositions[p].length > traceLineSize) {
+        pastPositions[p].shift();
+      }
     }
     
     // Draw the moving charges
-    for (let charge of charges) {
-      drawMovingCharge(charge);
-    }
+    //for (let charge of charges) {
+    //  drawMovingCharge(charge);
+    //}
   
     drawEnergyPlot(totalEnergy, energyPlotHeight);
   }
 
 function drawChargedBox(box) {
   stroke(0);
-  fill(255);
+  fill(0);
   rect(0, 0, box.width, box.height);
 }
 
 function drawMovingCharge(charge) {
-  stroke(0);
-  fill(255, 0, 0);
-  circle(charge.position.x, charge.position.y, 10);
+  stroke(255, 0, 0);
+  strokeWeight(4); // Increase this value to make the red point larger
+  point(charge.position.x, charge.position.y);
 }
 
 function drawEnergyPlot(totalEnergy, plotHeight) {
