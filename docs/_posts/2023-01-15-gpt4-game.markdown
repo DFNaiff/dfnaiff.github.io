@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Graviational Golf - A game with GPT-4"
+title:  "Gravitational Golf - A game with GPT-4"
 date:   2023-03-15 20:00:00 -0300
 categories:
 ---
@@ -21,3 +21,6 @@ it is working more as a Gravitational Soccer. But it is still great.
 
 ## UPDATE 2
 I found an small error, and surprisingly, it was the very small part that I've edited. This is humbling.
+
+## UPDATE 3
+Screw that, I made another web application again using GPT-4. This time I had even less working setting it up, I think I got better at how to ask GPT-4 for things. All of those can be found on the Apps tab.
