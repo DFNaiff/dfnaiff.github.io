@@ -139,6 +139,9 @@ let massInput;
 let timeStepSizeInput;
 let magneticFieldInput;
 let initialSpeedInput;
+let canvasWidthInput;
+let canvasHeightInput;
+let fullscreenButton;
 
 // Storing data
 let totalEnergy = [];
@@ -157,6 +160,14 @@ function restartSimulation() {
   const newDt = parseFloat(timeStepSizeInput.value());
   const newB = parseFloat(magneticFieldInput.value());
   const initialSpeed = parseFloat(initialSpeedInput.value());
+  const newWidth = parseInt(canvasWidthInput.value());
+  const newHeight = parseInt(canvasHeightInput.value());
+
+  if (!isNaN(newWidth) && !isNaN(newHeight)) {
+    resizeCanvas(newWidth, newHeight + energyPlotHeight);
+    box.width = width;
+    box.height = height - energyPlotHeight;
+  }
 
   if (!isNaN(numParticles) && !isNaN(newK) && !isNaN(newD) && !isNaN(newMass) && !isNaN(newDt) && !isNaN(newB) && !isNaN(initialSpeed)) {    k = newK;
     darwinConstant = newD;
@@ -209,16 +220,22 @@ function setup() {
   timeStepSizeInput = select('#time-step-size');
   magneticFieldInput = select('#magnetic-field');
   initialSpeedInput = select('#initial-speed');
-  
+  canvasWidthInput = select('#canvas-width');
+  canvasHeightInput = select('#canvas-height');
+  fullscreenButton = select('#fullscreen-button');
+
   // Add event listener to restart the simulation
   restartButton.mousePressed(restartSimulation);
-  
-  
+  fullscreenButton.mousePressed(resizeCanvasAndToggleFullscreen);
+
 }
 
 function draw() {
+   background(0); // Set background to black
+   push();
+    translate((width - box.width) / 2, (height - box.height - energyPlotHeight) / 2);
     // Clear the canvas
-    background(240);
+    background(0);
     // Draw the charged box
     drawChargedBox(box);
 
@@ -253,6 +270,7 @@ function draw() {
     //}
   
     drawEnergyPlot(totalEnergy, energyPlotHeight);
+    pop();
   }
 
 function drawChargedBox(box) {
@@ -269,7 +287,7 @@ function drawMovingCharge(charge) {
 
 function drawEnergyPlot(totalEnergy, plotHeight) {
     // Draw the plot background
-    fill(255);
+    fill(0);
     noStroke();
     rect(0, height - plotHeight, width, plotHeight);
   
@@ -288,4 +306,9 @@ function drawEnergyPlot(totalEnergy, plotHeight) {
       vertex(width * (i / maxEnergyDataPoints), height - totalEnergy[i] * scaleY);
     }
     endShape();
+  }
+
+  function resizeCanvasAndToggleFullscreen() {
+    let fs = fullscreen();
+    fullscreen(!fs);
   }

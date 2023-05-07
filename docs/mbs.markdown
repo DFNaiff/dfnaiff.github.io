@@ -15,6 +15,10 @@ permalink: /mbs/
 <div>
 <label for="num-particles">Number of particles:</label>
 <input type="number" id="num-particles" class="number-input" value="10" min="1">
+<label for="canvas-width">Width:</label>
+<input type="number" id="canvas-width" value="300" class="number-input">
+<label for="canvas-height">Height:</label>
+<input type="number" id="canvas-height" value="300" class="number-input">
 </div>
 <div>
 <label for="k-constant">K:</label>
@@ -35,6 +39,7 @@ permalink: /mbs/
 <input type="number" id="initial-speed" class="number-input" value="1">
 <div>
 <button id="restart-button">Restart Simulation</button>
+<button id="fullscreen-button">Fullscreen</button>
 </div>
 </div>
 <div id="simulation-container"></div>
