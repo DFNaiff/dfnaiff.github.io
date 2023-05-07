@@ -163,6 +163,11 @@ function restartSimulation() {
   const newWidth = parseInt(canvasWidthInput.value());
   const newHeight = parseInt(canvasHeightInput.value());
 
+  if (newWidth < 5 || newWidth > 1200 || newHeight < 5 || newHeight > 1200) {
+    alert("Width and height values must be between 5 and 1200.");
+    return;
+  }
+
   if (!isNaN(newWidth) && !isNaN(newHeight)) {
     resizeCanvas(newWidth, newHeight + energyPlotHeight);
     box.width = width;
