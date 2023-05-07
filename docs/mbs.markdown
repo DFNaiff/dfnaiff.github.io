@@ -29,14 +29,18 @@ permalink: /mbs/
 <input type="number" id="magnetic-field" value="0" class="number-input" step="0.1">
 <label for="mass">M:</label>
 <input type="number" id="mass" value="1.0" class="number-input" step="0.1">
+<label for="initial-speed">Initial Speed:</label>
+<input type="number" id="initial-speed" class="number-input" value="1">
 </div>
 <div>
 <label for="time-step-size">Step Size:</label>
 <input type="number" id="time-step-size" value="0.1" class="number-input" step="0.01">
 <label for="trace-line-size">Trace Size:</label>
 <input type="number" id="trace-line-size" class="number-input" value="100">
-<label for="initial-speed">Initial Speed:</label>
-<input type="number" id="initial-speed" class="number-input" value="1">
+<label for="show-electric-field">Show Electric Field:</label>
+<input type="checkbox" id="show-electric-field">
+<label for="grid-spacing">Grid Spacing:</label>
+<input type="number" id="grid-spacing" value="20" min="5" max="100" class="number-input" >
 <div>
 <button id="restart-button">Restart Simulation</button>
 <button id="fullscreen-button">Fullscreen</button>

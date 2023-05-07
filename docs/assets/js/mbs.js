@@ -33,8 +33,10 @@ let maxEnergyDataPoints = 400;
 
 // Compute electrostatic force between two charges
 function computeForce(charge1, charge2) {
+  const eps = 1e-5; // Small constant to avoid division by zero
+
   let r = p5.Vector.sub(charge2.position, charge1.position);
-  let distanceSq = r.magSq();
+  let distanceSq = r.magSq() + eps*eps;
   let forceMagnitude = -k * charge1.charge * charge2.charge / distanceSq;
   
   let v1v2 = p5.Vector.dot(charge1.velocity, charge2.velocity);
@@ -49,6 +51,21 @@ function computeMagneticForce(charge, magneticField) {
   let force = p5.Vector.cross(charge.velocity, createVector(0, 0, magneticField));
   force.mult(charge.charge);
   return force;
+}
+
+function computeForceField(x, y, charges) {
+  let fictitiousCharge = new MovingCharge(createVector(x, y), createVector(0, 0), 1, 1);
+  let totalForce = createVector(0, 0);
+
+  for (let charge of charges) {
+    let force = computeForce(fictitiousCharge, charge);
+    totalForce.add(force);
+  }
+
+  let magneticForce = computeMagneticForce(fictitiousCharge, B);
+  totalForce.add(magneticForce);
+
+  return totalForce;
 }
 
 function updateSimulation(charges, box, dt) {
@@ -142,6 +159,8 @@ let initialSpeedInput;
 let canvasWidthInput;
 let canvasHeightInput;
 let fullscreenButton;
+let showElectricFieldToggle;
+let gridSpacingInput;
 
 // Storing data
 let totalEnergy = [];
@@ -228,11 +247,25 @@ function setup() {
   canvasWidthInput = select('#canvas-width');
   canvasHeightInput = select('#canvas-height');
   fullscreenButton = select('#fullscreen-button');
+  showElectricFieldToggle = select('#show-electric-field');
+  gridSpacingInput = select('#grid-spacing');
 
   // Add event listener to restart the simulation
   restartButton.mousePressed(restartSimulation);
   fullscreenButton.mousePressed(resizeCanvasAndToggleFullscreen);
 
+}
+
+function computeElectricField(point, charges) {
+  let electricField = createVector(0, 0);
+  for (let charge of charges) {
+    let r = p5.Vector.sub(charge.position, point);
+    let distanceSq = r.magSq();
+    let fieldMagnitude = k * charge.charge / distanceSq;
+    let field = r.normalize().mult(fieldMagnitude);
+    electricField.add(field);
+  }
+  return electricField;
 }
 
 function draw() {
@@ -273,7 +306,18 @@ function draw() {
     //for (let charge of charges) {
     //  drawMovingCharge(charge);
     //}
-  
+    if (showElectricFieldToggle.checked()) {
+      let gridSpacing = parseInt(gridSpacingInput.value());
+      if (isNaN(gridSpacing)) {
+        gridSpacing = 20; // Default value
+      }
+      let B = parseFloat(magneticFieldInput.value());
+      if (isNaN(B)) {
+        B = 0; // Default value
+      }
+      drawElectricField(gridSpacing, B);
+    }
+
     drawEnergyPlot(totalEnergy, energyPlotHeight);
     pop();
   }
@@ -288,6 +332,32 @@ function drawMovingCharge(charge) {
   stroke(255, 0, 0);
   strokeWeight(4); // Increase this value to make the red point larger
   point(charge.position.x, charge.position.y);
+}
+
+function drawElectricField(gridSpacing, B) {
+  for (let x = 0; x <= width; x += gridSpacing) {
+    for (let y = 0; y <= height; y += gridSpacing) {
+      console.log(x, y)
+      let point = createVector(x, y);
+      let forceField = computeForceField(point.x, point.y, charges);
+      let forceMagnitude = forceField.mag();
+      // Cap the force magnitude to avoid infinities
+      forceMagnitude = min(forceMagnitude, 1000);
+
+      // Map the color from yellow (lowest magnitude) to red (highest magnitude)
+      let forceColor = lerpColor(color(255, 0, 0, 10), color(255, 0, 0, 100), forceMagnitude / 10);
+      stroke(forceColor);
+
+      // Draw an arrow representing the force field
+      push();
+      translate(point.x, point.y);
+      rotate(forceField.heading());
+      line(0, 0, gridSpacing * 0.5, 0);
+      line(gridSpacing * 0.5, 0, gridSpacing * 0.3, gridSpacing * 0.1);
+      line(gridSpacing * 0.5, 0, gridSpacing * 0.3, -gridSpacing * 0.1);
+      pop();
+    }
+  }
 }
 
 function drawEnergyPlot(totalEnergy, plotHeight) {
