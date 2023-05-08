@@ -16,9 +16,9 @@ permalink: /mbs/
 <label for="num-particles">Number of particles:</label>
 <input type="number" id="num-particles" class="number-input" value="10" min="1">
 <label for="canvas-width">Width:</label>
-<input type="number" id="canvas-width" value="300" class="number-input" min="5" max="1200">
+<input type="number" id="canvas-width" value="600" class="number-input" min="5" max="1200">
 <label for="canvas-height">Height:</label>
-<input type="number" id="canvas-height" value="300" class="number-input" min="5" max="1200">
+<input type="number" id="canvas-height" value="400" class="number-input" min="5" max="1200">
 </div>
 <div>
 <label for="k-constant">K:</label>

@@ -345,7 +345,7 @@ function drawElectricField(gridSpacing, B) {
       forceMagnitude = min(forceMagnitude, 1000);
 
       // Map the color from yellow (lowest magnitude) to red (highest magnitude)
-      let forceColor = lerpColor(color(255, 0, 0, 10), color(255, 0, 0, 100), forceMagnitude / 10);
+      let forceColor = lerpColor(color(255, 0, 0, 10), color(255, 0, 0, 100), forceMagnitude);
       stroke(forceColor);
 
       // Draw an arrow representing the force field
