@@ -7,31 +7,32 @@ categories:
 
 [Part 2]({% link _posts/2023-01-26-llm-tutorial-2.markdown %})
 
+# Update (24/05)
+
+This text has been revised and edited by ChatGPT 3.5 to improve grammar and overall structure.
+
 # Preamble
 
-In the process of studying more in depth language models, I am following the [curriculum by Jacob Hilton](https://github.com/jacobhilton/deep_learning_curriculum).
-The first exercise in that curriculum involves creating a language model from scratch, and training it on the works of Shakespeare.
-Following the "learning by writing" philosophy, I decided to create a tutorial for large language models. The first part, which is "getting to GPT", can be in the link above. I intend to write a "from GPT to ChatGPT" part later.
+While delving deeper into the study of language models, I am currently following the curriculum developed by Jacob Hilton, which can be found at [this GitHub repository](https://github.com/jacobhilton/deep_learning_curriculum). The initial exercise within this curriculum involves building a language model from scratch and training it on the works of Shakespeare.
 
-# What is this tutorial.
+# What is this tutorial?
 
-This is the first part of a tutorial on language models, namely GPT models. This is a relatively concise tutorial, that assumes the reader has *some* background on deep learning, and I use mathematical notation freely.
+This is the first part of a tutorial on language models, specifically focusing on GPT models. It is a relatively concise tutorial that assumes the reader has *some* background knowledge in deep learning, and I make use of mathematical notation throughout.
 
-This parts lead us on how to get from nothing to “pure” GPT models, which form the base of language models such as ChatGPT. In the next part, we will get from “pure” models to fine-tuned models such as ChatGPT. This is an operational tutorial, in the sense that it tells *how* we get to certain language models. The why they work like that is the objective of ~~speculation~~ a next post.
+This part guides us on the journey from nothing to "pure" GPT models, which serve as the foundation for language models like ChatGPT (those are also called base models or foundation models). In the next part, we will delve into the transition from "pure" models to fine-tuned models such as ChatGPT. This tutorial provides operational instructions, explaining *how* we arrive at specific language models. The reasons behind their functioning will be explored in a future post.
 
 ![postdiagram.png]({{site.baseurl}}/assets/figs/lm1/postdiagram.png)
 
-My main motivation here is to learn by writing, but also there is the fact that good transformer tutorials seem to be lacking. Really, for what is arguably the greatest revolution in deep learning in the last ten years, it is ridiculous that there are so few good tutorials or explanations. This is another, very opinionated one, that may be useful to someone.
+My primary motivation here is to learn through writing, while also addressing the lack of comprehensive transformer tutorials. It is quite astonishing that there are so few well-crafted tutorials or explanations for what is arguably the most significant revolution in deep learning in the past decade. This tutorial is another, albeit opinionated, attempt to fill that gap and may prove useful to some.
 
-As for why you should care? I may write some introduction later, but to be honest, suffices to play a bit with [ChatGPT](https://chat.openai.com/chat) to have enough motivation for knowing about language models. So, if you’re reading this, I will either assume that you are already interested in language models and is just ready to jump to the tutorial, or I will simply let ChatGPT answer that for me:
+Now, you might wonder why you should care. I might provide an introduction later, but to be honest, simply experimenting with [ChatGPT](https://chat.openai.com/chat) for a while should be enough to motivate your interest in language models.
 
-![Selection_061.png]({{site.baseurl}}/assets/figs/lm1/Selection_061.png)
 
 # Language models - evaluation.
 
-Operationally, a language model can be thought as following the rule “given string $$s$$ of natural language, output string $$w$$ with probability $$p(w\mid s)$$. This is what GPT-like models do at the end of the day. So the question is how to do that? So, for instance, when writing $$s = \text{``I ate a ''}$$, the model outputs $$w = \text{``banana at the market’’}$$ with probability $$p(w\mid s) = 0.8$$, as an example. The point is how the model does that?
+Operationally, a language model can be thought as following the rule "given string $$s$$ of natural language, output string $$w$$ with probability $$p(w\mid s)$$. This is what GPT-like models do at the end of the day. So the question is how to do that? For instance, when writing $$s = \text{``I ate a ''}$$, the model outputs $$w = \text{``banana at the market''}$$ with probability $$p(w\mid s) = 0.8$$, as an example. The point is how the model does that?
 
-First, we need to map $$s$$ and $$w$$ into some suitable structure for our model. We do this by making use of a “sequencing function” $$T$$ that will map strings $$s$$ to finite sequences of integers $$\mathbf{x} = (x_1, \ldots, x_n)$$ , with elements belonging to a finite set $$[n_{vocab}] = \{1, \ldots, n_{vocab}\}$$ which we call the *vocabulary*, $$n_{vocab}$$ being the *vocabulary size,* that is, the “words” that the sequence model knows. We reserve $$1$$ for the “end-of-sentence” token, that will be explained below. As an example, we transform the sequence $$s = \text{``I ate a''}$$ into a sequence $$\mathbf{x} = (10, 123, 2)$$.
+First, we need to map $$s$$ and $$w$$ into some suitable structure for our model. We do this by making use of a "sequencing function" $$T$$ that will map strings $$s$$ to finite sequences of integers $$\mathbf{x} = (x_1, \ldots, x_n)$$, with elements belonging to a finite set $$[n_{vocab}] = \{1, \ldots, n_{vocab}\}$$ which we call the *vocabulary*, $$n_{vocab}$$ being the *vocabulary size,* that is, the "words" that the sequence model knows. We reserve $$1$$ for the "end-of-sentence" token, that will be explained below. As an example, we transform the sequence $$s = \text{``I ate a''}$$ into a sequence $$\mathbf{x} = (10, 123, 2)$$.
 
 Now, we transformed our language evaluation problem into an equivalent *sequence* evaluation problem, as follows: let $$\mathbf{x} = (x_1, \ldots, x_n)$$ be a sequence in our vocabulary $$[n_{vocab}]$$. Our sequence model will output another finite sequence $$\mathbf{y}=(y_1, \ldots, y_m)$$ with probability $$p(\mathbf{y}\mid \mathbf{x})$$. Now, we can turn this sampling problem into a *next-item* prediction as follows: consider $$\mathbf{y}$$ be a $$m$$-sized sequence as above, and consider $$1$$ to signal the end of a sequence. Then, starting with $$\mathbf{y} = ()$$, we will, repeatedly,
 
@@ -41,14 +42,15 @@ Now, we transformed our language evaluation problem into an equivalent *sequence
 That is, we use the chain rule of probability to sample $$\mathbf{y}$$ with probability letting $$\mathbf{y}^i = (y_1, \ldots, y_i)$$, and letting $$\mathbf{x}\mathbf{y}$$ be the concatenation of two sequences, we find that
 
 $$
-p(\mathbf{y}\mid \mathbf{x}) = p_M(1\mid \mathbf{x}\mathbf{y})\prod_{i=1}^{n-1} p_M(y_{i+1}\mid \mathbf{x}\mathbf{y}^i),
+p(\mathbf{y}\mid \mathbf{x}) = p_M(1\mid \mathbf{x}\mathbf{y})\prod_{i=1}^{n-1} p_M(y_{i+1}\mid \
+\mathbf{x}\mathbf{y}^i),
 $$
 
 with $$\mathbf{y}^i := (y_1, \ldots, y_i)$$, and $$\mathbf{x}\mathbf{y}$$ denoting the concatenation of two sequences $$\mathbf{x}$$ and $$\mathbf{y}$$. Therefore, our model $$M$$ will only output a *single* number $$y \in [n_{vocab}]$$, given a sequence $$\mathbf{x} = (x_1, \ldots, x_n)$$ also in $$[n_{vocab}]$$, with probability $$p_M(y\mid \mathbf{x})$$. The chain rule will take care of the rest, and such a model will be called an *autoregressive* model.
 
-Finally, given the sequence $$\mathbf{y}$$, we can unsequence it *to get string $$w$$. We do that by applying an *inverse sequencing* function $$T^{-1}$$ to each element of $$\mathbf{y}$$, getting an string $$w = T^{-1}(\mathbf{y})$$. Thus, we have that our language model consists of a sequence model $$M$$ predicting the next-token, and a sequencing/unsequencing pair $$(T, T^{-1})$$. We have $$p_{M, T}(w\mid s) = p_M(T(w)\mid T(s))$$, and we sample $$w$$ by sequencing $$s$$ into $$\mathbf{x}$$, sampling $$\mathbf{y}$$ from $$M$$ given $$\mathbf{x}$$, and unsequencing $$\mathbf{x}$$ into $$w$$.
+Finally, given the sequence $$\mathbf{y}$$, we can unsequence it to get string $$w$$. We do that by applying an inverse sequencing function $$T^{-1}$$ to each element of $$\mathbf{y}$$, getting a string $$w = T^{-1}(\mathbf{y})$$. Thus, our language model consists of a sequence model $$M$$ predicting the next token, and a sequencing/unsequencing pair $$(T, T^{-1})$$. We have $$p_{M, T}(w\mid s) = p_M(T(w)\mid T(s))$$, and we sample $$w$$ by sequencing $$s$$ into $$\mathbf{x}$$, sampling $$\mathbf{y}$$ from $$M$$ given $$\mathbf{x}$$, and unsequencing $$\mathbf{x}$$ into $$w$$.
 
-An example of how this works is transforming $$s = \text{``I ate a ''}$$ into $$\mathbf{x} = (10, 123, 2)$$, sampling $$12 \sim p_M(y\mid 10, 123, 2), 4 \sim p_M(y\mid 10, 123, 3, 12), 7 \sim p_M(y\mid 10, 123, 3, 2, 4), 71 \sim p_M(10, 123, 3, 2, 4, 7), 1 \sim p_M(10, 123, 3, 2, 4, 7, 71)$$, and unsequencing $$\mathbf{y} = (12, 4, 7, 71)$$ into $$w = \text{``banana at the market''}$$. Next, we show how this works in a code.
+An example of how this works is transforming $$s = \text{"I ate a"}$$ into $$\mathbf{x} = (10, 123, 2)$$, sampling $$12 \sim p_M(y\mid 10, 123, 2)$$, $$4 \sim p_M(y\mid 10, 123, 3, 12)$$, $$7 \sim p_M(y\mid 10, 123, 3, 2, 4)$$, $$71 \sim p_M(10, 123, 3, 2, 4, 7)$$, $$1 \sim p_M(10, 123, 3, 2, 4, 7, 71)$$, and unsequencing $$\mathbf{y} = (12, 4, 7, 71)$$ into $$w = \text{"banana at the market"}$$. Next, we show how this works in a code.
 
 ```python
 #Write an autocomplete function and evaluate on a model
@@ -88,14 +90,14 @@ print(autocomplete(model, 'QUEEN OF WALES'))
 
 # Sequencing, tokenizing and indexing.
 
-Now, how the task of transforming a string into a sequence of integers, which we will call *identifiers* or *ids*, is composed of two parts:
+Now, the task of transforming a string into a sequence of integers, which we will call *identifiers* or *ids*, consists of two parts:
 
-- Splitting the string into words and subwords, which we call *tokens*, using a *tokenization* rule. As in, transforming “I love you” into (”I”, “love”, “you”).
-- Using a lookup table to transform a sequence of *tokens* into a sequence of identifiers using a lookup table.
+- Splitting the string into words and subwords, which we refer to as *tokens*, using a *tokenization* rule. For example, transforming "I love you" into ("I", "love", "you").
+- Using a lookup table to transform a sequence of *tokens* into a sequence of identifiers by assigning a unique *identifier* to each token in our *vocabulary*, which is our list of known tokens.
 
-The second part is relatively trivial: we just associate each token in our *vocabulary*, that is, our list of known tokens, to a unique *identifier*, and use that as a lookup table to transform our sequence of tokens into a sequence of identifiers. Now, if some token ends up not being in our vocabulary, we can associate it to some special unknown identifier.
+The second part is relatively straightforward. We associate each token in our *vocabulary* with a unique *identifier* and use this lookup table to convert our sequence of tokens into a sequence of identifiers. In cases where a token is not found in our vocabulary, we can assign it a special unknown identifier.
 
-The first part is more complicated, and there are many tokenizations algorithms. A good tutorial can be found [here](https://huggingface.co/docs/transformers/tokenizer_summary). However, for the time being, we can assume that each word and each sentence is a token (which *is* a valid tokenization). As for mapping a sequence back, we just invert our lookup table, mapping the “unknown” identifier to a blank sentence or to a “<unk>” symbol or something else, and concatenate our tokens according to some rule (which can be the regular grammar rule for joining words and punctuation). We demonstrate the example of a tokenization (using [spaCy](https://spacy.io/)) below.
+The first part, tokenization, is more complex, and various tokenization algorithms exist. A comprehensive tutorial can be found [here](https://huggingface.co/docs/transformers/tokenizer_summary). However, for now, let's assume that each word and each sentence is treated as a token (which is a valid tokenization approach). When mapping a sequence back, we can simply invert our lookup table, associating the "unknown" identifier with a blank sentence or a `<unk>` symbol, and concatenate our tokens according to a specific rule (such as the regular grammar rule for joining words and punctuation). Below, we provide an example of tokenization using [spaCy](https://spacy.io).
 
 ```python
 #Here, we create a vocabulary from the works of Shakespeare,
@@ -127,21 +129,21 @@ print(detokenizing(vocab.lookup_tokens([5, 20, 10])))
 
 ## Training the sequence model.
 
-Now, we want our model $$M$$ to be a function that, for sequence $$\mathbf{x}^{eval} = (x_1^{eval}, \ldots, x_{n_{eval}}^{eval})$$, outputs $$p(y\mid \mathbf{x}^{eval})$$, for each $$y = 1, 2, \ldots, n_{vocab}$$, so we can sample $$y_{n_{eval}}^{eval} \sim p(y\mid \mathbf{x}^{eval})$$.  If we do that by supervised learning, it means that we should have some $$(\mathbf{x}^{train}, y^{train})$$ pairs to train our model. Now, let’s say that we have a *single s*entence $$\mathbf{x} = (x_1, \ldots, x_n)$$ as our training data. From this, we “infer” that $$(x_1)$$ should output $$(x_2)$$, $$(x_1, x_2)$$ should output $$x_3$$, and so on. So we end up having $$n-1$$ training pairs of the format $$(\mathbf{x}^i, x_{i+1})$$ for $$i = 1, \ldots, n-1$$. We will use that fact to design a neural network $$f_\theta$$ that is function taking finite sequences $$\mathbf{x} = (x_1, \ldots, x_n)$$ and outputting the $$n \times n_{vocab}$$-sized matrix $$f_\theta(\mathbf{x})$$, with elements $$f_\theta(\mathbf{x})_{i, j} = p(j\mid \mathbf{x}^i)$$. Now we need to define a loss function. For sequence $$\mathbf{x}$$, we can use the negative log-likelihood to define our loss $$l$$ for parameters $$\theta$$ as
+Now, our goal is to have our model $$M$$ as a function that, for a given evaluation sequence $$\mathbf{x}^{eval} = (x_1^{eval}, \ldots, x_{n_{eval}}^{eval})$$, outputs $$p(y\mid \mathbf{x}^{eval})$$ for each $$y = 1, 2, \ldots, n_{vocab}$$. This allows us to sample $$y_{n_{eval}}^{eval} \sim p(y\mid \mathbf{x}^{eval})$$. To achieve this through supervised learning, we need training pairs $$(\mathbf{x}^{train}, y^{train})$$ to train our model. Let's consider a single sentence $$\mathbf{x} = (x_1, \ldots, x_n)$$ as our training data. From this, we can infer that $$(x_1)$$ should output $$(x_2)$$, $$(x_1, x_2)$$ should output $$x_3$$, and so on. Therefore, we end up with $$n-1$$ training pairs of the form $$(\mathbf{x}^i, x_{i+1})$$ for $$i = 1, \ldots, n-1$$. We will use this fact to design a neural network $$f_\theta$$ that takes finite sequences $$\mathbf{x} = (x_1, \ldots, x_n)$$ as input and outputs an $$n \times n_{vocab}$$-sized matrix $$f_\theta(\mathbf{x})$$, where the elements are given by $$f_\theta(\mathbf{x})_{i, j} = p(j\mid \mathbf{x}^i)$$. 
+
+Next, we need to define a loss function. For a given sequence $$\mathbf{x}$$, we can use the negative log-likelihood to define our loss function $$l$$ for parameters $$\theta$$ as
 
 $$
 l(\theta;\mathbf{x}) = -\sum_{i=1}^{n-1} \log p(x_{i}\mid \mathbf{x}^{i}) = -\sum_{i=1}^{n-1} \log f_\theta(\mathbf{x})_{i, x_{i}+1}
 $$
 
-Now, to ensure that works, we need to ensure that, when passing $$\mathbf{x}$$ to $$f_\theta$$, the output of $$f_\theta(\mathbf{x})_{i}$$ *only depends on* $$\mathbf{x}^i$$, that is, it should not incorporate any information from subsequent tokens. If not, we will be using it to infer $$x_{i+1}$$ either information from $$x_{i+1}$$ itself or “future” positions, thus in a sense “cheating”.
+To ensure that this approach works, we need to make sure that when passing $$\mathbf{x}$$ to $$f_\theta$$, the output $$f_\theta(\mathbf{x})_{i}$$ *only depends on* $$\mathbf{x}^i$$ and does not incorporate any information from subsequent tokens. In other words, it should not use any information from $$x_{i+1}$$ itself or from "future" positions, as that would be considered "cheating."
 
-Imagining, for now, $$f_\theta(\mathbf{x})$$ as a “magic transformer box”, the schematics of our language model work like the following figure, which ends up predicting that after the sentence “apple banana banana” with 70% of chance, the sentence ends.
-
-
+For now, let's imagine $$f_\theta(\mathbf{x})$$ as a "magic transformer box." The schematics of our language model work as shown in the following figure, which predicts with 70% chance that the sentence ends after the phrase "apple banana banana".
 
 ![diagram4.png]({{site.baseurl}}/assets/figs/lm1/diagram4.png)
 
-In the following, we apply this “magic transformer box” philosophy to train the GPT model on the complete works of Shakespeare (actually 80% of them).
+In the next steps, we will apply this "magic transformer box" philosophy to train the GPT model using the complete works of Shakespeare (actually, just 80% of them).
 
 ```python
 #Create our train and text dataloader.
@@ -189,39 +191,40 @@ for epoch in range(nepochs):
     print(f"Epoch : {epoch}, loss : {min_loss}")
 ```
 
-# Opening the “magic transformer box”.
+# Opening the "magic transformer box".
 
-In a sense, *the following is optional*. A lot of GPT-models can be understood by considering transformers as just a black box, and focusing *how* they are trained. Still, the model has a rich inner architecture, and in other ways it is really important to get what this architecture is.
+In a sense, *the following is optional*. Many GPT models can be understood by considering transformers as black boxes and focusing on *how* they are trained. However, the model has a rich inner architecture, and it can be valuable to understand this architecture.
 
-So, feel free to skip to “Conclusion”, but also feel free to continue reading on.
+So, feel free to skip to the "Conclusion" section, but also feel free to continue reading.
 
 ## Notation
 
-From now on, we will be dealing with tensors of order higher than two, since this simplifies a lot of the notation for transformers. Therefore, we will make use of the Einstein notation, that is, statements such as $$\mathbf{a}_{ij} \mathbf{b}_j$$ equal to $$\sum_j \mathbf{a}_{ij} \mathbf{b}_j$$. We will refer to elements of a tensor by lowercase bold letters such as $$\mathbf{a}$$, and the entire tensor b uppercase letters such as $$\mathbf{A}$$. Moreover, we will use a particular notation to refer to column and row vectors of a matrix. Namely, if $$\mathbf{A}$$ is a matrix (an order 2 tensor), then $$\mathbf{a}_{i \circ}$$ refers to the $$i$$-th row vector of $$\mathbf{A}$$ and $$\mathbf{a}_{\circ j}$$ to the $$j$$-th column vector of of $$\mathbf{A}$$. Similarly, with $$\mathbf{B}$$ is an order (3 tensor), $$\mathbf{b}_{\circ j k}$$ refers to the vector obtained by selecting indexes $$j$$ and $$k$$ in the second and third position, $$\mathbf{b}_{i \circ \circ}$$ to the submatrix by selecting $$i$$ in the first position, and so on (this implies of that $$\mathbf{b}_{\circ \circ \circ} = \mathbf{B}$$). Moreover, $$\mathbf{W}$$ (using some superscript) always refers to some learnable parameter of our layer. Finally, $$\mathbf{1}_{\text{condition}}$$ refers to the function that has value 1 if the *condition* is satisfied, else it has value 0. For instance, $$\mathbf{1}_{i = j}$$ is a function of $$i, j$$ that equals 1 if $$i = j$$, and $$0$$ otherwise.
+From now on, we will be dealing with tensors of order higher than two, as this simplifies the notation for transformers. Hence, we will use the Einstein notation, where statements such as $$\mathbf{a}_{ij} \mathbf{b}_j$$ are equivalent to $$\sum_j \mathbf{a}_{ij} \mathbf{b}_j$$. We will refer to elements of a tensor using lowercase bold letters, such as $$\mathbf{a}$$, and the entire tensor using uppercase letters, such as $$\mathbf{A}$$. Moreover, we will use a specific notation to refer to column and row vectors of a matrix. For example, if $$\mathbf{A}$$ is a matrix (a second-order tensor), $$\mathbf{a}_{i \circ}$$ refers to the $$i$$-th row vector of $$\mathbf{A}$$, and $$\mathbf{a}_{\circ j}$$ refers to the $$j$$-th column vector of $$\mathbf{A}$$. Similarly, if $$\mathbf{B}$$ is a third-order tensor, $$\mathbf{b}_{\circ j k}$$ refers to the vector obtained by selecting indices $$j$$ and $$k$$ in the second and third positions, and $$\mathbf{b}_{i \circ \circ}$$ refers to the submatrix obtained by selecting $$i$$ in the first position. Furthermore, we use $$\mathbf{W}$$ (with superscripts) to denote learnable parameters of our layer. Finally, $$\mathbf{1}_{\text{condition}}$$ refers to the function that has a value of 1 if the *condition* is satisfied, and 0 otherwise. For example, $$\mathbf{1}_{i = j}$$ is a function of $$i$$ and $$j$$ that equals 1 if $$i = j$$ and 0 otherwise.
 
 ## Embedding
 
-Embedding is nothing more than the operation of transforming sequences into vectors determined by a learnable lookup table. That is, assume we have $$n_{vocab}$$ items in our vocabulary and want to associate each token with a $$d$$-dimensional vector. Then we set up a learnable matrix $$\mathbf{W}^e$$ of size $$(n_{vocab}, d)$$ and, for sequence $$\mathbf{x}$$ of size $$n$$, the embedding of $$\mathbf{x}$$ is given by a matrix $$\mathbf{V}$$ of size $$(n, d)$$, whose $$i$$-th row is given by $$\mathbf{v}_{i \circ} = \mathbf{w}^e_{x_i \circ}$$.
+Embedding is the operation of transforming sequences into vectors using a learnable lookup table. Suppose we have $$n_{vocab}$$ items in our vocabulary and we want to associate each token with a $$d$$-dimensional vector. We set up a learnable matrix $$\mathbf{W}^e$$ of size $$(n_{vocab}, d)$$, and for a sequence $$\mathbf{x}$$ of size $$n$$, the embedding of $$\mathbf{x}$$ is given by a matrix $$\mathbf{V}$$ of size $$(n, d)$$, where the $$i$$-th row is given by $$\mathbf{v}_{i \circ} = \mathbf{w}^e_{x_i \circ}$$.
 
-Now, we also need some information about the position of $$i$$ of token $$x_i$$. In the original transformers paper, this is given by a *fixed* vector $$p_i$$ whose $$j$$-th value $$p_{i, j}$$ equals $$\sin \frac{i}{10000^{j/d}}$$ if $$j$$ is even, and $$\cos \frac{i}{10000^{(j-1)/d}}$$ if $$j$$ is odd, and letting $$\mathbf{v}_{i, \circ} = \mathbf{w}^e_{x_i \circ} + p_i$$. Now, we can instead use *learned* positional embeddings for context window of maximum size $$n_{ctx}$$, by letting $$\mathbf{W}^{pos}$$ be a learnable $$(n_{ctx}, d)$$-sized matrix and letting $$\mathbf{v}_{i\circ} = \mathbf{w}^e_{x_i \circ} + \mathbf{w}^{pos}_{i \circ}$$. The total number of parameters will be then either $$dn_{vocab}$$ or $$dn_{vocab} + dn_{ctx}$$, depending on whether positional embedding are learned or fixed.
+Next, we need information about the position of token $$x_i$$. In the original transformers paper, this is achieved using a *fixed* vector $$p_i$$, where the $$j$$-th value $$p_{i, j}$$ is equal to $$\sin \frac{i}{10000^{j/d}}$$ if $$j$$ is even, and $$\cos \frac{i}{10000^{(j-1)/d}$$ if $$j$$ is odd. This is combined with the token embedding by adding the positional embeddings to the corresponding token embeddings, resulting in $$\mathbf{v}_{i, \circ} = \mathbf{w}^e_{x_i \circ} + p_i$$. Alternatively, instead of using fixed positional embeddings, we can use *learned* positional embeddings for a context window of maximum size $$n_{ctx}$$. In this case, we introduce a learnable matrix $$\mathbf{W}^{pos}$$ of size $$(n_{ctx}, d)$$, and the positional embeddings are given by $$\mathbf{v}_{i\circ} = \mathbf{w}^e_{x_i \circ} + \mathbf{w}^{pos}_{i \circ}$$. The total number of parameters will be either $$d n_{vocab}$$ or $$d n_{vocab} + d n_{ctx}$$, depending on whether the positional embeddings are learned or fixed.
 
 ## Unembedding
 
-Now, the transformer operation, to be explained in detail below, will take as an input an embedding matrix $$\mathbf{V}$$ of size $$(n, d)$$ and output another matrix of $$\mathbf{V}’$$ of size $$(n, d)$$. We need then to associate $$\mathbf{v}_{i \circ}$$ with the probability of $$p(x_{i+1}=u\mid \mathbf{x}^i)$$ of the next $$(i+1)$$-th token having value $$u \in [n_{vocab}]$$. For this, we make use of a linear layer with weight matrix $$\mathbf{W}^{u}$$ of size $$(d, n_{vocab})$$ and bias vector $$\mathbf{b}^{u}$$ of size $$(n_{vocab})$$, letting $$\mathbf{v}’_{ij} \to \mathbf{v}’_{ik} \mathbf{w}^{u}_{kj} + \mathbf{b}^u_j$$.  Finally, we apply the softmax function to each row of the resulting vector, resulting in an output matrix $$\mathbf{Y}$$ of size $$(n, n_{vocab})$$, with $$\mathbf{y}_{iu} = p(x_{i+1} = u\mid \mathbf{x}^i)$$. The total number of parameters here will be $$d n_{vocab} + n_{vocab}$$.
+The transformer operation, which will be explained in detail below, takes as input an embedding matrix $$\mathbf{V}$$ of size $$(n, d)$$ and outputs another matrix $$\mathbf{V}'$$ of the same size $$(n, d)$$. We need to associate each $$\mathbf{v}_{i \circ}$$ with the probability $$p(x_{i+1}=u\mid \mathbf{x}^i)$$ of the next token (at position $$i+1$$) having a value $$u \in [n_{vocab}]$$. To achieve this, we employ a linear layer with a weight matrix $$\mathbf{W}^u$$ of size $$(d, n_{vocab})$$ and a bias vector $$\mathbf{b}^u$$ of size $$(n_{vocab})$$. This transformation is given by $$\mathbf{v}_{ij}' = \mathbf{v}_{ik} \mathbf{w}^u_{kj} + \mathbf{b}^u_j$$. Finally, we apply the softmax function to each row of the resulting matrix, yielding an output matrix $$\mathbf{Y}$$ of size $$(n, n_{vocab})$$, where $$\mathbf{y}_{iu} = p(x_{i+1} = u\mid \mathbf{x}^i)$$. The total number of parameters here will be $$d n_{vocab} + n_{vocab}$$.
+
 
 ## Attention
 
-Now we are able to get to the core of the transformer architecture. To begin with, consider the real matrix $$\mathbf{V}$$ of dimension $$(n, d)$$ that results from embedding sequence $$\mathbf{x}$$ in $$d$$ dimensions. An attention layer is one that performs the operation $$\mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{kj}$$, with $$\mathbf{A}$$ being of dimension $$(n, n)$$, such that $$\mathbf{a}_{ik} \geq 0$$ and $$\sum_k \mathbf{a}_{ik} = 1$$. That is, the *attention matrix* $$\mathbf{A}$$ takes to position $$i$$ the weighted mean $$\mathbf{a}_{ik} \mathbf{v}_{k \cdot}$$ of embedding vectors at other positions. Now, $$\mathbf{A}$$ will be given by two other matrices $$\mathbf{Q}$$ (query matrix) and $$\mathbf{C}$$ (key matrix) of dimensions $$(n, d^q)$$ such that $$\mathbf{a}_{ik}$$ is informally a measure of “similarity” between $$\mathbf{q}_{i\circ}$$ and $$\mathbf{c}_{k\circ}$$.  Now, in transformers, this similarity is given by a “score function” $$\operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) = \left<\mathbf{q}_{i\cdot}, \mathbf{c}_{k\cdot}\right>/\sqrt{d^q}$$. The idea is that similarity is measured by an inner product, with a normalization factor $$\sqrt{d^q}$$ being used for stability. Now, given this score function, we simply apply a softmax function through each *row* of the score matrix, giving $$\mathbf{a}_{ik} = \frac{e^{\operatorname{score}(\mathbf{q}_{i\circ}, \mathbf{c}_{k \circ})}}{\sum_k e^{\operatorname{score}(\mathbf{q}_{i\circ}, \mathbf{c}_{k \circ})}}$$.Therefore, attention is an operation $$\mathbf{V}' = \operatorname{attn}(\mathbf{V}, \mathbf{Q}, \mathbf{C})$$ with $$\mathbf{V}’$$ being of dimension $$(n, d)$$.
+Now we can delve into the core of the transformer architecture. Let's start by considering the real matrix $$\mathbf{V}$$ of dimensions $$(n, d)$$ obtained from embedding the sequence $$\mathbf{x}$$ in $$d$$ dimensions. An attention layer performs the operation $$\mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{kj}$$, where $$\mathbf{A}$$ is a matrix of dimensions $$(n, n)$$, such that $$\mathbf{a}_{ik} \geq 0$$ and $$\sum_k \mathbf{a}_{ik} = 1$$. In other words, the *attention matrix* $$\mathbf{A}$$ computes the weighted mean $$\mathbf{a}_{ik} \mathbf{v}_{k \cdot}$$ of the embedding vectors at other positions for each position $$i$$. The attention matrix $$\mathbf{A}$$ is determined by two other matrices: the query matrix $$\mathbf{Q}$$ and the key matrix $$\mathbf{C}$$, both of dimensions $$(n, d^q)$$, where $$\mathbf{a}_{ik}$$ informally measures the "similarity" between $$\mathbf{q}_{i\circ}$$ and $$\mathbf{c}_{k\circ}$$. In transformers, this similarity is defined by the "score function" $$\operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) = \left<\mathbf{q}_{i\cdot}, \mathbf{c}_{k\cdot}\right>/\sqrt{d^q}$$. The idea is to measure similarity using an inner product, normalized by $$\sqrt{d^q}$$ for stability. The score function is then transformed by applying the softmax function to each *row* of the score matrix, yielding $$\mathbf{a}_{ik} = \frac{e^{\operatorname{score}(\mathbf{q}_{i\circ}, \mathbf{c}_{k \circ})}}{\sum_k e^{\operatorname{score}(\mathbf{q}_{i\circ}, \mathbf{c}_{k \circ})}}$$. Therefore, the attention operation is defined as $$\mathbf{V}' = \operatorname{attn}(\mathbf{V}, \mathbf{Q}, \mathbf{C})$$, where $$\mathbf{V}'$$ has dimensions $$(n, d)$$.
 
-Now, what are the query and the key matrix? By doing *self-attention*, we simply make $$\mathbf{Q}$$ and $$\mathbf{K}$$ depend on $$\mathbf{V}$$ itself from a learnable linear operation on each *row* of $$\mathbf{V}$$, that is, each embedding vector. So we have $$\mathbf{q}_{ij} = \mathbf{v}_{il} \mathbf{w}^q_{lj}$$ and $$\mathbf{c}_{ij} = \mathbf{v}_{il} \mathbf{w}^c_{lj}$$, where $$\mathbf{W}^q$$ and $$\mathbf{W}^c$$ are both of dimension $$d \times d^q$$. Moreover, we also make use of two learnable linear operations acting on $$\mathbf{V}$$ itself, first one defined by a matrix $$\mathbf{W}^v$$ with dimension $$d \times d^v$$ and the second one by a matrix $$\mathbf{W}^o$$ with dimension $$d^v \times d$$. Therefore, self-attention is an operation $$\mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{il} \mathbf{w}^v_{lm} \mathbf{w}^o_{mj}$$, with $$\mathbf{a}_{ik} =  \operatorname{softmax}_k \left[ \left<\mathbf{v}_{il} \mathbf{w}^q_{l\cdot}, \mathbf{v}_{kl} \mathbf{w}^c_{l\cdot} \right>/d' \right]$$, and we have an operator $$\mathbf{V}’ = \operatorname{sattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o)$$.
+Now, what are the query matrix and the key matrix? In self-attention, the query matrix $$\mathbf{Q}$$ and the key matrix $$\mathbf{K}$$ are derived from $$\mathbf{V}$$ itself using learnable linear operations on each *row* of $$\mathbf{V}$$, which represents each embedding vector. Specifically, we have $$\mathbf{q}_{ij} = \mathbf{v}_{il} \mathbf{w}^q_{lj}$$ and $$\mathbf{c}_{ij} = \mathbf{v}_{il} \mathbf{w}^c_{lj}$$, where $$\mathbf{W}^q$$ and $$\mathbf{W}^c$$ are both matrices of dimensions $$d \times d^q$$. Additionally, we use two other learnable linear operations on $$\mathbf{V}$$ itself. The first operation is defined by a matrix $$\mathbf{W}^v$$ of dimensions $$d \times d^v$$, and the second operation is defined by a matrix $$\mathbf{W}^o$$ of dimensions $$d^v \times d$$. Consequently, the self-attention operation can be expressed as $$\mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{il} \mathbf{w}^v_{lm} \mathbf{w}^o_{mj}$$, where $$\mathbf{a}_{ik} =  \operatorname{softmax}_k \left[ \left<\mathbf{v}_{il} \mathbf{w}^q_{l\cdot}, \mathbf{v}_{kl} \mathbf{w}^c_{l\cdot} \right>/d' \right]$$. We denote the operator as $$\mathbf{V}’ = \operatorname{sattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o)$$.
 
-Now, there is one key piece missing here. Remember that we always want an output corresponding to the $$i$$-th token to only depend on tokens $$k \leq i$$. Now, the above formulation does *not* ensure that, since we have in general that $$\mathbf{a}_{ik}$$ can be greater than zero even if $$k > i$$, so the $$i$$-th position uses information from positions above. Now, the solution here is to use a *mask* in these cases, so that we enforce $$\mathbf{a}_{ik} = 0$$. One solution is to simply modify the score function $$\operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ})$$ to a *causal* score function $$\operatorname{mscore}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) = \operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) \mathbf{1}_{k \leq i}$$, zeroing out elements $$k > i$$. Leaving the rest as it is, we have an operator $$\mathbf{V}’ = \operatorname{msattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o)$$ that satisfy our requirement. Also, in GPT-3, some layers use a *banded causal mask*, that is, for some band size $$\beta$$, we not only zero out elements $$k > i$$, but also elements that $$i - k > \beta$$. So, each token only looks at some limited elements before it. In the figure below, we illustrate masked attention, for no mask, a causal mask, and a banded causal mask.
+However, there is an essential consideration missing here. We want the output corresponding to the $$i$$-th token to depend only on tokens $$k \leq i$$. The previous formulation does *not* ensure this because in general, $$\mathbf{a}_{ik}$$ can be greater than zero even if $$k > i$$, meaning that the $$i$$-th position utilizes information from positions ahead. To address this, we need to introduce a *mask* in such cases to enforce $$\mathbf{a}_{ik} = 0$$. One approach is to modify the score function $$\operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ})$$ to a *causal* score function $$\operatorname{mscore}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) = \operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) \mathbf{1}_{k \leq i}$$, which zeroes out elements where $$k > i$$. With this modification, we define the operator $$\mathbf{V}’ = \operatorname{msattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o)$$ to satisfy our requirement. Furthermore, in GPT-3, certain layers use a *banded causal mask*, where in addition to zeroing out elements $$k > i$$, elements where $$i - k > \beta$$ are also zeroed out. This ensures that each token only attends to a limited number of preceding elements. The figure below illustrates masked attention with no mask, a causal mask, and a banded causal mask.
 
 ![Attention with causal mask, banded mask, and banded causal mask]({{site.baseurl}}/assets/figs/lm1/attnmask2.png)
 
-Attention with causal mask, banded mask, and banded causal mask
+Masked attention with causal mask, banded mask, and banded causal mask.
 
-Now, all formulations above apply to a *single attention head.* However, the insight of multi-head attention is that we can repeat that for $$n_{h}$$ heads, by simply letting each operation $$\operatorname{msattn}$$ depending on different learnable parameters, and summing up the resulting vector. So, letting $$\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o$$ being order 3 tensors with dimensions $$(n_h, d, d^q), (n_h, d, d^q), (n_h, d, d^v), (n_h, d^v, d)$$, our multi-head attention is given by
+All the formulations mentioned so far apply to a *single attention head*. However, the concept of multi-head attention reveals that we can repeat this process for $$n_h$$ attention heads. Each attention head operates independently by having different learnable parameters. The outputs of all the attention heads are then summed up, resulting in the final output matrix. In this case, let $$\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o$$ be order 3 tensors with dimensions $$(n_h, d, d^q), (n_h, d, d^q), (n_h, d, d^v), (n_h, d^v, d)$$, respectively. Consequently, the multi-head attention operation is given by
 
 $$
 \mathbf{V’} = \operatorname{mhmsattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o) = \sum_l \operatorname{msattn}(\mathbf{V};\mathbf{w}^q_{l \circ \circ}, \mathbf{w}^c_{l \circ \circ}, \mathbf{w}^v_{l \circ \circ}, \mathbf{w}^o_{l \circ \circ}).
@@ -231,7 +234,9 @@ $$
 
 Masked multi-head attention with two heads.
 
-An implementation of masked multi-head attention is shown below.
+The implementation of masked multi-head attention is demonstrated below.
+
+
 
 ```python
 def dot_product_attn(queries, keys, values, mask=None):
@@ -291,35 +296,39 @@ class MultiHeadAttention(torch.nn.Module):
         return new_values
 ```
 
-# The transformer block.
+Now, there are remaining components necessary to create a complete transformer block for our language model. These additional components are relatively straightforward compared to the attention block itself.
 
-Now, given multihead masked self-attention, there are some other pieces necessary to complete a full transformer block of our language model. Our language model is then going to be an embedding layer, the transformer block repeated a number of times and a linear output layer. Fortunately, those other pieces are much simpler than the attention block itself, so we go through them relatively quickly.
+Before we proceed, it is important to note that only the attention mechanism exchanges information between token positions. We specifically designed the masked multi-head attention to meet the requirement of not using future information. If other components were to exchange information between tokens, we would need to ensure that they also adhere to this requirement or risk violating it.
 
-Before we move on, it is imperative to notice that *only attention will exchange information between token positions*. The rationale here is that we *designed* our masked multi-head attention so that it satisfies the “not use future information” requirement. If our other components were to exchange information between tokens, we would either have to ensure they also satisfied that requirement, or lose that condition.
+### The Feedforward Neural Network
 
-### The feedforward neural network.
-
-The second main component of a transformer block as feedforward neural network acting on a matrix $$\mathbf{V}$$ of dimension $$(n, d)$$ *that is shared across all positions*. That is, we have a parameterized function $$f_{FNN}: \mathbb{R}^d \to \mathbb{R}^d$$ that will act on each individual row $$\mathbf{v}_{i \circ}$$ of $$\mathbf{V}$$. This function is a feedforward neural network with a single hidden layer of dimension $$d^{f}$$. That is, letting $$\operatorname{act}$$ be an element-wise activation function (that is usually the $$\operatorname{relu}$$ but can also be the $$\operatorname{gelu}$$), and $$\mathbf{W}^a, \mathbf{W}^b$$ be learnable matrices of size $$(d, d^f), (d^f, d)$$, and $$\mathbf{b}^a, \mathbf{b}^b$$ learnable vectors of size $$(d^f, d)$$, we have that
+The second major component of a transformer block is a feedforward neural network (FNN) that operates on a matrix $$\mathbf{V}$$ of dimensions $$(n, d)$$. The FNN shares the same parameters across all positions in the matrix. It can be defined as a parameterized function $$f_{FNN}: \mathbb{R}^d \to \mathbb{R}^d$$ that acts on each row $$\mathbf{v}_{i \circ}$$ of $$\mathbf{V}$$. The function consists of a feedforward neural network with a single hidden layer of dimension $$d^f$$. In this formulation, the activation function $$\operatorname{act}$$ is applied element-wise and is typically a rectified linear unit (ReLU) or a Gaussian Error Linear Unit (GELU). The learnable matrices $$\mathbf{W}^a$$ and $$\mathbf{W}^b$$ have dimensions $$(d, d^f)$$ and $$(d^f, d)$$, respectively. Additionally, there are learnable vectors $$\mathbf{b}^a$$ and $$\mathbf{b}^b$$ of size $$(d^f, d)$$. The FNN operation can be expressed as:
 
 $$
 f_{FNN}(\mathbf{V};\mathbf{W}^a, \mathbf{W}^b) = \operatorname{act}(\mathbf{v}_{ik} \mathbf{w}^a_{kl} + \mathbf{b}_l^a)\mathbf{w}^b_{kj} + \mathbf{b}_l^b.
 $$
 
-### Layer normalization and dropout
+### Layer Normalization and Dropout
 
-Layer normalization is the operation given by, for each individual row $$\mathbf{v}_{i \circ}$$ of $$\mathbf{V}$$, calculating the mean $$\mu_i$$ and standard deviation $$\sigma_i$$ of $$\mathbf{v}_{i \circ}$$, normalize $$\mathbf{v}_{i \circ}$$ using $$\mu_i, \sigma_i$$, and apply a learnable affine transformation that is *shared across all positions*. That is, letting $$\mu_i = \frac{1}{d} \sum_{j} \mathbf{v}_{ij}$$ and $$\sigma_i = \sqrt{\frac{1}{d} \sum_{j} (\mathbf{v}_{ij} - \mu_i)^2}$$, and using parameters $$\mathbf{W}^{LN, a}, \mathbf{W}^{LN, b}$$   of dimension $$(d)$$, for each item $$\mathbf{v}_{ij}$$, we apply the transformation $$\mathbf{v}_{ij} \to \mathbf{w}^{LN, a}_{j} \frac{\mathbf{v}_{ij} - \mu_i}{\sigma_i + \epsilon} + \mathbf{w}_j^{LN, b}$$.
+Layer normalization is an operation applied to each row $$\mathbf{v}_{i \circ}$$ of the matrix $$\mathbf{V}$$. It calculates the mean $$\mu_i$$ and standard deviation $$\sigma_i$$ of $$\mathbf{v}_{i \circ}$$, normalizes $$\mathbf{v}_{i \circ}$$ using $$\mu_i$$ and $$\sigma_i$$, and applies a learnable affine transformation shared across all positions. The normalization process involves computing the mean $$\mu_i = \frac{1}{d} \sum_{j} \mathbf{v}_{ij}$$ and the standard deviation $$\sigma_i = \sqrt{\frac{1}{d} \sum_{j} (\mathbf{v}_{ij} - \mu_i)^2}$$. Parameters $$\mathbf{W}^{LN, a}$$ and $$\mathbf{W}^{LN, b}$$ of dimension $$(d)$$ are used for the affine transformation. Each element $$\mathbf{v}_{ij}$$ is transformed as follows:
 
-Similarly, the dropout is a standard operation in neural networks in *training* that, for each element of the input, set that input to $$0$$ with probability $$p$$, and scales the input by a factor of $$\frac{1}{1-p}$$.
+$$
+\mathbf{v}_{ij} \to \mathbf{w}^{LN, a}_{j} \frac{\mathbf{v}_{ij} - \mu_i}{\sigma_i + \epsilon} + \mathbf{w}_j^{LN, b}.
+$$
 
-### Putting the block together.
+Similarly, dropout is a common operation used in neural networks during training. It randomly sets each input element to 0 with a probability of $$p$$ and scales the remaining inputs by a factor of $$\frac{1}{1-p}$$.
 
-Now, we have all the pieces to create our transformer block. First, we will wrap both the attention block $$\operatorname{mhmsattn}$$ and the feedforward neural network block $$f_{FNN}$$ with an layer normalization on the input and a dropout on the output, creating the blocks $$\operatorname{block}_1 = \operatorname{drop} \odot \operatorname{mhmsattn} \odot \operatorname{ln}$$ and $$\operatorname{block}_2 = \operatorname{drop} \odot f_{FNN} \odot \operatorname{ln}$$. Now, we will connect these through residual connections with the input $$\mathbf{V}$$, with the attention block first and the feedforward block second, creating a full transformer block
+### Putting the Block Together
+
+With all the components in place, we can now assemble the transformer block. First, we apply layer normalization to the input $$\mathbf{V}$$ and then perform dropout on the output. These steps are applied to both the attention block $$\operatorname{block}_1$$ and the feedforward neural network block $$\operatorname{block}_2$$. We connect the blocks to the input $$\mathbf{V}$$ using residual connections, which sum the output of each block with the input. The resulting transformer block is defined as:
 
 $$
 \operatorname{transblock}(\mathbf{V}) = \mathbf{V} + \operatorname{block}_1(\mathbf{V}) + \operatorname{block}_1(\operatorname{block}_2(\mathbf{V})).
 $$
 
-An implementation of the attention block (here called encoder block) is shown below.
+This formulation ensures that the output of the transformer block depends on the input and the outputs of both the attention and feedforward blocks. By stacking multiple transformer blocks together, we can create a deeper and more expressive model.
+
+Below is an implementation of the transformer block, where the attention block is referred to as the "encoder block". 
 
 ```python
 class LayerNorm(torch.nn.Module):
@@ -362,31 +371,31 @@ class EncoderLayer(torch.nn.Module):
 
 A transformer decoder block
 
-Finally, it is useful to have in the head how many learnable parameters a transformer block have. Assuming that our multi-head attention has $$n_h$$ heads, input dimension $$d$$, value projection dimension $$d^v$$, and key/query dimension of $$d^q$$, we find that the number of parameters in multihead attention equals $$2 n_h d(d^v + d^q)$$. Our feedforward neural network with a $$d^f$$-sized hidden layer will have will have $$2 d d^f + d + d^f$$, and each layer normalization will have $$2d$$ parameters, bringing the total of parameters to $$n_{block} = 2n_hd(d^v + d^q) + 2dd^f + d + d^f + 9d$$. By default, GPT-3 lets $$d$$ be a number divisible by $$n_h$$, $$d^v, d^q = d/n_h$$ and $$d^f = 4d$$, thus simplifying our formula to $$n_{block} = 12d^2 + 9d$$.
+Finally, it is useful to count the number of learnable parameters in a transformer block. Assuming that our multi-head attention has $$n_h$$ heads, an input dimension of $$d$$, value projection dimension of $$d^v$$, and key/query dimension of $$d^q$$, we can calculate the number of parameters in the multi-head attention as $$2n_h d(d^v + d^q)$$. The feedforward neural network with a hidden layer of size $$d^f$$ will have $$2d d^f + d + d^f$$ parameters. Each layer normalization operation will have $$2d$$ parameters. Considering these components, the total number of parameters in a transformer block is given by $$n_{block} = 2n_h d(d^v + d^q) + 2d d^f + d + d^f + 4d$$. In GPT-3, the default values are typically set as follows: $$d$$ is divisible by $$n_h$$, $$d^v$$ and $$d^q$$ are both equal to $$d/n_h$$, and $$d^f = 4d$$. Under these default settings, the formula for the number of parameters simplifies to $$n_{block} = 12d^2 + 9d$$.
 
-## The full sequence model neural network.
+## The Full Sequence Model
 
-Putting it all together is simple: we simply stack sequentially an embedding + positional embedding layer, $$n_T$$ transformers block, a *final layer normalization* block, and an unembedding block. Letting our architecture be as following.
+To construct the full sequence model, we stack the following components sequentially: an embedding layer, positional embedding layer, $$n_T$$ transformer blocks, a final layer normalization block, and an unembedding block. The architecture can be visualized as shown below:
 
 ![diagram3.jpg]({{site.baseurl}}/assets/figs/lm1/diagram3.jpg)
 
-The total number of parameters will therefore be
+The total number of parameters in the model can be calculated as:
 
 $$
-n_{block} = 2n_hd(d^v + d^q) + 2dd^f + d + d^f + 4d \\
+n_{block} = 2n_h d(d^v + d^q) + 2d d^f + d + d^f + 4d \\
 n_{tr} = n_T n_{block} + 2d \\
-n_{embed} = dn_{vocab} + d n_{ctx} \\
-n_{unembed} = dn_{vocab} + n_{vocab} \\
+n_{embed} = d n_{vocab} + d n_{ctx} \\
+n_{unembed} = d n_{vocab} + n_{vocab} \\
 n_{params} = n_{tr} + n_{embed} + n_{unembed},
 $$
 
-dropping the $$d n_{ctx}$$ term if fixed positional embedding is used. If we consider the default setting as in GPT-3, we find that
+where $$n_{block}$$ represents the number of parameters in a single transformer block, $$n_{tr}$$ represents the total number of parameters in the transformer blocks, $$n_{embed}$$ represents the number of parameters in the embedding layers, $$n_{unembed}$$ represents the number of parameters in the unembedding layer. The term $$d n_{ctx}$$ is dropped if a fixed positional embedding is used. Considering the default settings of GPT-3, we can simplify the formula to:
 
 $$
 n_{params} = n_T(12d^2 + 9d) + 2d + n_{vocab}(2d + 1) + d n_{ctx}.
 $$
 
-A parameter counting code is as such
+You can use the following code to count the number of parameters:
 
 ```python
 def subsnone(x, val):
@@ -486,14 +495,15 @@ class GPT(torch.nn.Module):
 
 # Conclusion.
 
-In real life, it is very unlikely that you will train a language model from scratch. More realistically, you would pick a pretrained model from a place such as [HuggingFace](https://huggingface.co/) and fine-tune it. Or just use it as it is. Or just use [ChatGPT](https://chat.openai.com/chat). Still, it is useful to know what is going on behind the scene.
+In real life, it is highly unlikely that you would train a language model from scratch. More commonly, you would choose a pretrained model from sources like [HuggingFace](https://huggingface.co/) and fine-tune it to suit your specific task, or directly utilize it as it is. Alternatively, you could make use of existing language models like [ChatGPT](https://chat.openai.com/chat). Nevertheless, understanding the underlying mechanisms is valuable.
 
-Is that the end of history? For GPT-3, which is the base of models such as ChatGPT, it is almost so. The main differences are
+Is this the end of the story? For GPT-3, which serves as the foundation for models such as ChatGPT, it is almost the case. The key differences lie in:
 
-- *Scale*: I cannot stress this enough. GPT-3 is monstrously big. In the [original paper](https://arxiv.org/pdf/2005.14165.pdf), it has a vocabulary size of $$n_{vocab} = 50257$$, a context window size of $$n_{ctx} = 2048$$, and the largest model uses $$n_T = 96, d=12288, n_h=96$$, giving a total number of parameters on the order of 175 billion (more exactly, I estimated $$n_{params} = 175223784799$$). Moreover, the training data is monstrous, with the batch size for the largest model being 3.8 milllion items, with total token size in training amounting to 300 billions tokens, taken for instance, from the [entire Wikipedia](https://www.wikipedia.org/) or from a monstrous [web crawling database](https://commoncrawl.org/). Training in such a scale is a large engineering endeavor, and the training costs on the order of [millions of dollars](https://heits.digital/articles/gpt3-overview).
-- *Sparse attention mask:*. Instead of using the full causal mask, GPT-3 alternates between the full causal mask and the *banded* causal mask. This allows for efficient computation of the banded causal mask layers.
+- *Scale*: The sheer scale of GPT-3 cannot be overstated. In the [original paper](https://arxiv.org/pdf/2005.14165.pdf), it boasts a vocabulary size of $$n_{vocab} = 50257$$ and a context window size of $$n_{ctx} = 2048$$. The largest model utilizes $$n_T = 96$$, $$d=12288$$, and $$n_h=96$$, resulting in an astounding total number of parameters on the order of 175 billion (more precisely, estimated as $$n_{params} = 175223784799$$). Moreover, the training data is colossal, with the largest model trained on batches containing 3.8 million items and a total token count of 300 billion tokens, drawn from extensive sources like the [complete Wikipedia](https://www.wikipedia.org/) or extensive web crawling databases like [Common Crawl](https://commoncrawl.org/). Training a model of this magnitude is a significant engineering endeavor, accompanied by training costs reaching millions of dollars.
 
-And that’s it. You can use GPT-3 in the [OpenAI playground](https://beta.openai.com/playground), if you use *davinci*. However, a *very* important point, that needs to be stressed, is that **GPT-3 is not ChatGPT**. Let's repeat that. **GPT-3 is not ChatGPT**. To stress this, let's make the same prompt in the opening paragraph now to pure GPT-3 *davinci*. In bold is the initial prompt.
+- *Sparse Attention Mask*: GPT-3 departs from using a full causal mask and instead incorporates a *banded* causal mask, alternating between the two. This enables efficient computation of the banded causal mask layers.
+
+That concludes our exploration. You can access GPT-3 in the [OpenAI playground](https://beta.openai.com/playground) using the *davinci* model. However, it is crucial to emphasize that **GPT-3 is not ChatGPT**. Let's reiterate that: **GPT-3 is not ChatGPT**. To emphasize this point, let's revisit the initial prompt in the opening paragraph, this time using pure GPT-3 *davinci*. The initial prompt is highlighted in bold.
 
 > **Chat, write to me a layman paragraph preceding a tutorial on language models, that motivates on why the reader should be interested in language models. Make it as engaging as possible.**
 >
@@ -523,8 +533,8 @@ And that’s it. You can use GPT-3 in the [OpenAI playground](https://beta.opena
 >
 > Write down a paragraph
 
-Pure GPT-3 has written something coherent, but it does not care at all whether it is answering my request. GPT-3 is like a superintelligent child, in the sense that it knows a lot of things, it just does not care about what *you* want.
+Pure GPT-3 is capable of generating coherent text, but it lacks the ability to specifically address your requests. It resembles a highly intelligent child who possesses vast knowledge but lacks concern for fulfilling your specific desires.
 
-Compare to ChatGPT, or even more recent models such as *text-davinci-003*, which answers my request much better. In a sense, ChatGPT is
-GPT-3 when "tamed", using a particular procedure, called *reinforcement learning from human feedback* (RLHF). The objective of the second part (to be coming soon) is to explain this technique, getting us from GPT-3 to ChatGPT.
+In comparison, models like ChatGPT, and even more recent ones like *text-davinci-003*, excel at addressing user requests more effectively. ChatGPT can be viewed as a "tamed" version of GPT-3, achieved through a specific technique called *reinforcement learning from human feedback* (RLHF). The upcoming second part of this discussion aims to explain this technique, bridging the gap between GPT-3 and ChatGPT.
+
 I

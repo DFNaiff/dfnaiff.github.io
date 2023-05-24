@@ -164,7 +164,6 @@ let gridSpacingInput;
 
 // Storing data
 let totalEnergy = [];
-let energyPlotHeight = 100;
 
 // Tracing variables
 let pastPositions = [];
@@ -188,9 +187,9 @@ function restartSimulation() {
   }
 
   if (!isNaN(newWidth) && !isNaN(newHeight)) {
-    resizeCanvas(newWidth, newHeight + energyPlotHeight);
+    resizeCanvas(newWidth, newHeight);
     box.width = width;
-    box.height = height - energyPlotHeight;
+    box.height = height;
   }
 
   if (!isNaN(numParticles) && !isNaN(newK) && !isNaN(newD) && !isNaN(newMass) && !isNaN(newDt) && !isNaN(newB) && !isNaN(initialSpeed)) {    k = newK;
@@ -232,7 +231,7 @@ function setup() {
   }
 
   // Set canvas size to 400x400
-  resizeCanvas(300, 300 + energyPlotHeight);
+  resizeCanvas(300, 300);
 
   // Get user interface elements
   numParticlesInput = select('#num-particles');
@@ -271,7 +270,7 @@ function computeElectricField(point, charges) {
 function draw() {
    background(0); // Set background to black
    push();
-    translate((width - box.width) / 2, (height - box.height - energyPlotHeight) / 2);
+    translate((width - box.width) / 2, (height - box.height) / 2);
     // Clear the canvas
     background(0);
     // Draw the charged box
@@ -318,7 +317,6 @@ function draw() {
       drawElectricField(gridSpacing, B);
     }
 
-    drawEnergyPlot(totalEnergy, energyPlotHeight);
     pop();
   }
 
@@ -360,30 +358,7 @@ function drawElectricField(gridSpacing, B) {
   }
 }
 
-function drawEnergyPlot(totalEnergy, plotHeight) {
-    // Draw the plot background
-    fill(0);
-    noStroke();
-    rect(0, height - plotHeight, width, plotHeight);
-  
-    // Set up the plot style
-    stroke(0, 0, 255);
-    strokeWeight(1);
-    noFill();
-  
-    // Scale the plot to fit in the plot area
-    let maxEnergy = Math.max(...totalEnergy);
-    let scaleY = plotHeight / maxEnergy;
-  
-    // Draw the energy plot
-    beginShape();
-    for (let i = 0; i < totalEnergy.length; i++) {
-      vertex(width * (i / maxEnergyDataPoints), height - totalEnergy[i] * scaleY);
-    }
-    endShape();
-  }
-
-  function resizeCanvasAndToggleFullscreen() {
-    let fs = fullscreen();
-    fullscreen(!fs);
-  }
+function resizeCanvasAndToggleFullscreen() {
+  let fs = fullscreen();
+  fullscreen(!fs);
+}
