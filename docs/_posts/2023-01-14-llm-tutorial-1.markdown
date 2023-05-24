@@ -536,5 +536,3 @@ That concludes our exploration. You can access GPT-3 in the [OpenAI playground](
 Pure GPT-3 is capable of generating coherent text, but it lacks the ability to specifically address your requests. It resembles a highly intelligent child who possesses vast knowledge but lacks concern for fulfilling your specific desires.
 
 In comparison, models like ChatGPT, and even more recent ones like *text-davinci-003*, excel at addressing user requests more effectively. ChatGPT can be viewed as a "tamed" version of GPT-3, achieved through a specific technique called *reinforcement learning from human feedback* (RLHF). The upcoming second part of this discussion aims to explain this technique, bridging the gap between GPT-3 and ChatGPT.
-
-I
