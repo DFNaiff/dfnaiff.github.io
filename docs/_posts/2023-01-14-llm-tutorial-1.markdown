@@ -11,6 +11,16 @@ categories:
 
 This text has been revised and edited by ChatGPT 3.5 to improve grammar and overall structure.
 
+# Update (25/05)
+
+
+Some links that I recommend, that are likely better than what I've written here:
+
+- [Chapter 1: Transformers](https://github.com/jacobhilton/deep_learning_curriculum/blob/master/1-Transformers.md) of Jacob Hinton's deep learning curriculum. Also, all the links inside it. I *strongly* recommend doing the exercise, which is exactly what I've done below.
+- [Transformer Circuits](https://transformer-circuits.pub/2021/framework/index.html) by Anthropic, in particular the "Transformer Overview" section.
+- [GPT-3 Paper](https://arxiv.org/abs/2005.14165) and [InstructGPT Paper](https://arxiv.org/abs/2203.02155).
+
+
 # Preamble
 
 While delving deeper into the study of language models, I am currently following the curriculum developed by Jacob Hilton, which can be found at [this GitHub repository](https://github.com/jacobhilton/deep_learning_curriculum). The initial exercise within this curriculum involves building a language model from scratch and training it on the works of Shakespeare.
