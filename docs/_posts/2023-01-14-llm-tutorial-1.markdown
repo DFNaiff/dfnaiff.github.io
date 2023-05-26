@@ -205,26 +205,126 @@ From now on, we will be dealing with tensors of order higher than two, as this s
 
 Embedding is the operation of transforming sequences into vectors using a learnable lookup table. Suppose we have $$n_{vocab}$$ items in our vocabulary and we want to associate each token with a $$d$$-dimensional vector. We set up a learnable matrix $$\mathbf{W}^e$$ of size $$(n_{vocab}, d)$$, and for a sequence $$\mathbf{x}$$ of size $$n$$, the embedding of $$\mathbf{x}$$ is given by a matrix $$\mathbf{V}$$ of size $$(n, d)$$, where the $$i$$-th row is given by $$\mathbf{v}_{i \circ} = \mathbf{w}^e_{x_i \circ}$$.
 
-Next, we need information about the position of token $$x_i$$. In the original transformers paper, this is achieved using a *fixed* vector $$p_i$$, where the $$j$$-th value $$p_{i, j}$$ is equal to $$\sin \frac{i}{10000^{j/d}}$$ if $$j$$ is even, and $$\cos \frac{i}{10000^{(j-1)/d}$$ if $$j$$ is odd. This is combined with the token embedding by adding the positional embeddings to the corresponding token embeddings, resulting in $$\mathbf{v}_{i, \circ} = \mathbf{w}^e_{x_i \circ} + p_i$$. Alternatively, instead of using fixed positional embeddings, we can use *learned* positional embeddings for a context window of maximum size $$n_{ctx}$$. In this case, we introduce a learnable matrix $$\mathbf{W}^{pos}$$ of size $$(n_{ctx}, d)$$, and the positional embeddings are given by $$\mathbf{v}_{i\circ} = \mathbf{w}^e_{x_i \circ} + \mathbf{w}^{pos}_{i \circ}$$. The total number of parameters will be either $$d n_{vocab}$$ or $$d n_{vocab} + d n_{ctx}$$, depending on whether the positional embeddings are learned or fixed.
+Next, we need information about the position of token $$x_i$$. In the original transformers paper, this is achieved using a *fixed* vector $$p_i$$, where the $$j$$-th value $$p_{i, j}$$ is equal to $$\sin \frac{i}{10000^{j/d}}$$ if $$j$$ is even, and $$\cos \frac{i}{10000^{(j-1)/d}}$$ if $$j$$ is odd. This is combined with the token embedding by adding the positional embeddings to the corresponding token embeddings, resulting in
+
+$$
+\mathbf{v}_{i, \circ} = \mathbf{w}^e_{x_i \circ} + p_i.
+$$
+
+Alternatively, instead of using fixed positional embeddings, we can use *learned* positional embeddings for a context window of maximum size $$n_{ctx}$$. In this case, we introduce a learnable matrix $$\mathbf{W}^{pos}$$ of size $$(n_{ctx}, d)$$, and the positional embeddings are given by 
+
+$$
+\mathbf{v}_{i\circ} = \mathbf{w}^e_{x_i \circ} + \mathbf{w}^{pos}_{i \circ}.
+$$ 
+
+The total number of parameters here will be either $$d n_{vocab}$$, if positional embeddings are fixed, or $$d n_{vocab} + d n_{ctx}$$, if positional embeddings are learned.
 
 ## Unembedding
 
-The transformer operation, which will be explained in detail below, takes as input an embedding matrix $$\mathbf{V}$$ of size $$(n, d)$$ and outputs another matrix $$\mathbf{V}'$$ of the same size $$(n, d)$$. We need to associate each $$\mathbf{v}_{i \circ}$$ with the probability $$p(x_{i+1}=u\mid \mathbf{x}^i)$$ of the next token (at position $$i+1$$) having a value $$u \in [n_{vocab}]$$. To achieve this, we employ a linear layer with a weight matrix $$\mathbf{W}^u$$ of size $$(d, n_{vocab})$$ and a bias vector $$\mathbf{b}^u$$ of size $$(n_{vocab})$$. This transformation is given by $$\mathbf{v}_{ij}' = \mathbf{v}_{ik} \mathbf{w}^u_{kj} + \mathbf{b}^u_j$$. Finally, we apply the softmax function to each row of the resulting matrix, yielding an output matrix $$\mathbf{Y}$$ of size $$(n, n_{vocab})$$, where $$\mathbf{y}_{iu} = p(x_{i+1} = u\mid \mathbf{x}^i)$$. The total number of parameters here will be $$d n_{vocab} + n_{vocab}$$.
+The transformer operation, which will be explained in detail below, takes as input an embedding matrix $$\mathbf{V}$$ of size $$(n, d)$$ and outputs another matrix $$\mathbf{V}'$$ of the same size $$(n, d)$$. We need to associate each $$\mathbf{v}_{i \circ}$$ with the probability $$p(x_{i+1}=u\mid \mathbf{x}^i)$$ of the next token (at position $$i+1$$) having a value $$u \in [n_{vocab}]$$. To achieve this, we: 
+
+- Employ a linear layer with a weight matrix $$\mathbf{W}^u$$ of size $$(d, n_{vocab})$$ and a bias vector $$\mathbf{b}^u$$ of size $$(n_{vocab})$$. This transformation is given by $$\mathbf{v}_{ij}' = \mathbf{v}_{ik} \mathbf{w}^u_{kj} + \mathbf{b}^u_j$$.
+- Apply the softmax function to each row of the resulting matrix, yielding an output matrix $$\mathbf{Y}$$ of size $$(n, n_{vocab})$$, where $$\mathbf{y}_{iu} = p(x_{i+1} = u\mid \mathbf{x}^i)$$.
+
+ The total number of parameters here will be $$d n_{vocab} + n_{vocab}$$.
 
 
 ## Attention
 
-Now we can delve into the core of the transformer architecture. Let's start by considering the real matrix $$\mathbf{V}$$ of dimensions $$(n, d)$$ obtained from embedding the sequence $$\mathbf{x}$$ in $$d$$ dimensions. An attention layer performs the operation $$\mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{kj}$$, where $$\mathbf{A}$$ is a matrix of dimensions $$(n, n)$$, such that $$\mathbf{a}_{ik} \geq 0$$ and $$\sum_k \mathbf{a}_{ik} = 1$$. In other words, the *attention matrix* $$\mathbf{A}$$ computes the weighted mean $$\mathbf{a}_{ik} \mathbf{v}_{k \cdot}$$ of the embedding vectors at other positions for each position $$i$$. The attention matrix $$\mathbf{A}$$ is determined by two other matrices: the query matrix $$\mathbf{Q}$$ and the key matrix $$\mathbf{C}$$, both of dimensions $$(n, d^q)$$, where $$\mathbf{a}_{ik}$$ informally measures the "similarity" between $$\mathbf{q}_{i\circ}$$ and $$\mathbf{c}_{k\circ}$$. In transformers, this similarity is defined by the "score function" $$\operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) = \left<\mathbf{q}_{i\cdot}, \mathbf{c}_{k\cdot}\right>/\sqrt{d^q}$$. The idea is to measure similarity using an inner product, normalized by $$\sqrt{d^q}$$ for stability. The score function is then transformed by applying the softmax function to each *row* of the score matrix, yielding $$\mathbf{a}_{ik} = \frac{e^{\operatorname{score}(\mathbf{q}_{i\circ}, \mathbf{c}_{k \circ})}}{\sum_k e^{\operatorname{score}(\mathbf{q}_{i\circ}, \mathbf{c}_{k \circ})}}$$. Therefore, the attention operation is defined as $$\mathbf{V}' = \operatorname{attn}(\mathbf{V}, \mathbf{Q}, \mathbf{C})$$, where $$\mathbf{V}'$$ has dimensions $$(n, d)$$.
+Now we can delve into the core of the transformer architecture. Let's start by considering the real matrix $$\mathbf{V}$$ of dimensions $$(n, d)$$ obtained from embedding the sequence $$\mathbf{x}$$ in $$d$$ dimensions. An attention layer performs the operation
 
-Now, what are the query matrix and the key matrix? In self-attention, the query matrix $$\mathbf{Q}$$ and the key matrix $$\mathbf{K}$$ are derived from $$\mathbf{V}$$ itself using learnable linear operations on each *row* of $$\mathbf{V}$$, which represents each embedding vector. Specifically, we have $$\mathbf{q}_{ij} = \mathbf{v}_{il} \mathbf{w}^q_{lj}$$ and $$\mathbf{c}_{ij} = \mathbf{v}_{il} \mathbf{w}^c_{lj}$$, where $$\mathbf{W}^q$$ and $$\mathbf{W}^c$$ are both matrices of dimensions $$d \times d^q$$. Additionally, we use two other learnable linear operations on $$\mathbf{V}$$ itself. The first operation is defined by a matrix $$\mathbf{W}^v$$ of dimensions $$d \times d^v$$, and the second operation is defined by a matrix $$\mathbf{W}^o$$ of dimensions $$d^v \times d$$. Consequently, the self-attention operation can be expressed as $$\mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{il} \mathbf{w}^v_{lm} \mathbf{w}^o_{mj}$$, where $$\mathbf{a}_{ik} =  \operatorname{softmax}_k \left[ \left<\mathbf{v}_{il} \mathbf{w}^q_{l\cdot}, \mathbf{v}_{kl} \mathbf{w}^c_{l\cdot} \right>/d' \right]$$. We denote the operator as $$\mathbf{V}’ = \operatorname{sattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o)$$.
+$$
+\mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{kj},
+$$
 
-However, there is an essential consideration missing here. We want the output corresponding to the $$i$$-th token to depend only on tokens $$k \leq i$$. The previous formulation does *not* ensure this because in general, $$\mathbf{a}_{ik}$$ can be greater than zero even if $$k > i$$, meaning that the $$i$$-th position utilizes information from positions ahead. To address this, we need to introduce a *mask* in such cases to enforce $$\mathbf{a}_{ik} = 0$$. One approach is to modify the score function $$\operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ})$$ to a *causal* score function $$\operatorname{mscore}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) = \operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) \mathbf{1}_{k \leq i}$$, which zeroes out elements where $$k > i$$. With this modification, we define the operator $$\mathbf{V}’ = \operatorname{msattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o)$$ to satisfy our requirement. Furthermore, in GPT-3, certain layers use a *banded causal mask*, where in addition to zeroing out elements $$k > i$$, elements where $$i - k > \beta$$ are also zeroed out. This ensures that each token only attends to a limited number of preceding elements. The figure below illustrates masked attention with no mask, a causal mask, and a banded causal mask.
+where $$\mathbf{A}$$ is a matrix of dimensions $$(n, n)$$, such that $$\mathbf{a}_{ik} \geq 0$$ and $$\sum_k \mathbf{a}_{ik} = 1$$. In other words, the *attention matrix* $$\mathbf{A}$$ computes the weighted mean $$\mathbf{a}_{ik} \mathbf{v}_{k \cdot}$$ of the embedding vectors at other positions for each position $$i$$.
+
+The attention matrix $$\mathbf{A}$$ is determined by two other matrices: the query matrix $$\mathbf{Q}$$ and the key matrix $$\mathbf{C}$$, both of dimensions $$(n, d^q)$$, where $$\mathbf{a}_{ik}$$ informally measures the "similarity" between $$\mathbf{q}_{i\circ}$$ and $$\mathbf{c}_{k\circ}$$. In transformers, this similarity is defined by the "score function"
+
+$$
+\operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) := \left<\mathbf{q}_{i\cdot}, \mathbf{c}_{k\cdot}\right>/\sqrt{d^q}.
+$$
+
+The idea is to measure similarity using an inner product, normalized by $$\sqrt{d^q}$$ for stability. The score function is then transformed by applying the softmax function to each *row* of the score matrix, yielding
+
+$$
+\mathbf{a}_{ik} := \frac{e^{\operatorname{score}(\mathbf{q}_{i\circ}, \mathbf{c}_{k \circ})}}{\sum_k e^{\operatorname{score}(\mathbf{q}_{i\circ}, \mathbf{c}_{k \circ})}}.
+$$
+
+Therefore, the attention operation $$\operatorname{attn}$$ is defined as
+
+$$
+\mathbf{V}' = \operatorname{attn}(\mathbf{V}, \mathbf{Q}, \mathbf{C}),
+$$
+
+where $$\mathbf{V}'$$ has dimensions $$(n, d)$$.
+
+Now, what are the query matrix and the key matrix? In self-attention, the query matrix $$\mathbf{Q}$$ and the key matrix $$\mathbf{K}$$ are derived from $$\mathbf{V}$$ itself using learnable linear operations on each *row* of $$\mathbf{V}$$, which represents each embedding vector. Specifically, we have
+
+$$
+\mathbf{q}_{ij} := \mathbf{v}_{il} \mathbf{w}^q_{lj},
+$$
+
+and
+
+$$
+\mathbf{c}_{ij} := \mathbf{v}_{il} \mathbf{w}^c_{lj},
+$$
+
+where $$\mathbf{W}^q$$ and $$\mathbf{W}^c$$ are both matrices of dimensions $$d \times d^q$$. Additionally, we use two other learnable linear operations on $$\mathbf{V}$$ itself. The first operation is defined by a matrix $$\mathbf{W}^v$$ of dimensions $$d \times d^v$$, and the second operation is defined by a matrix $$\mathbf{W}^o$$ of dimensions $$d^v \times d$$. Consequently, the self-attention operation can be expressed as
+
+$$
+\mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{il} \mathbf{w}^v_{lm} \mathbf{w}^o_{mj},
+$$
+
+where
+
+$$
+\mathbf{a}_{ik} =  \operatorname{softmax}_k \left[ \left<\mathbf{v}_{il} \mathbf{w}^q_{l\cdot}, \mathbf{v}_{kl} \mathbf{w}^c_{l\cdot} \right>/d' \right].
+$$
+
+We denote the operator as
+
+$$\mathbf{V}’ = \operatorname{sattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o).
+$$
+
+
+Yet, there is an essential consideration missing here. We want the output corresponding to the $$i$$-th token to depend only on tokens $$k \leq i$$. The previous formulation does *not* ensure this because in general, $$\mathbf{a}_{ik}$$ can be greater than zero even if $$k > i$$, meaning that the $$i$$-th position utilizes information from positions ahead. To address this, we need to introduce a *mask* in such cases to enforce $$\mathbf{a}_{ik} = 0$$ if $$k > i$$. One approach is to modify the score function
+
+$$
+\operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ})
+$$
+
+to a *causal* score function
+
+$$
+\operatorname{mscore}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) = \operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) \mathbf{1}_{k \leq i},
+$$
+
+which zeroes out elements where $$k > i$$. With this modification, we define the operator $$\operatorname{msattn}$$ as 
+
+$$\mathbf{V}’ = \operatorname{msattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o)
+$$
+
+to satisfy our requirement. Furthermore, in GPT-3, certain layers use a *banded causal mask*, where in addition to zeroing out elements $$k > i$$, elements where $$i - k > \beta$$ are also zeroed out. This ensures that each token only attends to a limited number of preceding elements. The figure below illustrates masked attention with no mask, a causal mask, and a banded causal mask.
 
 ![Attention with causal mask, banded mask, and banded causal mask]({{site.baseurl}}/assets/figs/lm1/attnmask2.png)
 
 Masked attention with causal mask, banded mask, and banded causal mask.
 
-All the formulations mentioned so far apply to a *single attention head*. However, the concept of multi-head attention reveals that we can repeat this process for $$n_h$$ attention heads. Each attention head operates independently by having different learnable parameters. The outputs of all the attention heads are then summed up, resulting in the final output matrix. In this case, let $$\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o$$ be order 3 tensors with dimensions $$(n_h, d, d^q), (n_h, d, d^q), (n_h, d, d^v), (n_h, d^v, d)$$, respectively. Consequently, the multi-head attention operation is given by
+All the formulations mentioned so far apply to a *single attention head*. However, the concept of multi-head attention reveals that we can repeat this process for $$n_h$$ attention heads. Each attention head operates independently by having different learnable parameters. The outputs of all the attention heads are then summed up, resulting in the final output matrix. In this case, let
+
+$$
+\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o
+$$
+
+be order 3 tensors with dimensions
+
+$$
+(n_h, d, d^q), (n_h, d, d^q), (n_h, d, d^v), (n_h, d^v, d),
+$$
+
+respectively. Consequently, the multi-head attention operation $$\operatorname{mhmsattn}$$ is given by
 
 $$
 \mathbf{V’} = \operatorname{mhmsattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o) = \sum_l \operatorname{msattn}(\mathbf{V};\mathbf{w}^q_{l \circ \circ}, \mathbf{w}^c_{l \circ \circ}, \mathbf{w}^v_{l \circ \circ}, \mathbf{w}^o_{l \circ \circ}).
@@ -310,7 +410,19 @@ $$
 
 ### Layer Normalization and Dropout
 
-Layer normalization is an operation applied to each row $$\mathbf{v}_{i \circ}$$ of the matrix $$\mathbf{V}$$. It calculates the mean $$\mu_i$$ and standard deviation $$\sigma_i$$ of $$\mathbf{v}_{i \circ}$$, normalizes $$\mathbf{v}_{i \circ}$$ using $$\mu_i$$ and $$\sigma_i$$, and applies a learnable affine transformation shared across all positions. The normalization process involves computing the mean $$\mu_i = \frac{1}{d} \sum_{j} \mathbf{v}_{ij}$$ and the standard deviation $$\sigma_i = \sqrt{\frac{1}{d} \sum_{j} (\mathbf{v}_{ij} - \mu_i)^2}$$. Parameters $$\mathbf{W}^{LN, a}$$ and $$\mathbf{W}^{LN, b}$$ of dimension $$(d)$$ are used for the affine transformation. Each element $$\mathbf{v}_{ij}$$ is transformed as follows:
+Layer normalization is an operation applied to each row $$\mathbf{v}_{i \circ}$$ of the matrix $$\mathbf{V}$$. It calculates the mean $$\mu_i$$ and standard deviation $$\sigma_i$$ of $$\mathbf{v}_{i \circ}$$, normalizes $$\mathbf{v}_{i \circ}$$ using $$\mu_i$$ and $$\sigma_i$$, and applies a learnable affine transformation shared across all positions. The normalization process involves computing the mean
+
+$$
+\mu_i = \frac{1}{d} \sum_{j} \mathbf{v}_{ij}
+$$
+
+and the standard deviation
+
+$$
+\sigma_i = \sqrt{\frac{1}{d} \sum_{j} (\mathbf{v}_{ij} - \mu_i)^2}.
+$$
+
+Parameters $$\mathbf{W}^{LN, a}$$ and $$\mathbf{W}^{LN, b}$$ of dimension $$(d)$$ are used for the affine transformation. Each element $$\mathbf{v}_{ij}$$ is transformed as follows:
 
 $$
 \mathbf{v}_{ij} \to \mathbf{w}^{LN, a}_{j} \frac{\mathbf{v}_{ij} - \mu_i}{\sigma_i + \epsilon} + \mathbf{w}_j^{LN, b}.
@@ -535,4 +647,4 @@ That concludes our exploration. You can access GPT-3 in the [OpenAI playground](
 
 Pure GPT-3 is capable of generating coherent text, but it lacks the ability to specifically address your requests. It resembles a highly intelligent child who possesses vast knowledge but lacks concern for fulfilling your specific desires.
 
-In comparison, models like ChatGPT, and even more recent ones like *text-davinci-003*, excel at addressing user requests more effectively. ChatGPT can be viewed as a "tamed" version of GPT-3, achieved through a specific technique called *reinforcement learning from human feedback* (RLHF). The upcoming second part of this discussion aims to explain this technique, bridging the gap between GPT-3 and ChatGPT.
+In comparison, models like ChatGPT, and even more recent ones like *text-davinci-003*, excel at addressing user requests more effectively. ChatGPT can be viewed as a "tamed" version of GPT-3, achieved through two specific techniques: *supervised fine tuning* (SFT) and *reinforcement learning from human feedback* (RLHF). The upcoming second part of this discussion aims to explain this technique, bridging the gap between GPT-3 and ChatGPT.
