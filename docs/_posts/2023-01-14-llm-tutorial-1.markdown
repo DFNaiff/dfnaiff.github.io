@@ -281,7 +281,7 @@ $$
 \mathbf{c}_{ij} := \mathbf{v}_{il} \mathbf{w}^c_{lj},
 $$
 
-where $$\mathbf{W}^q$$ and $$\mathbf{W}^c$$ are both matrices of dimensions $$d \times d^q$$. Additionally, we use two other learnable linear operations on $$\mathbf{V}$$ itself. The first operation is defined by a matrix $$\mathbf{W}^v$$ of dimensions $$d \times d^v$$, and the second operation is defined by a matrix $$\mathbf{W}^o$$ of dimensions $$d^v \times d$$. Consequently, the self-attention operation can be expressed as
+where $$\mathbf{W}^q$$ and $$\mathbf{W}^c$$ are both matrices of dimensions $$d \times d^q$$ (with $$d^q < d$$ usually). Not only that, but we make the attention operation on a learnable projection of the embedding vectors of $\mathbf{v}_{ij}$ to a subspace of dimension $d^v$, using a matrix $$\mathbf{W}^v$$ of dimensions $$d \times d^v$$, such that we apply $$\mathbf{a}_{ik}$$ to $$\mathbf{v}_{kl} \mathbf{w}^v_{lm}$$. Of course, that results in a matrix of dimension $(n, d_v)$, so we must undo the projection using another learnable matrix $$\mathbf{W}^o$$ of dimensions $$d^v \times d$$ to return to dimension $(n, d)$. Consequently, the self-attention operation can be expressed as
 
 $$
 \mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{il} \mathbf{w}^v_{lm} \mathbf{w}^o_{mj},
@@ -292,8 +292,7 @@ where
 $$
 \mathbf{a}_{ik} =  \operatorname{softmax}_k \left[ \left<\mathbf{v}_{il} \mathbf{w}^q_{l\cdot}, \mathbf{v}_{kl} \mathbf{w}^c_{l\cdot} \right>/d' \right].
 $$
-
-We denote the operator as
+As a side note, notice that $$\mathbf{w}^v_{lm} \mathbf{w}^o_{mj}$$ can be thought of as a linear operator operating on the embedding dimension of $$v$$, of low-rank with $$d_v < d$$. We denote the operator as
 
 $$\mathbf{V}’ = \operatorname{sattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o).
 $$
@@ -311,9 +310,9 @@ $$
 \operatorname{mscore}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) = \operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) \mathbf{1}_{k \leq i},
 $$
 
-which zeroes out elements where $$k > i$$. With this modification, we define the operator $$\operatorname{msattn}$$ as 
+which zeroes out elements where $$k > i$$. With this modification, we define the operator $$\operatorname{sattn}_m$$ as 
 
-$$\mathbf{V}’ = \operatorname{msattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o)
+$$\mathbf{V}’ = \operatorname{sattn}_m(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o)
 $$
 
 to satisfy our requirement. Furthermore, in GPT-3, certain layers use a *banded causal mask*, where in addition to zeroing out elements $$k > i$$, elements where $$i - k > \beta$$ are also zeroed out. This ensures that each token only attends to a limited number of preceding elements. The figure below illustrates masked attention with no mask, a causal mask, and a banded causal mask.
@@ -334,10 +333,10 @@ $$
 (n_h, d, d^q), (n_h, d, d^q), (n_h, d, d^v), (n_h, d^v, d),
 $$
 
-respectively. Consequently, the multi-head attention operation $$\operatorname{mhmsattn}$$ is given by
+respectively. Consequently, the multi-head attention operation $$\operatorname{sattn}_{m, h}$$ is given by
 
 $$
-\mathbf{V’} = \operatorname{mhmsattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o) = \sum_l \operatorname{msattn}(\mathbf{V};\mathbf{w}^q_{l \circ \circ}, \mathbf{w}^c_{l \circ \circ}, \mathbf{w}^v_{l \circ \circ}, \mathbf{w}^o_{l \circ \circ}).
+\mathbf{V’} = \operatorname{sattn}_{m, h}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o) = \sum_l \operatorname{sattn}_m(\mathbf{V};\mathbf{w}^q_{l \circ \circ}, \mathbf{w}^c_{l \circ \circ}, \mathbf{w}^v_{l \circ \circ}, \mathbf{w}^o_{l \circ \circ}).
 $$
 
 ![Masked multi-head attention with two heads.]({{site.baseurl}}/assets/figs/lm1/diagram1.jpg)
