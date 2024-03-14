@@ -339,7 +339,7 @@ $$
 \mathbf{V’} = \operatorname{sattn}_{m, h}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o) = \sum_l \operatorname{sattn}_m(\mathbf{V};\mathbf{w}^q_{l \circ \circ}, \mathbf{w}^c_{l \circ \circ}, \mathbf{w}^v_{l \circ \circ}, \mathbf{w}^o_{l \circ \circ}).
 $$
 
-![Masked multi-head attention with two heads.]({{site.baseurl}}/assets/figs/lm1/diagram1.jpg)
+![Masked multi-head attention with two heads.]({{site.baseurl}}/assets/figs/lm1/diagramattention.jpg)
 
 Masked multi-head attention with two heads.
 
@@ -488,7 +488,7 @@ class EncoderLayer(torch.nn.Module):
         return values
 ```
 
-![A transformer decoder block]({{site.baseurl}}/assets/figs/lm1/diagram2.jpg)
+![A transformer decoder block]({{site.baseurl}}/assets/figs/lm1/diagramblock.jpg)
 
 A transformer decoder block
 
@@ -498,7 +498,7 @@ Finally, it is useful to count the number of learnable parameters in a transform
 
 To construct the full sequence model, we stack the following components sequentially: an embedding layer, positional embedding layer, $$n_T$$ transformer blocks, a final layer normalization block, and an unembedding block. The architecture can be visualized as shown below:
 
-![diagram3.jpg]({{site.baseurl}}/assets/figs/lm1/diagram3.jpg)
+![diagram3.jpg]({{site.baseurl}}/assets/figs/lm1/diagramouter.jpg)
 
 The total number of parameters in the model can be calculated as:
 

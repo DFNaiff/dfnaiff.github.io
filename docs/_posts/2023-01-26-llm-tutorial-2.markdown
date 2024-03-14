@@ -9,7 +9,7 @@ categories:
 
 # Update (23/06)
 
-I turned this in a general interlude for RL and RLHF, but I decided to write a next part of actually applying this to language models.
+I turned this in a general interlude for RL and RLHF, and I decided to write a next part of actually applying this to language models.
 
 # Update (24/05)
 
