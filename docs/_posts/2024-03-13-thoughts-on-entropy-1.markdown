@@ -131,7 +131,7 @@ A more thorough argument for $H(p)$ being the correct measure of uncertainty is 
 2. Letting $h(m) = H_m(1/m, \ldots, 1/m)$, $h(m)$ is monotonically increasing (so, a uniform distribution with more elements is more uncertain than one with fewer elements).
 3. $H$ is consistent in the following manner: given an ensemble of $n$ uniformly distributed elements that are divided into $k$ boxes with $b_1, ..., b_k$ elements each, the entropy of the whole ensemble should be equal to the sum of the entropy of the system of boxes and the individual entropies of the boxes, each weighted with the probability of being in that particular box (wording taken from [the Wikipedia page on information entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)).
 
-Since this is true for every $\theta_1, \ldots, \theta_m$ finite, it stands to reason that it should stand for $\theta_1, \theta_2, \ldots$ countably infinite, although we do not have a uniform distribution here, and thus the distribution can only be maximized under some suitable constraint. If we take another shoddy leap, we can even assume that the possible states of $\Theta$ take places in some domain $\Omega$, and by analogy we choose the probability density function $p(\theta)$ for $\Theta$ such that it maximizes
+Since this is true for every $\theta_1, \ldots, \theta_m$ finite, it stands to reason that it should stand for $\theta_1, \theta_2, \ldots$ countably infinite, although we do not have a uniform distribution here, and thus the distribution can only be maximized under some suitable constraint. If we take another shoddy leap, we can even assume that the possible states of $\Theta$ take place in some domain $\Omega$, and by analogy, we choose the probability density function $p(\theta)$ for $\Theta$ such that it maximizes
 
 $$
 H(p(\theta)) = -\int_\Omega p(\theta) \log p(\theta) d\theta.
@@ -267,8 +267,7 @@ and that
 $$
 \bar{\delta f} = k_B \frac{\log \hat{Z}}{\frac \partial \alpha} dV,
 $$
-
-which can alo be directly derived from the properties of $\log Z$ described previously.
+which can also be directly derived from the properties of $\log Z$ described previously.
 
 Finally, to get to Euler's relation, we will need to _assume_ that
 
@@ -282,7 +281,7 @@ $$
 k \frac{\partial \log \hat{Z}}{\partial \alpha} = \frac{\partial \hat{S}_I}{\partial \alpha} = \text{\cte},
 $$
 
-and arrive at the Euler's relation
+and arrive at Euler's relation
 
 $$
 \hat{S}_I = \frac{\partial \hat{S}_I}{\partial \alpha} \alpha + \sum_{j=1}^m \frac{\partial \hat{S}_I}{\partial \bar{f}_j} \bar{f}_j,
@@ -327,12 +326,12 @@ $$
 S_I = \frac{1}{T} U + \frac{P}{T} V.
 $$
 
-Thus, $S_I$ is an extensive function of the internal energy $U$ and volume $V$, that always takes a maximum under some possible constrainte (since it is the result of a maximiziation). If we assume $\lambda > 0$ for every $U$ and $V$, it is also monotonically increasing function of the internal energy. We arrive at all the axioms of the thermodynamic entropy, so we can equate the thermodynamic entropy $S$ with the information entropy $S_I$.
+Thus, $S_I$ is an extensive function of the internal energy $U$ and volume $V$, that always takes a maximum under some possible constraints (since it is the result of a maximization). If we assume $\lambda > 0$ for every $U$ and $V$, it is also a monotonically increasing function of the internal energy. We arrive at all the axioms of the thermodynamic entropy, so we can equate the thermodynamic entropy $S$ with the information entropy $S_I$.
 
-Assuming that $\lambda > 0$ is the same as assuming that microstates are more unlikely the higher is their energy. As for why $\log Z \propto V$, it can be proven for a variety of systems under very general assumptions, although for some system such that this is untrue, then classical thermodynamics cannot describe this system. Those are not the main problems
+Assuming that $\lambda > 0$ is the same as assuming that microstates are more unlikely the higher their energy. As for why $\log Z \propto V$, it can be proven for a variety of systems under very general assumptions, although for some systems such that this is untrue, then classical thermodynamics cannot describe this system. Those are not the main problems
 
-# Why does this works at all?
+# Why does this work at all?
 
-Why this works at all? We arrived at this equation by assuming the maximum information entropy principle. However, the maximum entropy principle is mostly a logical derivation, or some sort of "best practices". There is no principled reason why the true distribution $p^{(true)}$ should _be_ the one we find by the maximum information entropy principle. After all, $p^{(true)}$ is arrived through some physical process on the microstates, and this process should _not care at all for the maximum information entropy principle_. Yet, we go out there, make our measurements, and it seems that it does follows exactly this principle, since we know classical thermodynamics holds.
+Why this works at all? We arrived at this equation by assuming the maximum information entropy principle. However, the maximum entropy principle is mostly a logical derivation or some sort of "best practice". There is no principled reason why the true distribution $p^{(true)}$ should _be_ the one we find by the maximum information entropy principle. After all, $p^{(true)}$ is arrived through some physical process on the microstates, and this process should _not care at all for the maximum information entropy principle_. Yet, we go out there and make our measurements, and it seems that it follows exactly this principle, since we know classical thermodynamics holds.
 
-So, the maximum entropy principle works, but it seem it should not. There is something to be investigated here. This will be the focus of the second part.
+So, the maximum entropy principle works, but it seems it should not. There is something to be investigated here. This will be the focus of the second part.

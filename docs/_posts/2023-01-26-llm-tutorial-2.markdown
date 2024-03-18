@@ -9,7 +9,7 @@ categories:
 
 # Update (23/06)
 
-I turned this in a general interlude for RL and RLHF, and I decided to write a next part of actually applying this to language models.
+I turned this into a general interlude for RL and RLHF, and I decided to write the next part of actually applying this to language models.
 
 # Update (24/05)
 
@@ -17,7 +17,7 @@ This text has been revised and edited by ChatGPT 3.5 to improve grammar and over
 
 # Preamble
 
-In Part 1, I mentioned that we would delve into ChatGPT. However, I must confess that I slightly misled you. The exact training details of ChatGPT have not been published yet. OpenAI has provided only a [general overview](https://openai.com/blog/chatgpt/). Nonetheless, OpenAI claims that the setup of ChatGPT is highly similar to the one used in the [InstructGPT](https://openai.com/blog/instruction-following/) series. Therefore, we will rely on the information presented in the [original InstructGPT paper](https://arxiv.org/pdf/2203.02155.pdf). However, to comprehend InstructGPT, we first need to understand both supervised fine tuning (SFT) and reinforcement learning from human feedback (RLHF). Yet, to do that, we need to understand reinforcement learning, which is the point of this interlude.
+In Part 1, I mentioned that we would delve into ChatGPT. However, I must confess that I slightly misled you. The exact training details of ChatGPT have not been published yet. OpenAI has provided only a [general overview](https://openai.com/blog/chatgpt/). Nonetheless, OpenAI claims that the setup of ChatGPT is highly similar to the one used in the [InstructGPT](https://openai.com/blog/instruction-following/) series. Therefore, we will rely on the information presented in the [original InstructGPT paper](https://arxiv.org/pdf/2203.02155.pdf). However, to comprehend InstructGPT, we first need to understand both supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF). Yet, to do that, we need to understand reinforcement learning, which is the point of this interlude.
 
 
 # Reinforcement learning - A primer.
@@ -87,7 +87,7 @@ V_\pi(o) = \mathbb{E}_{o', a \sim p(o' \mid o,a)\pi(a \mid o)}[r(a, o) + \gamma 
 Q_\pi(o, a) = \mathbb{E}_{o' \sim p(o' \mid o,a)}[r(a, o) + \gamma \mathbb{E}_{a' \sim p(a' \mid o')}[Q_\pi(o',a')]],
 $$
 
-where $$\gamma$$ is the discount factor. These equations capture the notion that the value or action-value from a state or action is the immediate expected reward plus the discounted future value of the expected future state. In finite time horizons, the situation becomes more complex as we need to consider the timing within the episode. However, by incorporating this information in our observations $$o_t$$, the Bellman equations remain valid for finite horizons. Another important concept is the advantage function:
+where $$\gamma$$ is the discount factor. These equations capture the notion that the value or action/value from a state or action is the immediate expected reward plus the discounted future value of the expected future state. In finite time horizons, the situation becomes more complex as we need to consider the timing within the episode. However, by incorporating this information in our observations $$o_t$$, the Bellman equations remain valid for finite horizons. Another important concept is the advantage function:
 
 $$
 A_\pi(o, a) = Q_\pi(o,a) - V_\pi(o),
@@ -153,4 +153,4 @@ This loss is minimized using minibatch gradient descent, and the resulting learn
 4. Optimize the policy $$\pi_\theta$$ using the learned reward function $$\hat{r}_\phi$$ through a reinforcement learning algorithm that maximizes $$J(\pi;\hat{r}_\phi)$$.
 5. Repeat from step 1.
 
-Next, we will use that general framework to actually explain instruct-based language models, how they are actually crafted from base models.
+Next, we will use that general framework to explain instruct-based language models, and how they are crafted from base models.
