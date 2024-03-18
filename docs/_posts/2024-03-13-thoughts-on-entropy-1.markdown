@@ -278,7 +278,7 @@ $$
 Notice that this assumption may not hold, although the rest of the theory above is valid, we will not get Euler's relation. Yet, assuming the above relation, we will find that,
 
 $$
-k \frac{\partial \log \hat{Z}}{\partial \alpha} = \frac{\partial \hat{S}_I}{\partial \alpha} = \text{\cte},
+k \frac{\partial \log \hat{Z}}{\partial \alpha} = \frac{\partial \hat{S}_I}{\partial \alpha} = \text{cte},
 $$
 
 and arrive at Euler's relation
@@ -332,6 +332,6 @@ Assuming that $\lambda > 0$ is the same as assuming that microstates are more un
 
 # Why does this work at all?
 
-Why this works at all? We arrived at this equation by assuming the maximum information entropy principle. However, the maximum entropy principle is mostly a logical derivation or some sort of "best practice". There is no principled reason why the true distribution $p^{(true)}$ should _be_ the one we find by the maximum information entropy principle. After all, $p^{(true)}$ is arrived through some physical process on the microstates, and this process should _not care at all for the maximum information entropy principle_. Yet, we go out there and make our measurements, and it seems that it follows exactly this principle, since we know classical thermodynamics holds.
+Why this works at all? We arrived at this equation by assuming the maximum information entropy principle. However, the maximum entropy principle is mostly a logical derivation or some sort of "best practice". There is no principled reason why the true distribution $p^{(true)}$ should _be_ the one we find by the maximum information entropy principle. After all, we arrive at $p^{(true)}$ through some physical process on the microstates, and this process should _not care at all for the maximum information entropy principle_. Yet, we go out there and make our measurements, and it seems that it follows exactly this principle, since we know classical thermodynamics holds.
 
 So, the maximum entropy principle works, but it seems it should not. There is something to be investigated here. This will be the focus of the second part.
