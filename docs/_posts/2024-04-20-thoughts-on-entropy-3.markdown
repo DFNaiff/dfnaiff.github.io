@@ -1,23 +1,22 @@
 ---
 layout: post
-title:  "Entropy and the world - Part 2"
+title:  "Entropy and the world - Part 3"
 date:   2024-04-18 12:00:00 -0300
 categories:
 ---
 
 
+# Warning
+
+Document under construction.
+
 # Preamble
 
-
-So, in the previous post, we concluded that, if we assume the maximum entropy principle, we arrive at classical thermodynamics. This is the basis of statistical mechanics, and nothing new was said there. Yet, a question remains: why?
-
-# The Boltzmann argument
-
-First, we consider a particular case, which we are going to explore in depth.
+Previously, we justified the maximum entropy principle being an actual physical principle for "most physics", when we consider coarse measurements in time and space. However, "most physics" is not enough. After all, in the previous discussion, we had to assume a dynamical law with fluctuations. This is an approximation of the actual world, and, to get deeply into how entropy works in this world here, we will need to interact with the actual physics of the world.
 
 # The quantum mechanical approach: states and measurement.
 
-To explore fully the above argument, we will make use of some basic quantum mechanics. Although this may seem like it makes the problem much harder in principle, we will find that the quantum mechanical framework not only is appropriate because it is true but because it ends up making things much easier.
+To continue our exploration of entropy in physical systems, we will have to move to quantum mechanics. Although this may seem like it makes the problem much harder in principle, we will find that the quantum mechanical framework not only is appropriate because it is true but because it ends up making things much easier.
 
 As a primer, we review the [basic framework](https://en.wikipedia.org/wiki/Mathematical_formulation_of_quantum_mechanics#Postulates_of_quantum_mechanics) of quantum mechanics, for a single isolated physical system. First, we have to define what are the systems we are describing. In quantum mechanics, we have that each isolated system is associated with a separable Hilbert space $\mathbb{H}$ with inner product $\braket{\phi}{\psi}$, or, in a very informal language, to a vector space $\mathbb{C}^D$ with $D$ being possibly _very_ large, that is, infinite. At each time $t$, the physical system is at a state $\ket{\psi} \in \mathbb{H}$. We assume those states to be unit vectors, that is, $\braket{\psi}{\psi} = 1$.
 
