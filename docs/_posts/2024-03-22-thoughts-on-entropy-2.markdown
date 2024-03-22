@@ -92,7 +92,7 @@ $$
 Now, for the sake of argument, we assume that our system dynamics reaches a stationary distribution $p_{\xi}(x_t)$, inducing a stationary distribution on the individual state $p_\theta(\theta_t)$. Moreover, we assume that we sample our system in long enough intervals $T$ such that $\theta_{t+T}$ is essentially independent of $\theta_t$ (this is just to avoid details involving hidden Markov chains). Therefore, we can assume that, when sampling $N$ individual states in such way, for each $t=1, \ldots, N$, we have that
 
 $$
-\theta_t \sim p(\theta); \quad \theta^N_t = \sim \prod p(\theta_i) \\
+\theta_t \sim p(\theta); \quad \theta^N_t \sim \prod p(\theta_i) \\
 p(\theta=j) = p_j, \quad j=1, \ldots, M.
 $$
 
