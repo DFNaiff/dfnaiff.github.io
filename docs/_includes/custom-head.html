@@ -26,7 +26,11 @@ MathJax.Hub.Config({
       braket: ["\\left\\langle #1 \\middle| #2 \\right\\rangle", 2],
       mean: ["\\left\\langle #1 \\right\\rangle", 1],
       abs: ["\\left| #1 \\right|", 1],
-      norm: ["\\left\\| #1 \\right\\|", 1]
+      norm: ["\\left\\| #1 \\right\\|", 1],
+      trace: ["\\text{tr}\\left( #1 \\right)", 1],
+      ptrace: ["\\text{tr}\_{#1}\\left( #2 \\right)", 2],
+      pderiv: ["\\frac{\\partial #1}{\\partial #2}", 2],
+      evalat: ["\\left. #1 \\right|_{#2}", 2],
     }
   }
 });

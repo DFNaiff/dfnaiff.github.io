@@ -53,16 +53,16 @@ $$
 W(\pmb{n};N) = \frac{N!}{n_1! \ldots n_M!}.
 $$
 
-Now, if we assume $N$ to be _very_ large, each $\pmb{n}$ with $W(\pmb{n}; N)$ will also have $n_j$ large for every $j$. Therefore, defining $H(\mathbf{n};N) := \frac{1}{N} \log W(\pmb{n};N)$, we can deploy Stirling's approximation to find that 
+Now, if we assume $N$ to be _very_ large, each $\pmb{n}$ with $W(\pmb{n}; N)$ will also have $n_j$ large for every $j$. Therefore, defining $S\_I(\mathbf{n};N) := \frac{1}{N} \log W(\pmb{n};N)$, we can deploy Stirling's approximation to find that 
 
 $$
-H(\mathbf{n};N) := \frac{1}{N} \log W(\pmb{n};N) = - \sum_{j} \frac{n_j}{N} \log \frac{n_j}{N}.
+S\_I(\mathbf{n};N) := \frac{1}{N} \log W(\pmb{n};N) = - \sum_{j} \frac{n_j}{N} \log \frac{n_j}{N}.
 $$
 
-Therefore, we find that $H(\mathbf{n};N)$ is the information entropy of the distribution $\{q_j = n_j/N}_{j=1}^M$. So, we find that, when maximizing the information entropy for $\{q_j\}$, for $N$ copies of the physical system, we find the macrostate $\pmb{n} = (n_1, \ldots, n_j)$ that is realizable by most microstates. Moreover, for large $N$, this is overwhelmingly larger, because, for any other $\mathbf{n}'$ with $H(\mathbf{n}';N) < H(\mathbf{n}';N)$, we find that
+Therefore, we find that $S\_I(\mathbf{n};N)$ is the information entropy of the distribution $\{q_j = n_j/N}_{j=1}^M$. So, we find that, when maximizing the information entropy for $\{q_j\}$, for $N$ copies of the physical system, we find the macrostate $\pmb{n} = (n_1, \ldots, n_j)$ that is realizable by most microstates. Moreover, for large $N$, this is overwhelmingly larger, because, for any other $\mathbf{n}'$ with $S\_I(\mathbf{n}';N) < S\_I(\mathbf{n}';N)$, we find that
 
 $$
-\frac{W(\pmb{n}';N)}{W(\pmb{n};N)} \approx e^{-N \left(H(\mathbf{n};N) - H(\mathbf{n}';N)\right)}
+\frac{W(\pmb{n}';N)}{W(\pmb{n};N)} \approx e^{-N \left(S\_I(\mathbf{n};N) - S\_I(\mathbf{n}';N)\right)}
 $$
 
 Therefore, one tentative answer to the question "Why is the maximum entropy principle valid?" can be as follows:
