@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "A mathematical tutorial on diffusion models."
-date:   2024-05-28 12:00:00 -0300
+date:   2024-08-28 12:00:00 -0300
 categories:
 ---
 
