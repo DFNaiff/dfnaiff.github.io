@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Entropy and the world - Part 4."
-date:   2024-05-28 12:00:00 -0300
+date:   2024-08-28 12:00:00 -0300
 categories:
 ---
 

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>A mathematical tutorial on diffusion models. | Danilo Naiff</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="A mathematical tutorial on diffusion models." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Preamble" />
+<meta property="og:description" content="Preamble" />
+<link rel="canonical" href="http://localhost:4000/2024/05/28/diffusion-tutorial-1.html" />
+<meta property="og:url" content="http://localhost:4000/2024/05/28/diffusion-tutorial-1.html" />
+<meta property="og:site_name" content="Danilo Naiff" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-05-28T12:00:00-03:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="A mathematical tutorial on diffusion models." />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-05-28T12:00:00-03:00","datePublished":"2024-05-28T12:00:00-03:00","description":"Preamble","headline":"A mathematical tutorial on diffusion models.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2024/05/28/diffusion-tutorial-1.html"},"url":"http://localhost:4000/2024/05/28/diffusion-tutorial-1.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Danilo Naiff" />
+
+<!--
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+-->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  TeX: {
+    Macros: {
+      ket: ["\\left| #1 \\right\\rangle", 1],
+      bra: ["\\left\\langle #1 \\right|", 1],
+      braket: ["\\left\\langle #1 \\middle| #2 \\right\\rangle", 2],
+      mean: ["\\left\\langle #1 \\right\\rangle", 1],
+      abs: ["\\left| #1 \\right|", 1],
+      norm: ["\\left\\| #1 \\right\\|", 1],
+      trace: ["\\text{tr}\\left( #1 \\right)", 1],
+      ptrace: ["\\text{tr}\_{#1}\\left( #2 \\right)", 2],
+      pderiv: ["\\frac{\\partial #1}{\\partial #2}", 2],
+      evalat: ["\\left. #1 \\right|_{#2}", 2],
+    }
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <!--<a class="site-title" rel="author" href="/">Danilo Naiff</a>
+    --><nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Danilo Naiff</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Apps
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/golf">Gravitational Golf</a>
+              <a class="dropdown-item" href="/mbs">Quasielectrostatics</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">A mathematical tutorial on diffusion models.</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2024-05-28T12:00:00-03:00" itemprop="datePublished">
+        May 28, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1> Preamble </h1>
+
+<h1> Introduction </h1>
+
+<p>We can state the objective of a generative model can be stated, for unconditional generation, as follows:</p>
+
+<blockquote>
+  <p>Given some unlabeled data $\mathcal{D} = \{x_1, \ldots, x_D\}$ sampled from a true distribution $q(x)$ <em>unknown</em> to us, how can we, from $\mathcal{D}$, create a distribution $p(x)$ such that:</p>
+  <ol>
+    <li>The distribution $p(x)$ is close to $q(x)$ in some relevant sense.</li>
+    <li>We can easily sample from $p(x)$.</li>
+  </ol>
+</blockquote>
+
+<p>Notice that we are <em>not</em> looking for any other information from $p(x)$ in principle, except for when it helps us sample from it. In other words, if you are interested in, say, the probability density function of $p(x)$ as a final goal, your problem is different from the one stated above.</p>
+
+<p>In this case of conditional generation, the problem is stated as follows:</p>
+
+<blockquote>
+  <p>Given some labeled data $\mathcal{D} = \{(x_1, y_1), \ldots, (x_D, y_D)\}$ sampled from a true distribution $q(x,y) = q(x \mid y) q(y)$ <em>unknown</em> to us, how can we, from $\mathcal{D}$, create a family of distributions distribution $p(x \mid y)$ such that:</p>
+  <ol>
+    <li>The distribution $p(x \mid y)$ is close to $q(x \mid y)$ in some relevant sense for every $y$.</li>
+    <li>We can easily sample from $p(x \mid y)$, given some label $y$.</li>
+  </ol>
+</blockquote>
+
+<p>Since “for every $y$” may be too ambitious for a goal, we will substitute it instead for</p>
+<blockquote>
+  <ol>
+    <li>The distribution $p(x, y) := p(x \mid y) q(y)$ is close to $q(x, y)$ in some relevant sense.</li>
+  </ol>
+</blockquote>
+
+<p>Notice that, although we are dealing with labeled data here, the problem is conceptually different than supervised learning. In particular, we are not interested in giving a label $y$ for some given $x$, but instead, <em>given</em> $y$, generating samples $x$ such that $y$ is a correct label for $x$. Of course, conditional generation is reduced to unconditional generation when we are dealing with a single null label $y$.</p>
+
+<p>When dealing with neural networks, our task (when considering the more general case of conditional generation) simplifies to:</p>
+
+<ol>
+<li> Creating a distribution $p_\theta(x \mid y)$, parameterized by some set $\theta \in \mathbb{R}^M$ of neural network weights, such that we have an algorithm for sampling from $p_\theta(x \mid y)$ when given $\theta$ and a label $y$. </li>
+
+<li> Creating a differentiable loss function $\mathcal{L}(x, y;\theta)$ such that we are led to $p_\theta(x, y) := p_\theta(x \mid y) q(y)$ being approximately equal to when minimizing
+
+$$
+L(\theta) := \mathbb{E}_{x \sim q(x)} L(x; \theta)
+$$
+
+</li>
+
+<li> Minimizing $L(\theta)$ by stochastic gradient descent using minibatches of $\mathcal{D}$. </li> </ol>
+
+<p>This is the problem that diffusion models will aim to solve. Diffusion models are not alone in trying to do so, and they are accompanied by techniques such as <a href="https://en.wikipedia.org/wiki/Flow-based_generative_model">Generative Adversarial Networks</a>, <a href="https://en.wikipedia.org/wiki/Variational_autoencoder">Variational Autoencoders</a>, and <a href="https://en.wikipedia.org/wiki/Flow-based_generative_model">Flow-based generative models</a>. It is not the task of this tutorial to explain why diffusion models currently work better than those other models, as I am still confused about this. Therefore, I will instead work on the easier task of just describing diffusion models.</p>
+
+<h1> Sampling through denoising </h1>
+
+<p>For now, let us forget about the full problem. Better, let us forget about learning itself. Consider instead the problem of sampling from some distribution $q(x)$. We will assume that $q(x)$ is a probability distribution in $\mathbb{R}^N$, and devise a method of sampling from $q(x)$ which we will call <em>sampling through denoising</em>.</p>
+
+<p>Even with access to the probability density function $q(x)$, sampling is not a trivial task, as the <a href="https://en.wikipedia.org/wiki/Variational_Bayesian_methods">huge</a> <a href="https://en.wikipedia.org/wiki/Rejection_sampling">amount of</a> <a href="https://en.wikipedia.org/wiki/Importance_sampling">developed</a> <a href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">sampling</a> <a href="https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm">techniques</a>, both approximate and exact, can attest. In some senses, our sampling technique will be a particularly ill-suited one, since it will depend on objects whose evaluation will be intractable. However, we will find out that these objects can be <em>learned</em> fairly well by neural networks, and our sampling technique will become very useful in this case.</p>
+
+<h2> Noised distributions </h2>
+
+<p>For devising our technique, we will first need to define the process of <em>noising</em>, in which we create a random variable $X_\sigma$, for $\sigma \geq 0$, through the following process:</p>
+
+<ol>
+  <li>Sample $X_0 \sim q(x)$.</li>
+  <li>Sample $Z \sim \mathcal{N}(0, I)$, where $\mathcal{N}(0, I)$ is the standard multivariate normal distribution in $\mathbb{R}^N$.</li>
+  <li>Let $X_\sigma := X_0 + \sigma Z$.</li>
+</ol>
+
+<p>This way, the random variable $X_\sigma$ is distributed according to $p(x, \sigma)$, where $p(x; \sigma)$ is a family of probability distributions whose density is given by</p>
+
+\[p(x; \sigma) := \int_{\mathbb{R}^N} \mathcal{N}(x \mid x_0, \sigma^2 I) q(x_0) dx_0,\]
+
+<p>where $\mathcal{N}(x \mid x_0, \sigma^2 I)$ is the density of the multivariate normal distribution with mean $x_0$ and covariance $\sigma^2 I$, given by</p>
+
+\[\mathcal{N}(x \mid x_0, \sigma^2 I) = \left(2 \pi \sigma \right)^{-N/2} \exp \left( -\frac{1}{2 \sigma^2} \norm{x - x_0}^2 \right).\]
+
+<p>This family of distribution has three fundamental properties. The first two are obvious:</p>
+
+<ol>
+  <li>$p(x;0) = q(x)$</li>
+  <li>$p(x;\sigma)$ asymptotically converges to $\mathcal{N}(0, \sigma^2 I)$ when $\sigma \to \infty$.</li>
+</ol>
+
+<p>The third key property is more involved, in that it satisfies the <em>probability flow ODE</em>, to be defined soon. Before that, we will define the key objects we will be dealing with, which are the <em>noised score functions</em>, defined as</p>
+
+\[s(x, \sigma) := \nabla_x \log p(x;\sigma).\]
+
+<p>As a spoiler, <em>these</em> are the objects that our neural network will be approximating, since they will be the building blocks of our sampling techniques. To see why, we will take a look at the probability flow ODE.</p>
+
+<h2> The probability flow ODE </h2>
+
+<p>Consider the following differential equation, which we will call (surprise) the probability flow ODE</p>
+
+\[\frac{d x}{d \sigma} = -\sigma s(x, \sigma),\]
+
+<p>With $s(x,\sigma)$ defined as above. The probability flow ODE of course defines a deterministic map $x_\sigma = F(x_\tau, \tau, \sigma)$ defined by integrating the above ODE from $\tau$ to $\sigma$, either forward or backward, with initial (or terminal) condition $x_\tau$, resulting in the final value $x_\sigma$.</p>
+
+<p>A major theorem is that this map (under whatever regularity conditions) will have the following property:</p>
+
+<blockquote>
+  <p>If $X_{\tau}$ is distributed according to $p(x;\tau)$, then $X_\sigma := F(X_{\tau}; \tau, \sigma)$ is distributed according to $p(x;\sigma)$.</p>
+</blockquote>
+
+<p>We will give a rough demonstration of this result below, but before, let us just see why this is an amazing result. Namely, it gives us a general recipe for sampling a random variable $X_\sigma \sim p(x;\sigma)$, given that we know how to sample from $p(x;\tau)$:</p>
+
+<ol>
+  <li>Sample $X_\tau$ from $p(x;\tau)$.</li>
+  <li>Solve the probability flow ODE from $\tau$ to $\sigma$ with initial (terminal) condition $X_\tau$, using some numerical method.</li>
+  <li>The solution $X_\sigma$ is sampled from $p(x;\sigma)$.</li>
+</ol>
+
+<p>Why is this a great recipe? Because remember, our original problem is to sample from $q(x) = p(x;0)$. And we <em>know</em> how to (approximately) sample from $p(x;\sigma)$ when $\sigma$ is large, since in this case $p(x;\sigma) \approx \mathcal{N}(0, \sigma^2 I)$, and we know very well how to sample from normal distributions. Therefore, here is a recipe on how to sample from $q(x)$:</p>
+
+<ol>
+  <li>Sample $X_{\sigma_\max}$ from $\mathcal{N}(0, \sigma_\max^2 I)$, for $\sigma_\max$ large.</li>
+  <li>Solve the probability flow ODE backward from $\sigma_\max$ to $0$, with terminal condition $X_\sigma$, using some numerical method.</li>
+  <li>The solution $X_0$ is sampled from $q(x)$.</li>
+</ol>
+
+<p>We will call this amazing sampling process <em>denoising</em>. Well… it would be amazing, <em>if</em> we had access to the noised score functions $s(x, \sigma)$. However, remember that</p>
+
+\[s(x, \sigma) := \nabla_x \log p(x;\sigma) = \nabla_x \log \int_{\mathbb{R}^N} \mathcal{N}(x \mid x_0,\sigma^2 I) q(x_0) dx_0.\]
+
+<p>But, we cannot calculate this quantity, because it is a complicated integral depending on $q(x_0)$. Let us face it, calculating this integral is intractable, except if we <em>maybe</em> had some way to sample from $q(x_0)$, which is exactly what we are looking for.</p>
+
+<p>So, why are we studying this method at all? Because of an amazing property of that, although the calculation of the noised score functions $s(x, \sigma)$ are intractable, they can be fairly well <em>approximated</em> by neural networks, through the second key result in which diffusion models depend.</p>
+
+<h2> A sketch of a derivation of the probability flow ODE </h2>
+
+<p>Assume we want to construct a sequence of random variables $X_\sigma$, indexed by $\sigma \geq 0$, with the following properties:</p>
+
+<ul>
+<li> $X_\sigma \sim p(x;\sigma)$. </li>
+<li> When given some $X_\tau$, $X_\sigma|X_\tau$ is given by evolving _some_ ordinary differential equation
+
+$$
+\frac{d x}{d \sigma} = f(x, \sigma),
+$$
+
+with initial condition $x(\tau) = X_\tau$.
+
+</li>
+</ul>
+
+<p>The second condition above implies that the family of densities $p(x;\sigma)$ should satisfy the <a href="https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation">Fokker-Planck equation</a></p>
+
+\[\pderiv{p(x;\sigma)}{\sigma} = -\nabla_x \cdot \left( f(x, \sigma) p(x;\sigma) \right).\]
+
+<p>It suffices to show then that $f(x, \sigma) = -\sigma \nabla_x \log p(x;\sigma)$ satisfies the equation above, as follows:</p>
+
+<ol>
+<li>
+First, we notice that, since $p(x;\sigma) = \int_{\mathbb{R}^N} \mathcal{N}(x \mid x_0, \sigma) q(x_0) dx_0$, then the left side of the Fokker-Planck equation becomes
+
+$$
+\int_{\mathbb{R}^N} \pderiv{\mathcal{N}(x \mid x_0, \sigma^2 I)}{\sigma} q(x_0) dx_0
+$$
+
+</li>
+<li>
+Plugging in $f(x, \sigma) = \sigma \nabla_x \log p(x;\sigma)$, and noticing that 
+
+$$
+p(x;\sigma) \nabla_x \log p(x;\sigma) = \nabla_x p(x;\sigma),
+$$
+the right side of the Fokker-Planck equation becomes
+
+$$
+\nabla_x \cdot \left( -\sigma \nabla_x p(x;\sigma) \right) = \int_{\mathbb{R}^N} \left( -\sigma \nabla^2_x \mathcal{N}(x \mid x_0, \sigma^2 I) \right) q(x_0) dx_0
+$$
+
+</li>
+<li>
+Since the density $\mathcal{N}(x \mid x_0, \sigma^2 I)$ is given by
+
+$$
+\mathcal{N}(x \mid x_0, \sigma^2 I) = \left(2 \pi \sigma \right)^{-N/2} \exp \left( -\frac{1}{2 \sigma^2} \norm{x - x_0}^2 \right),
+$$
+
+through straightforward (if somewhat laborious) differentiation, we find that
+
+$$
+\pderiv{\mathcal{N}(x \mid x_0, \sigma^2 I)}{\sigma} = \sigma \nabla^2_x \mathcal{N}(x \mid x_0, \sigma^2 I),
+$$
+
+thus showing that the RHS and the LHS side of the Fokker-Planck equation are equal if $f(x, \sigma) = -\sigma \nabla_x \log p(x;\sigma)$.
+</li>
+</ol>
+
+<h1> Approximating the noised score functions </h1>
+
+<p>Good. Now, we need to approximate the score function</p>
+
+\[s(x, \sigma) = \nabla_x \log p(x; \sigma) = \nabla_x \log \int_{\mathbb{R}^N} \mathcal{N}(x \mid x_0, \sigma^2 I) q(x_0) dx_0.\]
+
+<p>Let our approximation be a neural network $s_\theta(x, \sigma)$, parameterized by $\theta$. We will first try to do the obvious step: minimize the difference between $s_\theta(x, \sigma)$ and $s(x, \sigma)$, “suitably averaged”. Let us see what we would mean by that.</p>
+
+<p>Remember, we are interested in the score function because we want to solve the probability flow ODE</p>
+
+\[\frac{d x}{d \sigma} = -\sigma s(x, \sigma)\]
+
+<p>backward with $X_{\sigma_\max} \sim \mathcal{N}(0, \sigma_\max^2 I)$ as terminal condition. In this case, we have that, for each $\sigma$, $X_\sigma \sim p(x; \sigma)$. Therefore, it stands to reason that, for each $\sigma$, we want our solution to be accurate where $p(x; \sigma)$ is concentrated.</p>
+
+<p>Thinking as a regression problem, we then want to minimize the difference between $s_\theta(X_\sigma, \sigma)$ and $s(X_\sigma, \sigma)$ with $X_\sigma \sim p(x; \sigma)$. However, we have that $X_\sigma = X + \sigma Z$, with $X \sim q(x)$, $Z \sim \mathcal{N}(0, I)$. For this to work out, we need also to define a distribution $\lambda(\sigma)$ such that $\sigma \sim \lambda(\sigma)$, ideally with the support of $\sigma$ concentrated in $(0, \sigma_{\max})$.</p>
+
+<p>Finally, we need a way of measuring the distance between $s(x, \sigma)$ and $s_\theta(x, \sigma)$. Since they are both vectors in $\mathbb{R}^N$, the natural way of measuring the distance in the squared Euclidean norm $\norm{s_\theta(x, \sigma) - s(x, \sigma)}^2$. Therefore, we arrive at an ideal loss function for our neural network.</p>
+
+\[L^{\text{ideal}}(\theta) = \mathbb{E}_{\sigma \sim \lambda(\sigma)} \mathbb{E}_{X \sim q(x)} \mathbb{E}_{X_\sigma \sim \mathcal{N}(X, \sigma^2 I)} \norm{s_\theta(x, \sigma) - s(x, \sigma)}^2.\]
+
+<p>The obvious problem here is that we cannot compute $L^{\text{ideal}}(\theta)$, since we cannot compute $s(x, \sigma)$. However, the second main theorem of diffusion models will come to help us, saying that minimizing $L^{\text{ideal}}(\theta)$ is equivalent to minimizing a much easier loss function.</p>
+
+<h2> Score matching </h2>
+
+
+  </div><a class="u-url" href="/2024/05/28/diffusion-tutorial-1.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="http://localhost:4000/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Danilo Naiff&#39;s personal website.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+  <a rel="me" href="https://github.com/DFNaiff" target="_blank" title="github">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://www.linkedin.com/in/danilo-naiff" target="_blank" title="linkedin">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#linkedin"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://scholar.google.com/citations?user=UgDxpKgAAAAJ&hl" target="_blank" title="google_scholar">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#google_scholar"></use>
+    </svg>
+  </a>
+</li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

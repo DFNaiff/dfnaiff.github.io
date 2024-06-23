@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>A technical tutorial on Large Language Models - Part 1 | Danilo Naiff</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="A technical tutorial on Large Language Models - Part 1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Part 2" />
+<meta property="og:description" content="Part 2" />
+<link rel="canonical" href="http://localhost:4000/2023/01/14/llm-tutorial-1.html" />
+<meta property="og:url" content="http://localhost:4000/2023/01/14/llm-tutorial-1.html" />
+<meta property="og:site_name" content="Danilo Naiff" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-01-14T16:11:16-03:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="A technical tutorial on Large Language Models - Part 1" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-01-14T16:11:16-03:00","datePublished":"2023-01-14T16:11:16-03:00","description":"Part 2","headline":"A technical tutorial on Large Language Models - Part 1","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2023/01/14/llm-tutorial-1.html"},"url":"http://localhost:4000/2023/01/14/llm-tutorial-1.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Danilo Naiff" />
+
+<!--
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+-->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  TeX: {
+    Macros: {
+      ket: ["\\left| #1 \\right\\rangle", 1],
+      bra: ["\\left\\langle #1 \\right|", 1],
+      braket: ["\\left\\langle #1 \\middle| #2 \\right\\rangle", 2],
+      mean: ["\\left\\langle #1 \\right\\rangle", 1],
+      abs: ["\\left| #1 \\right|", 1],
+      norm: ["\\left\\| #1 \\right\\|", 1],
+      trace: ["\\text{tr}\\left( #1 \\right)", 1],
+      ptrace: ["\\text{tr}\_{#1}\\left( #2 \\right)", 2],
+      pderiv: ["\\frac{\\partial #1}{\\partial #2}", 2],
+      evalat: ["\\left. #1 \\right|_{#2}", 2],
+    }
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <!--<a class="site-title" rel="author" href="/">Danilo Naiff</a>
+    --><nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Danilo Naiff</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Apps
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/golf">Gravitational Golf</a>
+              <a class="dropdown-item" href="/mbs">Quasielectrostatics</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">A technical tutorial on Large Language Models - Part 1</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2023-01-14T16:11:16-03:00" itemprop="datePublished">
+        Jan 14, 2023
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><a href="/2023/01/26/llm-tutorial-2.html">Part 2</a></p>
+
+<h1 id="update-2405">Update (24/05)</h1>
+
+<p>This text has been revised and edited by ChatGPT 3.5 to improve grammar and overall structure.</p>
+
+<h1 id="update-2505">Update (25/05)</h1>
+
+<p>Some links that I recommend, that are likely better than what I’ve written here:</p>
+
+<ul>
+  <li><a href="https://github.com/jacobhilton/deep_learning_curriculum/blob/master/1-Transformers.md">Chapter 1: Transformers</a> of Jacob Hinton’s deep learning curriculum. Also, all the links inside it. I <em>strongly</em> recommend doing the exercise, which is exactly what I’ve done below.</li>
+  <li><a href="https://transformer-circuits.pub/2021/framework/index.html">Transformer Circuits</a> by Anthropic, in particular the “Transformer Overview” section.</li>
+  <li><a href="https://arxiv.org/abs/2005.14165">GPT-3 Paper</a> and <a href="https://arxiv.org/abs/2203.02155">InstructGPT Paper</a>.</li>
+</ul>
+
+<h1 id="preamble">Preamble</h1>
+
+<p>While delving deeper into the study of language models, I am currently following the curriculum developed by Jacob Hilton, which can be found at <a href="https://github.com/jacobhilton/deep_learning_curriculum">this GitHub repository</a>. The initial exercise within this curriculum involves building a language model from scratch and training it on the works of Shakespeare.</p>
+
+<h1 id="what-is-this-tutorial">What is this tutorial?</h1>
+
+<p>This is the first part of a tutorial on language models, specifically focusing on GPT models. It is a relatively concise tutorial that assumes the reader has <em>some</em> background knowledge in deep learning, and I make use of mathematical notation throughout.</p>
+
+<p>This part guides us on the journey from nothing to “pure” GPT models, which serve as the foundation for language models like ChatGPT (those are also called base models or foundation models). In the next part, we will delve into the transition from “pure” models to fine-tuned models such as ChatGPT. This tutorial provides operational instructions, explaining <em>how</em> we arrive at specific language models. The reasons behind their functioning will be explored in a future post.</p>
+
+<p><img src="/assets/figs/lm1/postdiagram.png" alt="postdiagram.png" /></p>
+
+<p>My primary motivation here is to learn through writing, while also addressing the lack of comprehensive transformer tutorials. It is quite astonishing that there are so few well-crafted tutorials or explanations for what is arguably the most significant revolution in deep learning in the past decade. This tutorial is another, albeit opinionated, attempt to fill that gap and may prove useful to some.</p>
+
+<p>Now, you might wonder why you should care. I might provide an introduction later, but to be honest, simply experimenting with <a href="https://chat.openai.com/chat">ChatGPT</a> for a while should be enough to motivate your interest in language models.</p>
+
+<h1 id="language-models---evaluation">Language models - evaluation.</h1>
+
+<p>Operationally, a language model can be thought as following the rule “given string \(s\) of natural language, output string \(w\) with probability \(p(w\mid s)\). This is what GPT-like models do at the end of the day. So the question is how to do that? For instance, when writing \(s = \text{``I ate a ''}\), the model outputs \(w = \text{``banana at the market''}\) with probability \(p(w\mid s) = 0.8\), as an example. The point is how the model does that?</p>
+
+<p>First, we need to map \(s\) and \(w\) into some suitable structure for our model. We do this by making use of a “sequencing function” \(T\) that will map strings \(s\) to finite sequences of integers \(\mathbf{x} = (x_1, \ldots, x_n)\), with elements belonging to a finite set \([n_{vocab}] = \{1, \ldots, n_{vocab}\}\) which we call the <em>vocabulary</em>, \(n_{vocab}\) being the <em>vocabulary size,</em> that is, the “words” that the sequence model knows. We reserve \(1\) for the “end-of-sentence” token, that will be explained below. As an example, we transform the sequence \(s = \text{``I ate a''}\) into a sequence \(\mathbf{x} = (10, 123, 2)\).</p>
+
+<p>Now, we transformed our language evaluation problem into an equivalent <em>sequence</em> evaluation problem, as follows: let \(\mathbf{x} = (x_1, \ldots, x_n)\) be a sequence in our vocabulary \([n_{vocab}]\). Our sequence model will output another finite sequence \(\mathbf{y}=(y_1, \ldots, y_m)\) with probability \(p(\mathbf{y}\mid \mathbf{x})\). Now, we can turn this sampling problem into a <em>next-item</em> prediction as follows: consider \(\mathbf{y}\) be a \(m\)-sized sequence as above, and consider \(1\) to signal the end of a sequence. Then, starting with \(\mathbf{y} = ()\), we will, repeatedly,</p>
+
+<ul>
+  <li>Sample \(y_{i+1}\) from \(p_M(y\mid x_{1},\ldots, x_n, y_1, \ldots, y_i)\). If \(y_{i+1} = 1\) stop, and return \(\mathbf{y} = (y_1, \ldots, y_i)\).</li>
+  <li>Update \(\mathbf{y}\) to \(\mathbf{y} = (y_1, \ldots, y_i, y_{i+1})\).</li>
+</ul>
+
+<p>That is, we use the chain rule of probability to sample \(\mathbf{y}\) with probability letting \(\mathbf{y}^i = (y_1, \ldots, y_i)\), and letting \(\mathbf{x}\mathbf{y}\) be the concatenation of two sequences, we find that</p>
+
+\[p(\mathbf{y}\mid \mathbf{x}) = p_M(1\mid \mathbf{x}\mathbf{y})\prod_{i=1}^{n-1} p_M(y_{i+1}\mid \
+\mathbf{x}\mathbf{y}^i),\]
+
+<p>with \(\mathbf{y}^i := (y_1, \ldots, y_i)\), and \(\mathbf{x}\mathbf{y}\) denoting the concatenation of two sequences \(\mathbf{x}\) and \(\mathbf{y}\). Therefore, our model \(M\) will only output a <em>single</em> number \(y \in [n_{vocab}]\), given a sequence \(\mathbf{x} = (x_1, \ldots, x_n)\) also in \([n_{vocab}]\), with probability \(p_M(y\mid \mathbf{x})\). The chain rule will take care of the rest, and such a model will be called an <em>autoregressive</em> model.</p>
+
+<p>Finally, given the sequence \(\mathbf{y}\), we can unsequence it to get string \(w\). We do that by applying an inverse sequencing function \(T^{-1}\) to each element of \(\mathbf{y}\), getting a string \(w = T^{-1}(\mathbf{y})\). Thus, our language model consists of a sequence model \(M\) predicting the next token, and a sequencing/unsequencing pair \((T, T^{-1})\). We have \(p_{M, T}(w\mid s) = p_M(T(w)\mid T(s))\), and we sample \(w\) by sequencing \(s\) into \(\mathbf{x}\), sampling \(\mathbf{y}\) from \(M\) given \(\mathbf{x}\), and unsequencing \(\mathbf{x}\) into \(w\).</p>
+
+<p>An example of how this works is transforming \(s = \text{"I ate a"}\) into \(\mathbf{x} = (10, 123, 2)\), sampling \(12 \sim p_M(y\mid 10, 123, 2)\), \(4 \sim p_M(y\mid 10, 123, 3, 12)\), \(7 \sim p_M(y\mid 10, 123, 3, 2, 4)\), \(71 \sim p_M(10, 123, 3, 2, 4, 7)\), \(1 \sim p_M(10, 123, 3, 2, 4, 7, 71)\), and unsequencing \(\mathbf{y} = (12, 4, 7, 71)\) into \(w = \text{"banana at the market"}\). Next, we show how this works in a code.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Write an autocomplete function and evaluate on a model
+#trained on the complete works of Shakespeare.
+</span><span class="k">def</span> <span class="nf">autocomplete</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">128</span><span class="p">):</span>
+		<span class="c1">#The next line is responsible for the sequencing
+</span>    <span class="n">base</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">vocab</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">string</span><span class="p">))).</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+    <span class="n">nmax</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">nctx</span> <span class="c1">#We guarantee our model not surpasses context window
+</span>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxiter</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">base</span><span class="p">[</span><span class="o">-</span><span class="n">nmax</span><span class="p">:])[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="c1">#Output the log-probabilities
+</span>        <span class="n">ind</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">multinomial</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">exp</span><span class="p">(</span><span class="n">out</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">#Sample from output
+</span>        <span class="n">base</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">cat</span><span class="p">([</span><span class="n">base</span><span class="p">,</span> <span class="n">ind</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#Append to our sequence
+</span>        <span class="k">if</span> <span class="n">ind</span><span class="p">.</span><span class="n">item</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">#Here we are using 0 instead of 1 for end-of-senence
+</span>            <span class="k">break</span>
+		<span class="c1">#The next line is responsible for the desequencing
+</span>    <span class="n">output</span> <span class="o">=</span> <span class="n">detokenizing</span><span class="p">(</span><span class="n">vocab</span><span class="p">.</span><span class="n">lookup_tokens</span><span class="p">(</span><span class="n">base</span><span class="p">.</span><span class="n">cpu</span><span class="p">().</span><span class="n">tolist</span><span class="p">()))</span>
+		<span class="k">return</span> <span class="n">output</span>
+<span class="k">print</span><span class="p">(</span><span class="n">autocomplete</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s">'QUEEN OF WALES'</span><span class="p">))</span>
+<span class="s">"""
+ QUEEN OF WALES
+ RICHARD, and KEEPER at Bordeaux.
+ I have leisure kept together,
+ Which of twelve thousand looks in France,
+ Against the French Duke of Norfolk,
+ Whose power of Hereford, Donalbain, speed,
+ Under your progenitors, charming arms, Edward’s blood,
+ And care not his father lives at MALCOLM.
+ It may not be discharged truth,
+ Where let, Harry to prevent enacted ships
+ To pay, and princes if can be bold
+ But must suspect ere we bid be alive
+ To follow them to the King with passage.
+ My noble lord, prince. I have sounded London,
+ So many the living time
+"""</span>
+</code></pre></div></div>
+
+<h1 id="sequencing-tokenizing-and-indexing">Sequencing, tokenizing and indexing.</h1>
+
+<p>Now, the task of transforming a string into a sequence of integers, which we will call <em>identifiers</em> or <em>ids</em>, consists of two parts:</p>
+
+<ul>
+  <li>Splitting the string into words and subwords, which we refer to as <em>tokens</em>, using a <em>tokenization</em> rule. For example, transforming “I love you” into (“I”, “love”, “you”).</li>
+  <li>Using a lookup table to transform a sequence of <em>tokens</em> into a sequence of identifiers by assigning a unique <em>identifier</em> to each token in our <em>vocabulary</em>, which is our list of known tokens.</li>
+</ul>
+
+<p>The second part is relatively straightforward. We associate each token in our <em>vocabulary</em> with a unique <em>identifier</em> and use this lookup table to convert our sequence of tokens into a sequence of identifiers. In cases where a token is not found in our vocabulary, we can assign it a special unknown identifier.</p>
+
+<p>The first part, tokenization, is more complex, and various tokenization algorithms exist. A comprehensive tutorial can be found <a href="https://huggingface.co/docs/transformers/tokenizer_summary">here</a>. However, for now, let’s assume that each word and each sentence is treated as a token (which is a valid tokenization approach). When mapping a sequence back, we can simply invert our lookup table, associating the “unknown” identifier with a blank sentence or a <code class="language-plaintext highlighter-rouge">&lt;unk&gt;</code> symbol, and concatenate our tokens according to a specific rule (such as the regular grammar rule for joining words and punctuation). Below, we provide an example of tokenization using <a href="https://spacy.io">spaCy</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Here, we create a vocabulary from the works of Shakespeare,
+#and use the Spacy tokenizer.
+</span><span class="n">site</span> <span class="o">=</span> <span class="s">"https://www.gutenberg.org/files/100/100-0.txt"</span>
+<span class="n">data_string</span> <span class="o">=</span> <span class="n">urllib</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">site</span><span class="p">).</span><span class="n">read</span><span class="p">().</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)</span>
+<span class="c1">#Tokenizer our data using Spacy tokenizer, to create a vocabulary
+</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">torchtext</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">utils</span><span class="p">.</span><span class="n">get_tokenizer</span><span class="p">(</span><span class="s">'spacy'</span><span class="p">)</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">data_string</span><span class="p">)</span>
+<span class="c1">#Create a vocabulary from tokens
+</span><span class="n">sorted_tokens_freq</span> <span class="o">=</span> <span class="n">collections</span><span class="p">.</span><span class="n">OrderedDict</span><span class="p">(</span>
+                        <span class="nb">sorted</span><span class="p">(</span><span class="n">collections</span><span class="p">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">tokens</span><span class="p">).</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">vocab</span> <span class="o">=</span> <span class="n">torchtext</span><span class="p">.</span><span class="n">vocab</span><span class="p">.</span><span class="n">vocab</span><span class="p">(</span><span class="n">sorted_tokens_freq</span><span class="p">,</span> <span class="n">specials</span><span class="o">=</span><span class="p">[</span><span class="s">'&lt;unk&gt;'</span><span class="p">])</span>
+<span class="n">vocab</span><span class="p">.</span><span class="n">set_default_index</span><span class="p">(</span><span class="n">vocab</span><span class="p">[</span><span class="s">'&lt;unk&gt;'</span><span class="p">])</span>
+<span class="c1">#Create a detokenizing function
+</span><span class="k">def</span> <span class="nf">detokenizing</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="p">[(</span><span class="s">' '</span> <span class="o">+</span> <span class="n">s</span> <span class="k">if</span> <span class="n">s</span><span class="p">.</span><span class="n">isalpha</span><span class="p">()</span> <span class="k">else</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">(</span><span class="s">"hello my friend"</span><span class="p">))</span>
+<span class="c1">#--&gt; ['hello', 'my', 'friend']
+</span><span class="k">print</span><span class="p">(</span><span class="n">vocab</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">(</span><span class="s">"hello my friend"</span><span class="p">)))</span>
+<span class="c1">#--&gt; [0, 15, 292]
+</span><span class="k">print</span><span class="p">(</span><span class="n">vocab</span><span class="p">.</span><span class="n">lookup_tokens</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
+<span class="c1">#--&gt; ['the', 'is', 'of']
+</span><span class="k">print</span><span class="p">(</span><span class="n">detokenizing</span><span class="p">(</span><span class="n">vocab</span><span class="p">.</span><span class="n">lookup_tokens</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">])))</span>
+<span class="c1">#--&gt; the is of
+</span></code></pre></div></div>
+
+<h2 id="training-the-sequence-model">Training the sequence model.</h2>
+
+<p>Now, our goal is to have our model \(M\) as a function that, for a given evaluation sequence \(\mathbf{x}^{eval} = (x_1^{eval}, \ldots, x_{n_{eval}}^{eval})\), outputs \(p(y\mid \mathbf{x}^{eval})\) for each \(y = 1, 2, \ldots, n_{vocab}\). This allows us to sample \(y_{n_{eval}}^{eval} \sim p(y\mid \mathbf{x}^{eval})\). To achieve this through supervised learning, we need training pairs \((\mathbf{x}^{train}, y^{train})\) to train our model. Let’s consider a single sentence \(\mathbf{x} = (x_1, \ldots, x_n)\) as our training data. From this, we can infer that \((x_1)\) should output \((x_2)\), \((x_1, x_2)\) should output \(x_3\), and so on. Therefore, we end up with \(n-1\) training pairs of the form \((\mathbf{x}^i, x_{i+1})\) for \(i = 1, \ldots, n-1\). We will use this fact to design a neural network \(f_\theta\) that takes finite sequences \(\mathbf{x} = (x_1, \ldots, x_n)\) as input and outputs an \(n \times n_{vocab}\)-sized matrix \(f_\theta(\mathbf{x})\), where the elements are given by \(f_\theta(\mathbf{x})_{i, j} = p(j\mid \mathbf{x}^i)\).</p>
+
+<p>Next, we need to define a loss function. For a given sequence \(\mathbf{x}\), we can use the negative log-likelihood to define our loss function \(l\) for parameters \(\theta\) as</p>
+
+\[l(\theta;\mathbf{x}) = -\sum_{i=1}^{n-1} \log p(x_{i}\mid \mathbf{x}^{i}) = -\sum_{i=1}^{n-1} \log f_\theta(\mathbf{x})_{i, x_{i}+1}\]
+
+<p>To ensure that this approach works, we need to make sure that when passing \(\mathbf{x}\) to \(f_\theta\), the output \(f_\theta(\mathbf{x})_{i}\) <em>only depends on</em> \(\mathbf{x}^i\) and does not incorporate any information from subsequent tokens. In other words, it should not use any information from \(x_{i+1}\) itself or from “future” positions, as that would be considered “cheating.”</p>
+
+<p>For now, let’s imagine \(f_\theta(\mathbf{x})\) as a “magic transformer box.” The schematics of our language model work as shown in the following figure, which predicts with 70% chance that the sentence ends after the phrase “apple banana banana”.</p>
+
+<p><img src="/assets/figs/lm1/diagram4.png" alt="diagram4.png" /></p>
+
+<p>In the next steps, we will apply this “magic transformer box” philosophy to train the GPT model using the complete works of Shakespeare (actually, just 80% of them).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Create our train and text dataloader.
+</span><span class="k">def</span> <span class="nf">batchify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">line_size</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+    <span class="n">tensor_size</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">nbatches</span> <span class="o">=</span> <span class="n">tensor_size</span><span class="o">//</span><span class="n">line_size</span>
+    <span class="n">overhead</span> <span class="o">=</span> <span class="n">line_size</span> <span class="o">-</span> <span class="n">tensor_size</span><span class="o">%</span><span class="n">line_size</span>
+    <span class="k">if</span> <span class="n">overhead</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">functional</span><span class="p">.</span><span class="n">pad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">overhead</span><span class="p">))</span>
+        <span class="n">nbatches</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">new_size</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">nbatches</span><span class="p">,</span> <span class="n">line_size</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">new_size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+<span class="n">line_size</span><span class="o">=</span><span class="mi">64</span>
+<span class="n">data_tensor</span> <span class="o">=</span> <span class="n">batchify</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">vocab</span><span class="p">(</span><span class="n">tokens</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="p">.</span><span class="nb">long</span><span class="p">),</span> <span class="n">line_size</span><span class="p">)</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">utils</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">data_tensor</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">))</span>
+<span class="n">train_dataset</span><span class="p">,</span> <span class="n">test_dataset</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">utils</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">random_split</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>
+<span class="n">train_dataloader</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">utils</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">test_dataloader</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">utils</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="c1">#Create our model
+</span><span class="n">model</span> <span class="o">=</span> <span class="n">GPT</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">),</span> <span class="n">line_size</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dembed</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">nlayers</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">nheads</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dk</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">nhidden</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">model</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">model</span><span class="p">.</span><span class="n">train</span><span class="p">()</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">1e-2</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">optim</span><span class="p">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+<span class="n">scheduler1</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">optim</span><span class="p">.</span><span class="n">lr_scheduler</span><span class="p">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="n">scheduler2</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">optim</span><span class="p">.</span><span class="n">lr_scheduler</span><span class="p">.</span><span class="n">CosineAnnealingWarmRestarts</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">eta_min</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+<span class="n">nepochs</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">print_frequency</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">min_loss</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="n">inf</span>
+<span class="c1">#Train our model
+</span><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nepochs</span><span class="p">):</span>
+    <span class="n">model</span><span class="p">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_dataloader</span><span class="p">):</span>
+        <span class="n">optimizer</span><span class="p">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+        <span class="n">loss</span><span class="p">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">utils</span><span class="p">.</span><span class="n">clip_grad_norm_</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="mf">1e-1</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">loss</span> <span class="o">&lt;</span> <span class="n">min_loss</span><span class="p">:</span>
+        <span class="n">min_loss</span> <span class="o">=</span> <span class="n">loss</span>
+        <span class="n">best_model</span> <span class="o">=</span> <span class="n">copy</span><span class="p">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">scheduler1</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="n">scheduler2</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Epoch : </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s">, loss : </span><span class="si">{</span><span class="n">min_loss</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="opening-the-magic-transformer-box">Opening the “magic transformer box”.</h1>
+
+<p>In a sense, <em>the following is optional</em>. Many GPT models can be understood by considering transformers as black boxes and focusing on <em>how</em> they are trained. However, the model has a rich inner architecture, and it can be valuable to understand this architecture.</p>
+
+<p>So, feel free to skip to the “Conclusion” section, but also feel free to continue reading.</p>
+
+<h2 id="notation">Notation</h2>
+
+<p>From now on, we will be dealing with tensors of order higher than two, as this simplifies the notation for transformers. Hence, we will use the Einstein notation, where statements such as \(\mathbf{a}_{ij} \mathbf{b}_j\) are equivalent to \(\sum_j \mathbf{a}_{ij} \mathbf{b}_j\). We will refer to elements of a tensor using lowercase bold letters, such as \(\mathbf{a}\), and the entire tensor using uppercase letters, such as \(\mathbf{A}\). Moreover, we will use a specific notation to refer to column and row vectors of a matrix. For example, if \(\mathbf{A}\) is a matrix (a second-order tensor), \(\mathbf{a}_{i \circ}\) refers to the \(i\)-th row vector of \(\mathbf{A}\), and \(\mathbf{a}_{\circ j}\) refers to the \(j\)-th column vector of \(\mathbf{A}\). Similarly, if \(\mathbf{B}\) is a third-order tensor, \(\mathbf{b}_{\circ j k}\) refers to the vector obtained by selecting indices \(j\) and \(k\) in the second and third positions, and \(\mathbf{b}_{i \circ \circ}\) refers to the submatrix obtained by selecting \(i\) in the first position. Furthermore, we use \(\mathbf{W}\) (with superscripts) to denote learnable parameters of our layer. Finally, \(\mathbf{1}_{\text{condition}}\) refers to the function that has a value of 1 if the <em>condition</em> is satisfied, and 0 otherwise. For example, \(\mathbf{1}_{i = j}\) is a function of \(i\) and \(j\) that equals 1 if \(i = j\) and 0 otherwise.</p>
+
+<h2 id="embedding">Embedding</h2>
+
+<p>Embedding is the operation of transforming sequences into vectors using a learnable lookup table. Suppose we have \(n_{vocab}\) items in our vocabulary and we want to associate each token with a \(d\)-dimensional vector. We set up a learnable matrix \(\mathbf{W}^e\) of size \((n_{vocab}, d)\), and for a sequence \(\mathbf{x}\) of size \(n\), the embedding of \(\mathbf{x}\) is given by a matrix \(\mathbf{V}\) of size \((n, d)\), where the \(i\)-th row is given by \(\mathbf{v}_{i \circ} = \mathbf{w}^e_{x_i \circ}\).</p>
+
+<p>Next, we need information about the position of token \(x_i\). In the original transformers paper, this is achieved using a <em>fixed</em> vector \(p_i\), where the \(j\)-th value \(p_{i, j}\) is equal to \(\sin \frac{i}{10000^{j/d}}\) if \(j\) is even, and \(\cos \frac{i}{10000^{(j-1)/d}}\) if \(j\) is odd. This is combined with the token embedding by adding the positional embeddings to the corresponding token embeddings, resulting in</p>
+
+\[\mathbf{v}_{i, \circ} = \mathbf{w}^e_{x_i \circ} + p_i.\]
+
+<p>Alternatively, instead of using fixed positional embeddings, we can use <em>learned</em> positional embeddings for a context window of maximum size \(n_{ctx}\). In this case, we introduce a learnable matrix \(\mathbf{W}^{pos}\) of size \((n_{ctx}, d)\), and the positional embeddings are given by</p>
+
+\[\mathbf{v}_{i\circ} = \mathbf{w}^e_{x_i \circ} + \mathbf{w}^{pos}_{i \circ}.\]
+
+<p>The total number of parameters here will be either \(d n_{vocab}\), if positional embeddings are fixed, or \(d n_{vocab} + d n_{ctx}\), if positional embeddings are learned.</p>
+
+<h2 id="unembedding">Unembedding</h2>
+
+<p>The transformer operation, which will be explained in detail below, takes as input an embedding matrix \(\mathbf{V}\) of size \((n, d)\) and outputs another matrix \(\mathbf{V}'\) of the same size \((n, d)\). We need to associate each \(\mathbf{v}_{i \circ}\) with the probability \(p(x_{i+1}=u\mid \mathbf{x}^i)\) of the next token (at position \(i+1\)) having a value \(u \in [n_{vocab}]\). To achieve this, we:</p>
+
+<ul>
+  <li>Employ a linear layer with a weight matrix \(\mathbf{W}^u\) of size \((d, n_{vocab})\) and a bias vector \(\mathbf{b}^u\) of size \((n_{vocab})\). This transformation is given by \(\mathbf{v}_{ij}' = \mathbf{v}_{ik} \mathbf{w}^u_{kj} + \mathbf{b}^u_j\).</li>
+  <li>Apply the softmax function to each row of the resulting matrix, yielding an output matrix \(\mathbf{Y}\) of size \((n, n_{vocab})\), where \(\mathbf{y}_{iu} = p(x_{i+1} = u\mid \mathbf{x}^i)\).</li>
+</ul>
+
+<p>The total number of parameters here will be \(d n_{vocab} + n_{vocab}\).</p>
+
+<h2 id="attention">Attention</h2>
+
+<p>Now we can delve into the core of the transformer architecture. Let’s start by considering the real matrix \(\mathbf{V}\) of dimensions \((n, d)\) obtained from embedding the sequence \(\mathbf{x}\) in \(d\) dimensions. An attention layer performs the operation</p>
+
+\[\mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{kj},\]
+
+<p>where \(\mathbf{A}\) is a matrix of dimensions \((n, n)\), such that \(\mathbf{a}_{ik} \geq 0\) and \(\sum_k \mathbf{a}_{ik} = 1\). In other words, the <em>attention matrix</em> \(\mathbf{A}\) computes the weighted mean \(\mathbf{a}_{ik} \mathbf{v}_{k \cdot}\) of the embedding vectors at other positions for each position \(i\).</p>
+
+<p>The attention matrix \(\mathbf{A}\) is determined by two other matrices: the query matrix \(\mathbf{Q}\) and the key matrix \(\mathbf{C}\), both of dimensions \((n, d^q)\), where \(\mathbf{a}_{ik}\) informally measures the “similarity” between \(\mathbf{q}_{i\circ}\) and \(\mathbf{c}_{k\circ}\). In transformers, this similarity is defined by the “score function”</p>
+
+\[\operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) := \left&lt;\mathbf{q}_{i\cdot}, \mathbf{c}_{k\cdot}\right&gt;/\sqrt{d^q}.\]
+
+<p>The idea is to measure similarity using an inner product, normalized by \(\sqrt{d^q}\) for stability. The score function is then transformed by applying the softmax function to each <em>row</em> of the score matrix, yielding</p>
+
+\[\mathbf{a}_{ik} := \frac{e^{\operatorname{score}(\mathbf{q}_{i\circ}, \mathbf{c}_{k \circ})}}{\sum_k e^{\operatorname{score}(\mathbf{q}_{i\circ}, \mathbf{c}_{k \circ})}}.\]
+
+<p>Therefore, the attention operation \(\operatorname{attn}\) is defined as</p>
+
+\[\mathbf{V}' = \operatorname{attn}(\mathbf{V}, \mathbf{Q}, \mathbf{C}),\]
+
+<p>where \(\mathbf{V}'\) has dimensions \((n, d)\).</p>
+
+<p>Now, what are the query matrix and the key matrix? In self-attention, the query matrix \(\mathbf{Q}\) and the key matrix \(\mathbf{K}\) are derived from \(\mathbf{V}\) itself using learnable linear operations on each <em>row</em> of \(\mathbf{V}\), which represents each embedding vector. Specifically, we have</p>
+
+\[\mathbf{q}_{ij} := \mathbf{v}_{il} \mathbf{w}^q_{lj},\]
+
+<p>and</p>
+
+\[\mathbf{c}_{ij} := \mathbf{v}_{il} \mathbf{w}^c_{lj},\]
+
+<p>where \(\mathbf{W}^q\) and \(\mathbf{W}^c\) are both matrices of dimensions \(d \times d^q\) (with \(d^q &lt; d\) usually). Not only that, but we make the attention operation on a learnable projection of the embedding vectors of $\mathbf{v}_{ij}$ to a subspace of dimension $d^v$, using a matrix \(\mathbf{W}^v\) of dimensions \(d \times d^v\), such that we apply \(\mathbf{a}_{ik}\) to \(\mathbf{v}_{kl} \mathbf{w}^v_{lm}\). Of course, that results in a matrix of dimension $(n, d_v)$, so we must undo the projection using another learnable matrix \(\mathbf{W}^o\) of dimensions \(d^v \times d\) to return to dimension $(n, d)$. Consequently, the self-attention operation can be expressed as</p>
+
+\[\mathbf{v}_{ij} \to \mathbf{a}_{ik} \mathbf{v}_{il} \mathbf{w}^v_{lm} \mathbf{w}^o_{mj},\]
+
+<p>where</p>
+
+<p>\(\mathbf{a}_{ik} =  \operatorname{softmax}_k \left[ \left&lt;\mathbf{v}_{il} \mathbf{w}^q_{l\cdot}, \mathbf{v}_{kl} \mathbf{w}^c_{l\cdot} \right&gt;/d' \right].\)
+As a side note, notice that \(\mathbf{w}^v_{lm} \mathbf{w}^o_{mj}\) can be thought of as a linear operator operating on the embedding dimension of \(v\), of low-rank with \(d_v &lt; d\). We denote the operator as</p>
+
+\[\mathbf{V}’ = \operatorname{sattn}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o).\]
+
+<p>Yet, there is an essential consideration missing here. We want the output corresponding to the \(i\)-th token to depend only on tokens \(k \leq i\). The previous formulation does <em>not</em> ensure this because in general, \(\mathbf{a}_{ik}\) can be greater than zero even if \(k &gt; i\), meaning that the \(i\)-th position utilizes information from positions ahead. To address this, we need to introduce a <em>mask</em> in such cases to enforce \(\mathbf{a}_{ik} = 0\) if \(k &gt; i\). One approach is to modify the score function</p>
+
+\[\operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ})\]
+
+<p>to a <em>causal</em> score function</p>
+
+\[\operatorname{mscore}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) = \operatorname{score}(\mathbf{q}_{i \circ}, \mathbf{c}_{k \circ}) \mathbf{1}_{k \leq i},\]
+
+<p>which zeroes out elements where \(k &gt; i\). With this modification, we define the operator \(\operatorname{sattn}_m\) as</p>
+
+\[\mathbf{V}’ = \operatorname{sattn}_m(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o)\]
+
+<p>to satisfy our requirement. Furthermore, in GPT-3, certain layers use a <em>banded causal mask</em>, where in addition to zeroing out elements \(k &gt; i\), elements where \(i - k &gt; \beta\) are also zeroed out. This ensures that each token only attends to a limited number of preceding elements. The figure below illustrates masked attention with no mask, a causal mask, and a banded causal mask.</p>
+
+<p><img src="/assets/figs/lm1/attnmask2.png" alt="Attention with causal mask, banded mask, and banded causal mask" /></p>
+
+<p>Masked attention with causal mask, banded mask, and banded causal mask.</p>
+
+<p>All the formulations mentioned so far apply to a <em>single attention head</em>. However, the concept of multi-head attention reveals that we can repeat this process for \(n_h\) attention heads. Each attention head operates independently by having different learnable parameters. The outputs of all the attention heads are then summed up, resulting in the final output matrix. In this case, let</p>
+
+\[\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o\]
+
+<p>be order 3 tensors with dimensions</p>
+
+\[(n_h, d, d^q), (n_h, d, d^q), (n_h, d, d^v), (n_h, d^v, d),\]
+
+<p>respectively. Consequently, the multi-head attention operation \(\operatorname{sattn}_{m, h}\) is given by</p>
+
+\[\mathbf{V’} = \operatorname{sattn}_{m, h}(\mathbf{V};\mathbf{W}^q, \mathbf{W}^c, \mathbf{W}^v, \mathbf{W}^o) = \sum_l \operatorname{sattn}_m(\mathbf{V};\mathbf{w}^q_{l \circ \circ}, \mathbf{w}^c_{l \circ \circ}, \mathbf{w}^v_{l \circ \circ}, \mathbf{w}^o_{l \circ \circ}).\]
+
+<p><img src="/assets/figs/lm1/diagramattention.jpg" alt="Masked multi-head attention with two heads." /></p>
+
+<p>Masked multi-head attention with two heads.</p>
+
+<p>The implementation of masked multi-head attention is demonstrated below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">dot_product_attn</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c1">#queries : (..., ntokens, dk)
+</span>    <span class="c1">#keys : (..., ntokens, dk)
+</span>    <span class="c1">#values : (..., ntokens, dv)
+</span>    <span class="c1">#mask : None or str or (..., ntokens, ntokens)
+</span>
+    <span class="n">dk</span> <span class="o">=</span> <span class="n">queries</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">inner_product</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'...ij, ...kj -&gt; ...ik'</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span><span class="o">/</span><span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span> <span class="c1">#(..., ntokens, ntokens)
+</span>    <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">ntokens</span> <span class="o">=</span> <span class="n">values</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">mask</span> <span class="o">==</span> <span class="s">'upper'</span> <span class="ow">or</span> <span class="n">mask</span> <span class="o">==</span> <span class="s">'causal'</span><span class="p">:</span>
+                <span class="n">maskbool</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">triu</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">ntokens</span><span class="p">,</span> <span class="n">ntokens</span><span class="p">),</span> <span class="n">diagonal</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">maskbool</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="nb">NotImplementedError</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">torch</span><span class="p">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">mask</span><span class="p">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">torch</span><span class="p">.</span><span class="nb">bool</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">log</span><span class="p">((</span><span class="o">~</span><span class="n">mask</span><span class="p">).</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="nb">float</span><span class="p">))</span>
+            <span class="n">inner_product</span> <span class="o">+=</span> <span class="n">mask</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">inner_product</span><span class="o">/</span><span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dk</span><span class="p">),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#(..., ntokens, ntokens)
+</span>    <span class="n">wvalues</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'...ij, ...jk -&gt; ...ik'</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wvalues</span>
+
+<span class="k">class</span> <span class="nc">MultiHeadAttention</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nheads</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">,</span> <span class="n">dk</span><span class="p">,</span> <span class="n">dv</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">nheads</span> <span class="o">=</span> <span class="n">nheads</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">dmodel</span> <span class="o">=</span> <span class="n">dmodel</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">dk</span> <span class="o">=</span> <span class="n">dk</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">dv</span> <span class="o">=</span> <span class="n">dv</span>
+        <span class="c1">#(..., ntokens, dmodel), (nheads, dmodel, dk) -&gt; (..., nheads, ntokens, dv)
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">q_proj_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nheads</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">,</span> <span class="n">dk</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">k_proj_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nheads</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">,</span> <span class="n">dk</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">v_proj_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nheads</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">,</span> <span class="n">dv</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">o_proj_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nheads</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">,</span> <span class="n">dv</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">initialize</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">init</span><span class="p">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">q_proj_matrix</span><span class="p">)</span>
+        <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">init</span><span class="p">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">k_proj_matrix</span><span class="p">)</span>
+        <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">init</span><span class="p">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">v_proj_matrix</span><span class="p">)</span>
+        <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">init</span><span class="p">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">o_proj_matrix</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c1">#queries : (..., ntokens, dmodel)
+</span>        <span class="c1">#keys : (..., ntokens, dmodel)
+</span>        <span class="c1">#values : (..., ntokens, dmodel)
+</span>        <span class="c1">#mask : None or (..., ntokens, ntokens)
+</span>        <span class="n">projected_queries</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'...ij, kjm -&gt; ...kim'</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">q_proj_matrix</span><span class="p">)</span> <span class="c1">#(..., nheads, ntokens, dk)
+</span>        <span class="n">projected_keys</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'...ij, kjm -&gt; ...kim'</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">k_proj_matrix</span><span class="p">)</span> <span class="c1">#(..., nheads, ntokens, dk)
+</span>        <span class="n">projected_values</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'...ij, kjm -&gt; ...kim'</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">v_proj_matrix</span><span class="p">)</span> <span class="c1">#(..., nheads, ntokens, dv)
+</span>        <span class="n">new_projected_values</span> <span class="o">=</span> <span class="n">dot_product_attn</span><span class="p">(</span><span class="n">projected_queries</span><span class="p">,</span> <span class="n">projected_keys</span><span class="p">,</span> <span class="n">projected_values</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span> <span class="c1">#(..., nheads, ntokens, dv)
+</span>        <span class="n">new_values</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'...ijk, ilk -&gt; ...jl'</span><span class="p">,</span> <span class="n">new_projected_values</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">o_proj_matrix</span><span class="p">)</span> <span class="c1">#(..., ntokens, dmodel)
+</span>        <span class="k">return</span> <span class="n">new_values</span>
+</code></pre></div></div>
+
+<p>Now, there are remaining components necessary to create a complete transformer block for our language model. These additional components are relatively straightforward compared to the attention block itself.</p>
+
+<p>Before we proceed, it is important to note that only the attention mechanism exchanges information between token positions. We specifically designed the masked multi-head attention to meet the requirement of not using future information. If other components were to exchange information between tokens, we would need to ensure that they also adhere to this requirement or risk violating it.</p>
+
+<h3 id="the-feedforward-neural-network">The Feedforward Neural Network</h3>
+
+<p>The second major component of a transformer block is a feedforward neural network (FNN) that operates on a matrix \(\mathbf{V}\) of dimensions \((n, d)\). The FNN shares the same parameters across all positions in the matrix. It can be defined as a parameterized function \(f_{FNN}: \mathbb{R}^d \to \mathbb{R}^d\) that acts on each row \(\mathbf{v}_{i \circ}\) of \(\mathbf{V}\). The function consists of a feedforward neural network with a single hidden layer of dimension \(d^f\). In this formulation, the activation function \(\operatorname{act}\) is applied element-wise and is typically a rectified linear unit (ReLU) or a Gaussian Error Linear Unit (GELU). The learnable matrices \(\mathbf{W}^a\) and \(\mathbf{W}^b\) have dimensions \((d, d^f)\) and \((d^f, d)\), respectively. Additionally, there are learnable vectors \(\mathbf{b}^a\) and \(\mathbf{b}^b\) of size \((d^f, d)\). The FNN operation can be expressed as:</p>
+
+\[f_{FNN}(\mathbf{V};\mathbf{W}^a, \mathbf{W}^b) = \operatorname{act}(\mathbf{v}_{ik} \mathbf{w}^a_{kl} + \mathbf{b}_l^a)\mathbf{w}^b_{kj} + \mathbf{b}_l^b.\]
+
+<h3 id="layer-normalization-and-dropout">Layer Normalization and Dropout</h3>
+
+<p>Layer normalization is an operation applied to each row \(\mathbf{v}_{i \circ}\) of the matrix \(\mathbf{V}\). It calculates the mean \(\mu_i\) and standard deviation \(\sigma_i\) of \(\mathbf{v}_{i \circ}\), normalizes \(\mathbf{v}_{i \circ}\) using \(\mu_i\) and \(\sigma_i\), and applies a learnable affine transformation shared across all positions. The normalization process involves computing the mean</p>
+
+\[\mu_i = \frac{1}{d} \sum_{j} \mathbf{v}_{ij}\]
+
+<p>and the standard deviation</p>
+
+\[\sigma_i = \sqrt{\frac{1}{d} \sum_{j} (\mathbf{v}_{ij} - \mu_i)^2}.\]
+
+<p>Parameters \(\mathbf{W}^{LN, a}\) and \(\mathbf{W}^{LN, b}\) of dimension \((d)\) are used for the affine transformation. Each element \(\mathbf{v}_{ij}\) is transformed as follows:</p>
+
+\[\mathbf{v}_{ij} \to \mathbf{w}^{LN, a}_{j} \frac{\mathbf{v}_{ij} - \mu_i}{\sigma_i + \epsilon} + \mathbf{w}_j^{LN, b}.\]
+
+<p>Similarly, dropout is a common operation used in neural networks during training. It randomly sets each input element to 0 with a probability of \(p\) and scales the remaining inputs by a factor of \(\frac{1}{1-p}\).</p>
+
+<h3 id="putting-the-block-together">Putting the Block Together</h3>
+
+<p>With all the components in place, we can now assemble the transformer block. First, we apply layer normalization to the input \(\mathbf{V}\) and then perform dropout on the output. These steps are applied to both the attention block \(\operatorname{block}_1\) and the feedforward neural network block \(\operatorname{block}_2\). We connect the blocks to the input \(\mathbf{V}\) using residual connections, which sum the output of each block with the input. The resulting transformer block is defined as:</p>
+
+\[\operatorname{transblock}(\mathbf{V}) = \mathbf{V} + \operatorname{block}_1(\mathbf{V}) + \operatorname{block}_1(\operatorname{block}_2(\mathbf{V})).\]
+
+<p>This formulation ensures that the output of the transformer block depends on the input and the outputs of both the attention and feedforward blocks. By stacking multiple transformer blocks together, we can create a deeper and more expressive model.</p>
+
+<p>Below is an implementation of the transformer block, where the attention block is referred to as the “encoder block”.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">LayerNorm</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">dmodel</span> <span class="o">=</span> <span class="n">dmodel</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dmodel</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dmodel</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-6</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">xnorm</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">std</span> <span class="o">+</span> <span class="bp">self</span><span class="p">.</span><span class="n">eps</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">a</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="p">.</span><span class="n">b</span>
+        <span class="k">return</span> <span class="n">y</span>
+
+<span class="k">class</span> <span class="nc">EncoderLayer</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nheads</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">,</span> <span class="n">dk</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nhidden</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">pdrop</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="n">dk</span> <span class="o">=</span> <span class="n">dk</span> <span class="k">if</span> <span class="n">dk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">dmodel</span>
+        <span class="n">dv</span> <span class="o">=</span> <span class="n">dv</span> <span class="k">if</span> <span class="n">dv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">dmodel</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">mthattention</span> <span class="o">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">nheads</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">,</span> <span class="n">dk</span><span class="p">,</span> <span class="n">dv</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ffn</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">dmodel</span><span class="p">,</span> <span class="n">nhidden</span><span class="p">),</span>
+                                       <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">ReLU</span><span class="p">(),</span>
+                                       <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">nhidden</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">pdrop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ln1</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">dmodel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ln2</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">dmodel</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c1"># values = self.mthattention(values, values, values, mask)
+</span>        <span class="n">self_attention</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">values</span> <span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">mthattention</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">values</span> <span class="o">+</span> <span class="bp">self</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">self_attention</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">ln1</span><span class="p">(</span><span class="n">values</span><span class="p">)))</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">values</span> <span class="o">+</span> <span class="bp">self</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">ffn</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">ln2</span><span class="p">(</span><span class="n">values</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">values</span>
+</code></pre></div></div>
+
+<p><img src="/assets/figs/lm1/diagramblock.jpg" alt="A transformer decoder block" /></p>
+
+<p>A transformer decoder block</p>
+
+<p>Finally, it is useful to count the number of learnable parameters in a transformer block. Assuming that our multi-head attention has \(n_h\) heads, an input dimension of \(d\), value projection dimension of \(d^v\), and key/query dimension of \(d^q\), we can calculate the number of parameters in the multi-head attention as \(2n_h d(d^v + d^q)\). The feedforward neural network with a hidden layer of size \(d^f\) will have \(2d d^f + d + d^f\) parameters. Each layer normalization operation will have \(2d\) parameters. Considering these components, the total number of parameters in a transformer block is given by \(n_{block} = 2n_h d(d^v + d^q) + 2d d^f + d + d^f + 4d\). In GPT-3, the default values are typically set as follows: \(d\) is divisible by \(n_h\), \(d^v\) and \(d^q\) are both equal to \(d/n_h\), and \(d^f = 4d\). Under these default settings, the formula for the number of parameters simplifies to \(n_{block} = 12d^2 + 9d\).</p>
+
+<h2 id="the-full-sequence-model">The Full Sequence Model</h2>
+
+<p>To construct the full sequence model, we stack the following components sequentially: an embedding layer, positional embedding layer, \(n_T\) transformer blocks, a final layer normalization block, and an unembedding block. The architecture can be visualized as shown below:</p>
+
+<p><img src="/assets/figs/lm1/diagramouter.jpg" alt="diagram3.jpg" /></p>
+
+<p>The total number of parameters in the model can be calculated as:</p>
+
+\[n_{block} = 2n_h d(d^v + d^q) + 2d d^f + d + d^f + 4d \\
+n_{tr} = n_T n_{block} + 2d \\
+n_{embed} = d n_{vocab} + d n_{ctx} \\
+n_{unembed} = d n_{vocab} + n_{vocab} \\
+n_{params} = n_{tr} + n_{embed} + n_{unembed},\]
+
+<p>where \(n_{block}\) represents the number of parameters in a single transformer block, \(n_{tr}\) represents the total number of parameters in the transformer blocks, \(n_{embed}\) represents the number of parameters in the embedding layers, \(n_{unembed}\) represents the number of parameters in the unembedding layer. The term \(d n_{ctx}\) is dropped if a fixed positional embedding is used. Considering the default settings of GPT-3, we can simplify the formula to:</p>
+
+\[n_{params} = n_T(12d^2 + 9d) + 2d + n_{vocab}(2d + 1) + d n_{ctx}.\]
+
+<p>You can use the following code to count the number of parameters:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">subsnone</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">val</span>
+
+<span class="k">def</span> <span class="nf">number_of_gpt_parameters</span><span class="p">(</span><span class="n">nvocab</span><span class="p">,</span> <span class="n">dembed</span><span class="p">,</span> <span class="n">nlayers</span><span class="p">,</span> <span class="n">nheads</span><span class="p">,</span> <span class="n">nctx</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dk</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nhidden</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">nhidden</span> <span class="o">=</span> <span class="n">subsnone</span><span class="p">(</span><span class="n">nhidden</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="n">dembed</span><span class="p">)</span>
+    <span class="n">dk</span> <span class="o">=</span> <span class="n">subsnone</span><span class="p">(</span><span class="n">dk</span><span class="p">,</span> <span class="n">dembed</span><span class="o">//</span><span class="n">nheads</span><span class="p">)</span>
+    <span class="n">dv</span> <span class="o">=</span> <span class="n">subsnone</span><span class="p">(</span><span class="n">dv</span><span class="p">,</span> <span class="n">dembed</span><span class="o">//</span><span class="n">nheads</span><span class="p">)</span>
+    <span class="n">n_attn</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">dembed</span><span class="o">*</span><span class="p">(</span><span class="n">dk</span> <span class="o">+</span> <span class="n">dv</span><span class="p">)</span><span class="o">*</span><span class="n">nheads</span>
+    <span class="n">n_fnn</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">dembed</span><span class="o">*</span><span class="n">nhidden</span> <span class="o">+</span> <span class="n">dembed</span> <span class="o">+</span> <span class="n">nhidden</span>
+    <span class="n">n_ln</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">dembed</span>
+    <span class="n">n_transformer</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_attn</span> <span class="o">+</span> <span class="n">n_fnn</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_ln</span><span class="p">)</span><span class="o">*</span><span class="n">nlayers</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">dembed</span>
+    <span class="n">n_embed</span> <span class="o">=</span> <span class="n">dembed</span><span class="o">*</span><span class="n">nvocab</span>
+    <span class="k">if</span> <span class="n">nctx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">n_embed</span> <span class="o">+=</span> <span class="n">nctx</span><span class="o">*</span><span class="n">dembed</span>
+    <span class="n">n_unembed</span> <span class="o">=</span> <span class="n">dembed</span><span class="o">*</span><span class="n">nvocab</span> <span class="o">+</span> <span class="n">nvocab</span>
+    <span class="k">return</span> <span class="n">n_embed</span> <span class="o">+</span> <span class="n">n_unembed</span> <span class="o">+</span> <span class="n">n_transformer</span>
+</code></pre></div></div>
+
+<p>We can then finally comlpete our code for GPT.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Encoder</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="s">"""
+        Makes an encoder
+    """</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nlayers</span><span class="p">,</span> <span class="n">nheads</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">,</span> <span class="n">dk</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nhidden</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">pdrop</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">nlayers</span> <span class="o">=</span> <span class="n">nlayers</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">EncoderLayer</span><span class="p">(</span><span class="n">nheads</span><span class="p">,</span> <span class="n">dmodel</span><span class="p">,</span> <span class="n">dk</span><span class="p">,</span> <span class="n">dv</span><span class="p">,</span> <span class="n">nhidden</span><span class="p">,</span> <span class="n">pdrop</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nlayers</span><span class="p">))</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ln</span> <span class="o">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">dmodel</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">layers</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">ln</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">values</span>
+
+<span class="k">class</span> <span class="nc">GPT</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="s">"""
+        Implements a version of GPT-2
+
+        Parameters:
+        -----------
+        nvocab: int
+            Size of the model vocabulary
+        nctx: int
+            Maximum size of context window
+        dembed: int
+            Size of embedding dimension
+        nlayers: int
+            Number of encoder layers
+        dk: Optional[int]
+            Dimension of key projection. If None equals dembed.
+        dv: Optional[int]
+            Dimension of value projection. If None equals dembed
+        nhidden: int
+            Number of hidden layers in FNN part of encoder
+        pdrop: float
+            Dropout probability
+    """</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nvocab</span><span class="p">,</span> <span class="n">nctx</span><span class="p">,</span> <span class="n">dembed</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">nlayers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">nheads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dk</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nhidden</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pdrop</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">nvocab</span> <span class="o">=</span> <span class="n">nvocab</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">nctx</span> <span class="o">=</span> <span class="n">nctx</span>
+				<span class="bp">self</span><span class="p">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">nctx</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">embed</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">nvocab</span><span class="p">,</span> <span class="n">dembed</span><span class="p">,</span> <span class="n">padding_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nctx</span><span class="p">,</span> <span class="n">dembed</span><span class="p">]))</span>
+        <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">init</span><span class="p">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span>
+        <span class="n">dk</span> <span class="o">=</span> <span class="n">dk</span> <span class="k">if</span> <span class="n">dk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">dembed</span><span class="o">//</span><span class="n">nheads</span>
+        <span class="n">dv</span> <span class="o">=</span> <span class="n">dv</span> <span class="k">if</span> <span class="n">dv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">dembed</span><span class="o">//</span><span class="n">nheads</span>
+        <span class="n">nhidden</span> <span class="o">=</span> <span class="n">nhidden</span> <span class="k">if</span> <span class="n">nhidden</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="mi">4</span><span class="o">*</span><span class="n">dembed</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">Encoder</span><span class="p">(</span><span class="n">nlayers</span><span class="p">,</span> <span class="n">nheads</span><span class="p">,</span> <span class="n">dembed</span><span class="p">,</span> <span class="n">dk</span><span class="p">,</span> <span class="n">dv</span><span class="p">,</span> <span class="n">nhidden</span><span class="p">,</span> <span class="n">pdrop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">projection</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">dembed</span><span class="p">,</span> <span class="n">nvocab</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">pdrop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s">'mask'</span><span class="p">,</span> <span class="n">torch</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">torch</span><span class="p">.</span><span class="n">triu</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nctx</span><span class="p">,</span> <span class="n">nctx</span><span class="p">),</span> <span class="n">diagonal</span><span class="o">=</span><span class="mi">1</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">apply_softmax</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="s">"""
+            tokens : torch.Tensor
+                Tensor of tokens, of type torch.long.
+        """</span>
+        <span class="c1">#tokens : (..., ntokens)
+</span>        <span class="n">d</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">pos</span><span class="p">[:</span><span class="n">d</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">mask</span><span class="p">[:</span><span class="n">d</span><span class="p">,</span> <span class="p">:</span><span class="n">d</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">embed</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="o">+</span> <span class="n">pos</span><span class="p">)</span> <span class="c1">#(..., ntokens, dembed)
+</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span> <span class="c1">#(..., ntokens, dembed)
+</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">#(..., ntokens, dmodel)
+</span>        <span class="k">if</span> <span class="n">apply_softmax</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#(..., ntokens, dmodel)
+</span>        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">functional</span><span class="p">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#(..., ntokens, dmodel)
+</span>        <span class="k">return</span> <span class="n">x</span>
+</code></pre></div></div>
+
+<h1 id="conclusion">Conclusion.</h1>
+
+<p>In real life, it is highly unlikely that you would train a language model from scratch. More commonly, you would choose a pretrained model from sources like <a href="https://huggingface.co/">HuggingFace</a> and fine-tune it to suit your specific task, or directly utilize it as it is. Alternatively, you could make use of existing language models like <a href="https://chat.openai.com/chat">ChatGPT</a>. Nevertheless, understanding the underlying mechanisms is valuable.</p>
+
+<p>Is this the end of the story? For GPT-3, which serves as the foundation for models such as ChatGPT, it is almost the case. The key differences lie in:</p>
+
+<ul>
+  <li>
+    <p><em>Scale</em>: The sheer scale of GPT-3 cannot be overstated. In the <a href="https://arxiv.org/pdf/2005.14165.pdf">original paper</a>, it boasts a vocabulary size of \(n_{vocab} = 50257\) and a context window size of \(n_{ctx} = 2048\). The largest model utilizes \(n_T = 96\), \(d=12288\), and \(n_h=96\), resulting in an astounding total number of parameters on the order of 175 billion (more precisely, estimated as \(n_{params} = 175223784799\)). Moreover, the training data is colossal, with the largest model trained on batches containing 3.8 million items and a total token count of 300 billion tokens, drawn from extensive sources like the <a href="https://www.wikipedia.org/">complete Wikipedia</a> or extensive web crawling databases like <a href="https://commoncrawl.org/">Common Crawl</a>. Training a model of this magnitude is a significant engineering endeavor, accompanied by training costs reaching millions of dollars.</p>
+  </li>
+  <li>
+    <p><em>Sparse Attention Mask</em>: GPT-3 departs from using a full causal mask and instead incorporates a <em>banded</em> causal mask, alternating between the two. This enables efficient computation of the banded causal mask layers.</p>
+  </li>
+</ul>
+
+<p>That concludes our exploration. You can access GPT-3 in the <a href="https://beta.openai.com/playground">OpenAI playground</a> using the <em>davinci</em> model. However, it is crucial to emphasize that <strong>GPT-3 is not ChatGPT</strong>. Let’s reiterate that: <strong>GPT-3 is not ChatGPT</strong>. To emphasize this point, let’s revisit the initial prompt in the opening paragraph, this time using pure GPT-3 <em>davinci</em>. The initial prompt is highlighted in bold.</p>
+
+<blockquote>
+  <p><strong>Chat, write to me a layman paragraph preceding a tutorial on language models, that motivates on why the reader should be interested in language models. Make it as engaging as possible.</strong></p>
+
+  <p>This type of summary is called an abstract. It is an important tool for scientists and non-scientists alike to quickly grasp the essence of a research paper. If you are writing a research paper, it is a good idea to write an abstract yourself before writing a scientific paper.</p>
+
+  <p>Preparation</p>
+
+  <p>Go to a notebook and write down ideas or notes. For example, use the text “Deep Learning” to start. Alternatively, use the text “Language Models”. Then, write down relevant words and phrases that come to your mind.</p>
+
+  <p>Write down a paragraph that motivates the reader to read further on language models.</p>
+
+  <p>Write down a paragraph that summarizes the main idea about language models.</p>
+
+  <p>Write down a paragraph that lists the main contributions of your paper.</p>
+
+  <p>Write down a paragraph that lists the main assumptions of your work.</p>
+
+  <p>Write down a paragraph that lists the main problems of your work.</p>
+
+  <p>Write down a paragraph that lists the main lessons learned from your work.</p>
+
+  <p>Write down a paragraph that lists the main open questions.</p>
+
+  <p>Write down a paragraph that lists the main suggestions for future work.</p>
+
+  <p>Write down a paragraph that lists the main references.</p>
+
+  <p>Write down a paragraph</p>
+</blockquote>
+
+<p>Pure GPT-3 is capable of generating coherent text, but it lacks the ability to specifically address your requests. It resembles a highly intelligent child who possesses vast knowledge but lacks concern for fulfilling your specific desires.</p>
+
+<p>In comparison, models like ChatGPT, and even more recent ones like <em>text-davinci-003</em>, excel at addressing user requests more effectively. ChatGPT can be viewed as a “tamed” version of GPT-3, achieved through two specific techniques: <em>supervised fine tuning</em> (SFT) and <em>reinforcement learning from human feedback</em> (RLHF). The upcoming second part of this discussion aims to explain this technique, bridging the gap between GPT-3 and ChatGPT.</p>
+
+  </div><a class="u-url" href="/2023/01/14/llm-tutorial-1.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="http://localhost:4000/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Danilo Naiff&#39;s personal website.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+  <a rel="me" href="https://github.com/DFNaiff" target="_blank" title="github">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://www.linkedin.com/in/danilo-naiff" target="_blank" title="linkedin">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#linkedin"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://scholar.google.com/citations?user=UgDxpKgAAAAJ&hl" target="_blank" title="google_scholar">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#google_scholar"></use>
+    </svg>
+  </a>
+</li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

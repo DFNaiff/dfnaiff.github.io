@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Entropy and the world - Part 3: Interlude on QM. | Danilo Naiff</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Entropy and the world - Part 3: Interlude on QM." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Preamble" />
+<meta property="og:description" content="Preamble" />
+<link rel="canonical" href="http://localhost:4000/2024/04/10/thoughts-on-entropy-3.html" />
+<meta property="og:url" content="http://localhost:4000/2024/04/10/thoughts-on-entropy-3.html" />
+<meta property="og:site_name" content="Danilo Naiff" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-04-10T12:00:00-03:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Entropy and the world - Part 3: Interlude on QM." />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-10T12:00:00-03:00","datePublished":"2024-04-10T12:00:00-03:00","description":"Preamble","headline":"Entropy and the world - Part 3: Interlude on QM.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2024/04/10/thoughts-on-entropy-3.html"},"url":"http://localhost:4000/2024/04/10/thoughts-on-entropy-3.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Danilo Naiff" />
+
+<!--
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+-->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  TeX: {
+    Macros: {
+      ket: ["\\left| #1 \\right\\rangle", 1],
+      bra: ["\\left\\langle #1 \\right|", 1],
+      braket: ["\\left\\langle #1 \\middle| #2 \\right\\rangle", 2],
+      mean: ["\\left\\langle #1 \\right\\rangle", 1],
+      abs: ["\\left| #1 \\right|", 1],
+      norm: ["\\left\\| #1 \\right\\|", 1],
+      trace: ["\\text{tr}\\left( #1 \\right)", 1],
+      ptrace: ["\\text{tr}\_{#1}\\left( #2 \\right)", 2],
+      pderiv: ["\\frac{\\partial #1}{\\partial #2}", 2],
+      evalat: ["\\left. #1 \\right|_{#2}", 2],
+    }
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <!--<a class="site-title" rel="author" href="/">Danilo Naiff</a>
+    --><nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Danilo Naiff</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Apps
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/golf">Gravitational Golf</a>
+              <a class="dropdown-item" href="/mbs">Quasielectrostatics</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Entropy and the world - Part 3: Interlude on QM.</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2024-04-10T12:00:00-03:00" itemprop="datePublished">
+        Apr 10, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="preamble">Preamble</h1>
+
+<p>Previously, we justified the maximum entropy principle being an actual physical principle for “most physics”, when we consider coarse measurements in time and space. However, “most physics” is not enough. After all, in the previous discussion, we had to assume a dynamical law with fluctuations. This is an approximation of the actual world, and, to get deeply into how entropy works in this world here, we will need to interact with the actual physics of the world.</p>
+
+<h1 id="the-quantum-mechanical-approach-states-and-measurement">The quantum mechanical approach: states and measurement.</h1>
+
+<p>To continue our exploration of entropy in physical systems, we will have to move to quantum mechanics. Although this may seem like it makes the problem much harder in principle, we will find that the quantum mechanical framework not only is appropriate because it is true but because it ends up making things much easier.</p>
+
+<p>As a primer, we review the <a href="https://en.wikipedia.org/wiki/Mathematical_formulation_of_quantum_mechanics#Postulates_of_quantum_mechanics">basic framework</a> of quantum mechanics, for a single isolated physical system. First, we have to define what are the systems we are describing. In quantum mechanics, we have that each isolated system is associated with a separable Hilbert space $\mathbb{H}$ with inner product $\braket{\phi}{\psi}$, or, in a very informal language, to a vector space $\mathbb{C}^D$ with $D$ being possibly <em>very</em> large, that is, infinite. At each time $t$, the physical system is at a state $\ket{\psi} \in \mathbb{H}$. We assume those states to be unit vectors, that is, $\braket{\psi}{\psi} = 1$.</p>
+
+<p>Physical systems are to be measured. In quantum mechanics, we assume that each measurable physical quantity is associated with a Hermitian operator $A$. To avoid using the full apparatus of <a href="https://en.wikipedia.org/wiki/Spectral_theorem">spectral theory</a>, of which I only know the basics, we treat $A$ as we would in the finite-dimensional case (in other words, we assume $A$ to be a <a href="https://en.wikipedia.org/wiki/Compact_operator_on_Hilbert_space">compact Hermitian operator</a>). Therefore, we can use the spectral theorem to postulate that $A$ can be uniquely decomposed as</p>
+
+\[A = \sum_i \lambda_i P_i,\]
+
+<p>where $\lambda_1, \lambda_2, \ldots$ are distinct eigenvalues of $A$, and $P_1, P_2, \ldots$ are projections onto a set of orthogonal subspaces spanning $A$. We abuse our notation and also denote these spaces as $P_1, P_2, \ldots$. The reason why we are directly talking about projections, instead of eigenvalues, is that the fact that the spectra can be degenerated is crucial in what is to follow.</p>
+
+<p>With the above decomposition, we can describe the measurement of a system as follows. When we make a measurement $A$ on the physical system in state $\ket{\psi}$, two things happens:</p>
+
+<ol>
+  <li>The result of our measurement is given by one of the eigenvalues $\lambda_1, \lambda_2, \ldots$, with the probability of measuring each eigenvalue $\lambda_i$ being given by $p_i = \bra{\psi} P_i \ket{\psi}$.</li>
+  <li>Having the measurement result $\lambda_i$, our system immediately transitions (collapses) from state $\ket{\psi}$ to the normalized state $\frac{P_i \ket{\psi}}{\bra{\psi} P_i \ket{\psi}}$. That is, our system is projected to the subspace $S_i$ and then normalized.</li>
+</ol>
+
+<p>The above axiom gives rise to the (main problem)[htteigenbasisps://en.wikipedia.org/wiki/Measurement_problem] of (interpreting quantum mechanics)[https://en.wikipedia.org/wiki/Interpretations_of_quantum_mechanics], but, for now, we will remain agnostic on what measurement <em>really</em> means, and just accept that this is how the world works.</p>
+
+<p>Importantly, we can calculate the expected value $\mean{A}$ of our measurement $A$ (of the physical system in state $\ket{\psi}$) as</p>
+
+\[\mean{A} = \sum_i \lambda_i \bra{\psi} P_i \ket{\psi} = \bra{\psi} \sum_i \lambda_i P_i \ket{\psi} = \bra{\psi} A \ket{\psi}.\]
+
+<p>Also, the measurement axiom makes clear why we want state vectors to be normalized, given that we want our probabilities to sum to one</p>
+
+\[1 = \sum_i p_i = \sum_i \bra{\psi} P_i \ket{\psi} = \bra{\psi} \sum_i P_i \ket{\psi}.\]
+
+<p>Also, the projection themselves $P_i$ can be thought of as measurable physical quantities, since they are Hermitian operators. In particular, we can think of $P_i$ as answering the question “Has the system collapsed to the subspace $S_i$?” with the value of 1 if the answer is “yes”, and 0 if the answer is no. The expected value here is exactly $\bra{\psi} P_i\ket{\psi}$, which measures “how much” was state vector $\ket{\psi}$ overlapping with subspace $S_i$ to begin with.</p>
+
+<p>A particular projection we have is the projection $P_\psi := \ket{\psi} \bra{\psi}$, associated with the quantum state $\ket{\phi}$. To indicate we are talking about a function of the physical state, rather than a measurement, we refer to this projection as the density operator and use the symbol $\rho$ instead of $P_\psi$. Three properties of the density operator, that can be easily proven, are</p>
+
+\[\trace{\rho} = 1 \\
+\bra{\psi} A \ket{\psi} = \trace{\rho A} \\
+\frac{P_i \ket{\psi}}{\bra{\psi} A \ket{\psi}} \frac{\bra{\psi} A}{\bra{\psi} A \ket{\psi}} = \frac{A \rho A}{\trace{A \rho A}}.\]
+
+<p>Thus, we can use the density operator $\rho$ in place of the state vector $\ket{\psi}$ when defining our physical system. An advantage of the density operator is that the state vectors $\ket{\psi}$ and $e^{i \theta} \ket{\psi}$ describe the same physical system, so we do not have a unique representation. However, since we have that $\ket{e^{i \theta} \ket{\psi}} \bra{e^{i \theta} \ket{\psi}} = \ket{\psi} \bra{\psi}$, we do have a unique representation of our physical system state when given by the density matrix $\rho$.</p>
+
+<h1 id="mixed-systems-and-the-density-matrix">Mixed systems and the density matrix.</h1>
+
+<p>First, consider a pure system as above, in state $\ket{\psi}$. associated with this quantum state, we have the projection operator $P_{\psi}:= \ket{\psi} \bra{\psi}$. To indicate we are talking about a function of the physical state, rather than a measurement, we refer to this projection as the density operator and use the symbol $\rho$ instead of $P_\psi$. Three properties of the density operator, that can be easily proven, are</p>
+
+\[\trace{\rho} = 1 \\
+\bra{\psi} A \ket{\psi} = \trace{\rho A} \\
+\frac{P_i \ket{\psi}}{\bra{\psi} A \ket{\psi}} \frac{\bra{\psi} A}{\bra{\psi} A \ket{\psi}} = \frac{A \rho A}{\trace{A \rho A}}.\]
+
+<p>Thus, we can use the density operator $\rho$ in place of the state vector $\ket{\psi}$ when defining our physical system. An advantage of the density operator is that the state vectors $\ket{\psi}$ and $e^{i \theta} \ket{\psi}$ describe the same physical system, so we do not have a unique representation. However, since we have that $\ket{e^{i \theta} \ket{\psi}} \bra{e^{i \theta} \ket{\psi}} = \ket{\psi} \bra{\psi}$, we do have a unique representation of our physical system state when given by the density matrix $\rho$.</p>
+
+<p>Now, suppose that we do not know in which quantum state our system is in. That is, our system can be in many possible orthogonal states ${\ket{\psi_j}}$, with probabilities ${w_j}$, such that $\sum_j w_j = 1$. Those are associated with pure density matrices ${\ket{\psi_j} \bra{\psi_j}}$. Now, when making a measurement $A$ of this system, we need to consider not only the probabilities given by Born’s rule but also the ones given by our lack of knowledge. We define then the density matrix $\rho$, encoding the state of our system <em>given the uncertainty</em> as</p>
+
+\[\rho := \sum_j w_j \rho_j, \quad \rho_j := \ket{\psi_j} \bra{\psi_j}.\]
+
+<p>The nice thing about the density matrix is that we can easily extend our postulates when written in terms of pure density matrices $\rho_j$. To see this, denote the random variable <em>our system is in quantum state $\ket{\psi_j}$ as $\Psi_j$, and, for a measurement $A$, denote the random variable _result of measurement $A$</em> as $\lambda(A)$. We then can find many similar results. For instance, the expected value of $\lambda(A)$ is given by</p>
+
+\[\trace{\rho A}\]
+
+<p>In particular, writing $A = \sum_i \lambda_i P_i$, the probability $P(\lambda(A) = \lambda_i)$ that we receive measurement $\lambda_i$ is given by</p>
+
+\[P(\lambda(A) = \lambda_i) = \sum_j P(\lambda(A) = \lambda_i \mid \Psi = \psi_j) P(\Psi = \psi_j) = \sum_i \trace{\rho_i P_i} w_i = \trace{\rho P_i}.\]
+
+<p>Similarly, the expected value $\mean{A}$ of $\lambda(A)$ equals</p>
+
+\[\mathbb{E} [\lambda(A)] = \trace{\rho A}.\]
+
+<p>After measurement, $\lambda(A) = \lambda_i$, the quantum state of the system will be in some unknown new collapsed state $P_i \rho_j P_i / \trace{\rho_j P_i}$ with some posterior probability $P(\Psi = \psi_j \mid \lambda(A) = \lambda_i)$ that I <em>was</em> in state $\ket{\psi_j}$ given that I’ve observed $\lambda_i$. This can also be described by a density matrix $\rho, and using Bayes’ rule, we find that the density matrix collapses to</p>
+
+\[\frac{P_i \rho P_i}{\trace{\rho P_i}}.\]
+
+<p>Finally, the matrix $\rho$ also has unit trace</p>
+
+\[\trace{\rho}.\]
+
+<p>Moreover, we have the property that</p>
+
+\[\trace{\rho^2} \leq 1,\]
+
+<p>with equality only if $\rho = \ket{\psi} \bra{\psi}$, that is, our system is in a pure state.</p>
+
+<p>In what follows, we will want to write the density matrix given a set of orthogonal subspaces, whose projections are given by ${Q_j}$. We will often also refer to the subspace themselves as $Q_j$. The probability $w_j$ will now mean “the probability that our system’s quantum state is in subspace $Q_j$”, and we will write</p>
+
+\[\rho = \sum w_j Q_j,\]
+
+<p>where now $w_1, w_2, \ldots$ are <em>distinct</em> positive values satisfying</p>
+
+\[\trace{\rho} = \sum_j w_j n_j = 1.\]
+
+<p>This way we are given a unique representation of the density matrix $\rho$ given ${w_j}$ and ${Q_j}$. If, for each subspace ${Q_j}$, of dimension $n_j$, we choose a basis ${\ket{\psi}_{jk}}_{k=1}^{n_j}$, we can diagonalize $\rho$ as</p>
+
+\[\rho = \sum_j \sum_{j=1}^{n_j} w_j \ket{\psi}_{jk} \bra{\psi}_{jk} \quad n_j := \operatorname{rank}{Q_j}.\]
+
+<p>In this case, we are tempted again to interpret $\rho$ as saying that “the system is in state $\ket{\psi}_{jk}$ with probability $w_j$”. The problem here is that the orthogonal basis of $Q_j$ is not unique, so in a sense saying the previous sentence is arbitrary. What we can say instead is just “the system’s state is in subspace $Q_j$ with probability $w_j n_j$”, but we can say nothing about any specific state inside $n_j$.</p>
+
+<p>With these properties, we can consider density matrices as the fundamental objects describing our physical system, instead of quantum states. Following <a href="https://www.amazon.com/Quantum-Computation-Information-10th-Anniversary/dp/1107002176">Nielsen and Chuang</a>, we reformulate the state and measurement postulates in terms of density matrices:</p>
+
+<p><em>Postulate 1</em>: Associated to any isolated physical system is a complex vector space $\mathbb{H}$ with inner product $\braket{\phi}{\psi}$. The system is described by its density operator $\rho$, which is both positive-definite and has unit trace. This implies that the density matrix can be decomposed as</p>
+
+\[\rho = \sum_j w_j \trace{Q_j},\]
+
+<p>where ${Q_j}$ are projections into a set of orthogonal subspaces, and $w_j &gt; 0$ are distinct values. Notice that the exigence of $\trace{\rho} = 1$ implies that</p>
+
+<p>The system is in a <em>pure state</em> if $\rho = \ket{\psi} \bra{\psi}$, and in a <em>mixed state</em> otherwise. Equivalently, a system is in a pure state if $\trace{\rho^2} = 1$ and in a mixed state if $\trace{\rho^2} &lt; 1$. If a quantum system is in state $\rho_k$ with probability $p_k$, then its density operator is given by</p>
+
+\[\rho = \sum_j p_k \rho_k.\]
+
+<p><em>Postulate 2</em>: Quantum measurements are described by Hermitian operators $A$, which can be decomposed as</p>
+
+\[A = \sum_i \lambda_i P_i,\]
+
+<p>where ${P_i}$ are projections into a set of orthogonal subspaces that span $\mathbb{H}$, and ${\lambda_i}$ are the distinct possible measurement results. If the state of the system before measurement, is $\rho$, the probability that we measure value $\lambda_i$ is given by</p>
+
+\[p(\lambda_i) := \trace{\rho P_i},\]
+
+<p>and, measuring value $\lambda_i$, the system state collapses to a new state $\rho(P_i)$, given by</p>
+
+\[\rho(P_i) := \frac{P_i \rho P_i}{\trace{\rho P_i}}.\]
+
+<p>In particular, this implies that the expected value $\mean{A}$ of the measurement $A$ is given by</p>
+
+\[\mean{A} = \trace{\rho A}.\]
+
+<h1 id="composite-systems-and-entanglement">Composite systems and entanglement</h1>
+
+<p>Another axiom concerns composite physical systems made of more than one part. In terms of state vectors, the third postulate of quantum mechanics says that, if we we have two distinct physical systems with associated Hilbert spaces $\mathbb{H}_A$ and $\mathbb{H}_B$, then the resulting composite physical system Hilbert space $\mathbb{H}$ is the tensor product</p>
+
+\[\mathbb{H} = \mathbb{H}_A \otimes \mathbb{H}_B\]
+
+<p>Moreover, <em>if</em> the the systems are prepared in states $\ket{\psi_A}$ and $\ket{\psi_B}$, then the composite system state vector $\ket{\psi}$ is</p>
+
+\[\ket{\psi} = \ket{\psi_A} \otimes \ket{\psi_B}.\]
+
+<p>we formulate the composite system postulate in terms of the density operator, by giving <em>Postulate 3</em>: Assuming we have $N$ distinct physical systems, each associated with a Hilbert space $\mathbb{H}_n$, then the resulting composite physical system Hilbert space $\mathbb{H}$ is the tensor product $\mathbb{H}_1 \otimes \ldots \otimes \mathbb{H}_N$. If each system $i$ is prepared in state $\rho_i$, then the joint state $\rho$ of the composite system is given by $\rho_1 \otimes \ldots \otimes \rho_N$.</p>
+
+<p>By choosing an orthogonal basis ${\ket{a}_i}$ for $\mathbb{H}_A$ and another orthogonal basis ${\ket{b}_j}$ for $\mathbb{H}_B$, we have that ${\ket{a}_i \otimes \ket{b}_j}$ is a basis for $\mathbb{H}_A \otimes \mathbb{H}_B$, so we can write $\ket{\psi}$ as</p>
+
+\[\ket{\psi} = \sum_{i,j} c_{ij} \ket{a_i} \otimes \ket{b}_j.\]
+
+<p>Similarly, we can write the density operator $\rho = \ket{\psi} \bra{\psi}$ as</p>
+
+\[\rho = \sum_{i,j,k,l} c_{i,j} c_{k, l}^* \ket{a_i} \bra{a_k} \otimes \ket{b_j} \bra{b_l}.\]
+
+<p>Crucially, not all state vectors $\ket{\psi} \in \mathbb{H}$ can be written as $\ket{\psi_A} \otimes \ket{\psi_B}$. In this case, we will not be able to consider each of the subsystems as being in some state vector. This gives us another strong motivation for dealing with the density operator formulation of quantum mechanics because if the system is in state $\rho = \ket{\psi}\bra{\psi}$, we <em>can</em> consider each system as in states $\rho_A$ and $\rho_B$, given by</p>
+
+\[\rho_A = \ptrace{B}{\rho} \\
+\rho_B = \ptrace{A}{\rho},\]
+
+<p>where we define the partial trace as</p>
+
+\[\ptrace{B}{\rho} = \left(\sum_n I_A \odot \bra{b_n}\right) \rho \left(I_A \odot \ket{b_n}\right) \\
+= \sum_n c_{in} c_{kn} \ket{a_i} \bra{a_n}.\]
+
+<p>This is because, using some calculations, we can show that, for any measurement $M_A$ made in the first system, the corresponding measurement in $\mathbb{H}_A \otimes \mathbb{H}_B$ is $M_A \otimes I_B$, and that</p>
+
+\[\mean{M_A} = \trace{\rho \left(M_A \otimes I_B\right)} = \trace{\ptrace{B}{\rho} M_A},\]
+
+<p>We will have much more to say about entanglement in the future, as I strongly suspect that this will be key to understanding the maximum entropy principle. However, that is a future discussion.</p>
+
+<h1 id="time-evolution">Time evolution</h1>
+
+<p>Finally, the last axiom concerns the time evolution of a physical system. In particular, it postulates that, when not perturbed by some measurement, the state of our system $\ket{\psi_0}$ at time $0$ transitions to state $\ket{\psi_t}$ at time $t$ as</p>
+
+\[\ket{\psi_t} = U(t) \ket{\psi_0},\]
+
+<p>where the operator $U(t)$ is unitary, with $U(0) = I$. The fact that $U(t)$ is unitary satisfies the requirement that $\braket{\psi}{\psi}$ is always equal to one.</p>
+
+<p>Since the operator is unitary  we can show that</p>
+
+\[U'(t) = -\frac{i}{\hbar} H,\]
+
+<p>where $H$ is a Hermitian operator. The operator $H$ is called the Hamiltonian, which, when seen as a measurement, measures the total energy of the system. Therefore, the system will evolve according to the Schrödinger equation
+\(\pderiv{\ket{\psi}}{t} = -\frac{i}{\hbar} H \ket{\psi}.\)</p>
+
+<p>The time evolution postulate and the Schrödinger equation are equivalent, and we can begin with the Schrödinger equation as our postulate, and derive unitary evolution by solving it.</p>
+
+<p>In terms of density operators, we can formulate <em>Postulate 4</em>, which says that, when not perturbed by some measurement, the state of our system $\rho_0$ at time $0$ transitions to state $\rho_t$ at time $t$ as</p>
+
+\[\ket{\psi_t} = U(t) \rho U(t)\]
+
+<p>where the operator $U(t)$ is unitary, with $U(0) = I$. The Schrödinger equation for the density matrix can be written as</p>
+
+\[\pderiv{\rho}{t} = -\frac{i}{\hbar} \left[H, \rho\right] \\
+\left[H, \rho\right] = H\rho - \rho H\]
+
+<p>For now, we will consider our system as static in time, bar a measurement, and we will not consider time evolution until much later in our essays. Instead, in the next part, we will use the above formalism to consider the maximum entropy principle in operator form, and its implications.</p>
+
+  </div><a class="u-url" href="/2024/04/10/thoughts-on-entropy-3.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="http://localhost:4000/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Danilo Naiff&#39;s personal website.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+  <a rel="me" href="https://github.com/DFNaiff" target="_blank" title="github">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://www.linkedin.com/in/danilo-naiff" target="_blank" title="linkedin">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#linkedin"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://scholar.google.com/citations?user=UgDxpKgAAAAJ&hl" target="_blank" title="google_scholar">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#google_scholar"></use>
+    </svg>
+  </a>
+</li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

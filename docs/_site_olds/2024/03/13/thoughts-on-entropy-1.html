@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Entropy and the world - Part 1 | Danilo Naiff</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Entropy and the world - Part 1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Updates" />
+<meta property="og:description" content="Updates" />
+<link rel="canonical" href="http://localhost:4000/2024/03/13/thoughts-on-entropy-1.html" />
+<meta property="og:url" content="http://localhost:4000/2024/03/13/thoughts-on-entropy-1.html" />
+<meta property="og:site_name" content="Danilo Naiff" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-03-13T12:00:00-03:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Entropy and the world - Part 1" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-03-13T12:00:00-03:00","datePublished":"2024-03-13T12:00:00-03:00","description":"Updates","headline":"Entropy and the world - Part 1","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2024/03/13/thoughts-on-entropy-1.html"},"url":"http://localhost:4000/2024/03/13/thoughts-on-entropy-1.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Danilo Naiff" />
+
+<!--
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+-->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  TeX: {
+    Macros: {
+      ket: ["\\left| #1 \\right\\rangle", 1],
+      bra: ["\\left\\langle #1 \\right|", 1],
+      braket: ["\\left\\langle #1 \\middle| #2 \\right\\rangle", 2],
+      mean: ["\\left\\langle #1 \\right\\rangle", 1],
+      abs: ["\\left| #1 \\right|", 1],
+      norm: ["\\left\\| #1 \\right\\|", 1],
+      trace: ["\\text{tr}\\left( #1 \\right)", 1],
+      ptrace: ["\\text{tr}\_{#1}\\left( #2 \\right)", 2],
+      pderiv: ["\\frac{\\partial #1}{\\partial #2}", 2],
+      evalat: ["\\left. #1 \\right|_{#2}", 2],
+    }
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <!--<a class="site-title" rel="author" href="/">Danilo Naiff</a>
+    --><nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Danilo Naiff</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Apps
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/golf">Gravitational Golf</a>
+              <a class="dropdown-item" href="/mbs">Quasielectrostatics</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Entropy and the world - Part 1</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2024-03-13T12:00:00-03:00" itemprop="datePublished">
+        Mar 13, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="updates">Updates</h1>
+
+<p>2024-04-10 - Corrected some clumsy notation.</p>
+
+<p>2024-03-15 - Understood a bit more of the theory, in particular the relation with the volume. The text reflects that chance. Also, the first version of this text had the final part incomplete, reflecting that lack of previous understanding.</p>
+
+<h1 id="preamble">Preamble</h1>
+
+<p>One thing that has been on my mind, on and off, for a long time, is thermodynamics. It may be that, for a while, thermodynamics just seemed <em>mysterious</em>, with a bunch of heuristics that did not make much sense, and lots of talks about engines, cycles and so on. Recently, I delved more deeply into the axiomatic approach given by <a href="https://www.amazon.com/Thermodynamics-Intro-Thermostat-2E-Clo/dp/0471862568">Callen’s book</a>, and suddenly classical thermodynamics made sense to me. Sure, entropy was still a mysterious object, but it was a <em>well-behaved</em> mysterious object, following certain laws, just like force or mass. The laws of thermodynamics made sense, and we had a complete theory. I could grasp classical thermodynamics.</p>
+
+<p>Still, there was the classical and statistical thermodynamics correspondence. I was now curious about how this correspondence worked and if I could get by myself some nice insight. Also, there seems to be a deeper topic here. The connection between the microscopic world and the macroscopic world passes through statistical mechanics, it seems. So, in a poorly formed way, part of the mystery of how the world is what it is seems to pass through that connection.</p>
+
+<p>After some research and some thoughts, inspired mainly by <a href="https://www.amazon.com/Entropy-Evolution-Macroscopic-International-Monographs/dp/0199546177/">Walter Grandy’s book</a>, and some Wikipedia pages, I could at least form some inner thoughts on that. And, well, entropy did not become <em>less</em> mysterious, but it is now mysterious in a different way. In a sense, classical thermodynamics is just the maximum entropy principle, a mathematical subject, and not only a physical subject <em>per se</em>. I got excited, and decided to give my thoughts on the subject, because why not? That is why I have a website, after all.</p>
+
+<h1 id="classical-thermodynamics">Classical thermodynamics</h1>
+
+<p>In Callen’s, classical thermodynamics is formulated through a set of postulates, for macroscopic systems. They are as follows:</p>
+
+<blockquote>
+  <p><em>Postulate I</em>. There exist particular states (called equilibrium states) of
+systems that, macroscopically, are characterized completely by the
+internal energy $U$, and a set of extensive parameters $X_1, \ldots, X_n$ to be later specifically enumerated.</p>
+</blockquote>
+
+<p>Which of these extensive parameters is to be used depends on the nature of our system. In practice, we’ll focus on simple systems, defined as</p>
+
+<blockquote>
+  <p>Systems that are macroscopically homogeneous, isotropic, and uncharged,
+that are large enough so that surface effects can be neglected, and that are
+not acted on by electric, magnetic, or gravitational fields.</p>
+</blockquote>
+
+<p>In simple systems, we can consider as extensive parameters only the volume $V$ and the number of specific species $N_1, \ldots, N_r$ constituents of our system. Philosophically, the most important thing about this postulate is that there <em>is</em> an internal energy variable $U$ at all, which is not obvious at all. The second and third postulates will introduce our second key player in thermodynamics, entropy.</p>
+
+<blockquote>
+  <p><em>Postulate II</em>. There exists a function (called the entropy) of the extensive
+parameters, defined for all equilibrium states, and having the following
+property. The values assumed by the extensive parameters in the absence of a
+constraint are those that maximize the entropy over the manifold of con-
+strained equilibrium states.</p>
+</blockquote>
+
+<blockquote>
+  <p><em>Postulate III</em>. The entropy of a composite system is additive over the
+constituent subsystems (whence the entropy of each constituent system 1s a
+homogeneous first-order function of the extensive parameters). The entropy is
+continuous and differentiable and is a monotonically increasing function of
+the internal energy.</p>
+</blockquote>
+
+<p>Notice that these postulates are not in the game of explaining what entropy <em>is</em>, just that there is something called entropy that is maximized, and has the properties described in the third postulate. Therefore, classical thermodynamics is a phenomenological theory, that has no business in interpreting the phenomena it describes, but just describing the actual phenomena.</p>
+
+<p>Focusing on simple systems, we denote the entropy function as</p>
+
+\[S = \hat{S}(U, V, N_1, \ldots, N_r),\]
+
+<p>and the second postulate implies that this function is always to be maximized, under certain constraints. In particular, if we assume that the universe evolves by the removal of constraints specified by its initial conditions, this postulate <em>is</em> the second law of thermodynamics. The third postulate implies some properties of the entropy. A fundamental one is that we can invert $\hat{S}$ with relation to $U$, therefore arriving at the energy formulation</p>
+
+\[U = \hat{U}(S, V, N_1, \ldots, N_r).\]
+
+<p>By taking the differential of $U$, we arrive at</p>
+
+\[dU = \frac{\partial{\hat{U}}}{\partial S} dS + \frac{\partial{\hat{U}}}{\partial V} dV + \sum_{j=1}^r \frac{\partial{\hat{U}}}{\partial N_j} dN_j.\]
+
+<p>Now, we <em>define</em> the temperature $T$, pressure $P$ and chemical potentials $\{\mu_j\}$ as</p>
+
+\[T := \frac{\partial{\hat{U}}}{\partial S} \\
+P := -\frac{\partial{\hat{U}}}{\partial V} \\
+\mu_j := -\frac{\partial{\hat{U}}}{\partial N_j},\]
+
+<p>thus arriving at the first law of thermodynamics (where $dQ = T dS$ and $dW = P dV$)</p>
+
+\[dU = T dS - P dV + \sum_{j=1}^r \mu dN_j\]
+
+<p>Of course, we must show that our definition of temperature and pressure corresponds to what we know to be temperature and pressure, but that <em>can</em> be shown (just check the first few chapters of <em>Callen</em>!). Given these definitions in terms of $\hat{U}$, we can define the same variables in term of the $\hat{S}$ (using some manipulations of partial derivatives) as</p>
+
+\[\frac{1}{T} = \frac{\partial \hat{S}}{\partial U} \\
+\frac{P}{T} = \frac{\partial \hat{S}}{\partial V} \\
+\frac{\mu_j}{T} = -\frac{\partial \hat{S}}{\partial N_j}\]
+
+<p>and write the differential of $S$ as</p>
+
+\[dS = \frac{1}{T} dU + \frac{P}{T} dV \sum_{j=1}^r \frac{\mu_j}{T} d N_j.\]
+
+<p>Another implication of the third postulate, in particular of additivity, is that the entropy function (and the energy function) obeys the <em>Euler relation</em>, so that we can write</p>
+
+\[\hat{S}(U, V, N_1, \ldots, N_r) = \frac{\partial{\hat{S}}}{\partial U} U + \frac{\partial{\hat{S}}}{\partial V} V + \sum_{j=1}^r \frac{\partial{\hat{S}}}{\partial N_j} N_j = \frac{1}{T} U + \frac{P}{T} V - \sum_{r=1}^n \frac{\mu_j}{T} N_j.\]
+
+<p>There is also a fourth postulate, associated with the third law of thermodynamics, but we don’t need to concern ourselves with it in what is to follow. The important thing is that, with just these three postulates, some careful consideration of our systems of interest, and deploying the mathematical tool of <em>Legendre transformations</em>, we have a complete and well-defined theory of classical thermodynamics, as shown in Callen’s book.</p>
+
+<h1 id="the-maximum-information-entropy-principle">The maximum information entropy principle.</h1>
+
+<p>No, forget about classical thermodynamic entropy. Forget that I’ve ever written the first part. Pretend that this is a text on probability, and was always thus. We instead consider the following problem. Say we have a random variable $\Theta$ taking values in $\theta_1, \theta_2, \ldots$, with some probability</p>
+
+\[\pmb{p}^{(\text{true})} = ( p_i^{(\text{true}}); \ p_i = P(\Theta = \theta_i).\]
+
+<p>Suppose that we do not know $\pmb{p}^{(\text{true})}$, although we may know some constraints on $\pmb{p}^{(\text{true})}$. We want to then estimate some probability $\pmb{p} \{p_i\}$ such that $\pmb{p}$ is a good estimate for $\pmb{p}^{(\text{true})}$.From a Bayesian epistemological point of view, what even means for $\Theta$ to have a \pmb{p}^{(\text{true})} assigned by nobody is odd, but we will not consider this for now. We bypass this important problem for now and instead just ask</p>
+
+<blockquote>
+  <p>What is the best way to choose an probability distribution $\pmb{p}$?”, possibly under sume contraints on $\pmb{p}$, such as we will treat $\Theta$ as being distributed according to $\pmb{p}$?</p>
+</blockquote>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Principle_of_maximum_entropy">maximum entropy principle</a> gives a simple answer: for some positive constant $k_B$, choose the probability distribution $p$ such that $p$ maximizes the <em>information entropy</em></p>
+
+\[S_I(\pmb{p}) = -k_B \sum_i p_i \log p_i\]
+
+<p>under some possible constraints on $\pmb{p}$.</p>
+
+<p>The idea here is that $S_I(\pmb{p})$ is a measure of the uncertainty of the probability distribution $\pmb{p}$, and you choose the distribution with as much uncertainty as possible. For finite $\theta_i, \ldots, \theta_m$, we can see that $S_I(\pmb{p})$ is a measure of uncertainty since it is minimized with value $0$ for some distribution $\pmb{p}$ that, for some $\theta_j$, assign probability one to $P(\Theta = \theta_j)$, that is, assign certainty to $\Theta = \theta_j$. Moreover, $S_I(\pmb{p})$ is maximized if $P(\theta = \theta_i) = 1/m$, that is, the distribution $\pmb{p}$ is as uniform-like, thus uncertain, as possible. Therefore, the argument goes, by maximizing $S_I(\pmb{p})$ under some constraints, we are choosing the most uninformative distribution as we possibly can.</p>
+
+<p>A more thorough argument for $S_I(p)$ being the correct measure of uncertainty is found in E. T. Jaynes’ <a href="https://www.amazon.com/Probability-Theory-Science-T-Jaynes/dp/0521592712">treatise on probability</a>, showing that the information entropy is (up to the constant $k_B$) the <em>only</em> measure of uncertainty $S_I(p)$, for an arbitrary discrete probability distribution, that satisfies:</p>
+
+<ol>
+  <li>For fixed $m$, $S_I(p_1, \ldots, p_m)$ is continuous (small changes in the distribution lead to small changes in the uncertainty), and achieves its maximum at $S_I(1/m, \ldots, 1/m)$.</li>
+  <li>Letting $h(m) = S_I(1/m, \ldots, 1/m)$, $h(m)$ is monotonically increasing (so, a uniform distribution with more elements is more uncertain than one with fewer elements).</li>
+  <li>$H$ is consistent in the following manner: given an ensemble of $n$ uniformly distributed elements that are divided into $k$ boxes with $b_1, …, b_k$ elements each, the entropy of the whole ensemble should be equal to the sum of the entropy of the system of boxes and the individual entropies of the boxes, each weighted with the probability of being in that particular box (wording taken from <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">the Wikipedia page on information entropy</a>.</li>
+</ol>
+
+<p>Since this is true for every $\theta_1, \ldots, \theta_m$ finite, it stands to reason that it should stand for $\theta_1, \theta_2, \ldots$ countably infinite, although we do not have a uniform distribution here, and thus the distribution can only be maximized under some suitable constraint. If we take another shoddy leap, we can even assume that the possible states of $\Theta$ take place in some domain $\Omega$, and by analogy, we choose the probability density function $p(\theta)$ for $\Theta$ such that it maximizes</p>
+
+\[S_I(p(\theta)) = -\int_\Omega p(\theta) \log p(\theta) d\theta.\]
+
+<p>A deeper discussion on the maximum entropy principle is postponed since it is part of what I want to understand here by writing these essays.</p>
+
+<h1 id="the-maximum-information-entropy-probability-distribution">The maximum (information) entropy probability distribution.</h1>
+
+<p>With the maximum information entropy principle in hand, we will consider the following problem:</p>
+
+<p>Say that we have a random variable $\Theta$ taking values in the states $\theta_1(\alpha), \theta_2(\alpha), \ldots$, possibly infinite, such that every $\theta_i$ vary continuously in some positive variable $\alpha$, whose value is given to us. We assume $\alpha$ fixed. We will later associate this variable $\alpha$ with a volume in the physical case. Suppose we do not know about the probability distribution</p>
+
+\[\pmb{p}^{(\text{true})}(\alpha) = \{p^{(\text{true})}_1(\alpha), p^{(\text{true})}_2(\alpha), \ldots \} \\
+p^{(\text{true})}_i(\alpha) := P(\Theta = \theta_i(\alpha))\]
+
+<p>associated with the random variable $\Theta$. However, we have a set of real-value functions $\{f_j(\theta)\}_{j=1}^m$ such that we know or have measured the expected value of $f_j(\Theta)$</p>
+
+\[\bar{f}_j = \mathbb{E}_{\Theta \sim p(\alpha)} f_j(\Theta(\alpha)) = \sum_i f_{ij}(\alpha) \\
+f_{ij}(\alpha) := f_j(\theta_i(\alpha))\]
+
+<p>for every $j=1, \ldots, m$. We want to them make a probability assignment $\pmb{p} = \{p_i\}_{i=1}$ such that $\pmb{p} \approx \pmb{p}^{(\text{true})}$. That is, we want again to answer the question</p>
+
+<blockquote>
+  <p>For some $\alpha$, what is the best way to choose an probability distribution $\pmb{p}$?”, such as we will treat some random variable $\Theta$, taking values in ${\theta_i(\alpha)}$, as being distributed according to $\pmb{p}$, such that $\pmb{p}$ should obey the constraints $\bar{f}_j = \mathbb{E}_{\pmb{p}} [f_j(\Theta)]$ associated with our measured values $\bar{f}_j$?.</p>
+</blockquote>
+
+<p>It is important to notice that, in this maximization problem, ${\bar{f}_j}$ are, together with $\alpha$, our fixed variables, since they are the results of our measurements. The principle of maximum entropy dictates that we should choose $\pmb{p}$ such that it is the solution of following the maximization problem:</p>
+
+\[\pmb{p} = \max_{\pmb{p'}} S_I(\pmb{p'}) = -k_B \sum_{i} p'_i \log p'_i, \\
+\text{s.t.} \quad \sum_{i} p'_i = 1, \\
+\text{s.t.} \quad  \sum_{i}^m f_{i}(\alpha) p'_i = \bar{f}_j, \ \forall j=1, \ldots, n.\]
+
+<p>Crucially, the probability distribution $\pmb{p}$ that maximizes this problem will be a function of ${\bar{f}_j}$ and $\alpha$. Here, $k_B$ is just a positive constant, and will not influence our maximization problem. We can use Lagrange multipliers $\lambda_0, \lambda_1, \ldots, \lambda_m$ to arrive at the equivalent system of equations</p>
+
+\[-k_b \left(\log p_i + (1 + \lambda_0) - \sum_{j=1}^n \lambda_j f(\theta_i;\alpha)  = 0
+\right) \ \forall i=1, \ldots, m\\
+\sum_i p_i = 1, \\
+\sum_i f_{ij}(\alpha) p_i = \bar{f}_j, \ \forall j=1, \ldots, n.\]
+
+<p>Solving these equations, we find that</p>
+
+\[p_i := \frac{1}{Z} e^{-\sum_{j=1}^n \lambda_j f_{ij}(\alpha)}; \\\]
+
+<p>where $Z$ is given by</p>
+
+\[Z = \sum_i e^{-\sum_{j=1}^n \lambda_j f_{ij}(\alpha)}.\]
+
+<p>Finally, we find that $\lambda_1, \ldots, \lambda_n$ are found by solving the following system of equations</p>
+
+\[\sum_i f_{ij}(\alpha) e^{-\sum_{j=1}^n \lambda_j f_{ij}(\alpha)} = \bar{f}_j \sum_i e^{-\sum_{j=1}^n \lambda_j f_{ij}(\alpha)}, \ \forall j=1, \ldots, n.\]
+
+<p>Of course, solving this system is brutally hard. Still, if we assume the system to be uniquely solvable (we know that it is solvable at all since the Lagrange multipliers exist), we find that</p>
+
+\[\pmb{p} = \hat{p}(Z, \pmb{\lambda}), \\
+Z = \hat{Z}(\pmb{\lambda}, \alpha) = \sum_i e^{-\pmb{\lambda} \cdot \pmb{f}_i}, \\
+\pmb{\lambda} = \hat{\lambda}(\pmb{\bar{f}}, \alpha),\]
+
+<p>where we conveniently define</p>
+
+\[\pmb{\lambda} := (\lambda_1, \ldots, \lambda_n) \\
+\pmb{f}_i := (f_{i1}, \ldots, f_{in}) \\
+\pmb{\bar{f}} := (\bar{f}_1, \ldots, \bar{f}_n).\]
+
+<p>The most important of these functions will be $\hat{Z}$, which we refer to as the partition function. An important property of the partition function is that its derivatives are related to the constraints $\bar{f}_j$, and, by differentiating $\hat{Z}$ in respect to $\lambda_j$,</p>
+
+\[\frac{\partial \hat{Z}}{\partial \lambda_j} = \sum_i -f_{ij} e^{-\pmb{\lambda} \cdot \pmb{f}_i} = \hat{Z} \bar{f}_j \implies \bar{f}_j = -\frac{\partial \log \hat{Z}}{\partial \lambda_j}.\]
+
+<p>What about the value $S_I(p)$ found by the maximization? Defining $S_I$ as this maximum value, by plugging the value of $p$ back in the formula for $S_I(p)$, we find that,</p>
+
+\[S = \hat{S}(\pmb{\bar{f}}, \alpha) := S(\hat{p}(\pmb{\bar{f}}, \alpha)) = k_B \left(\pmb{\lambda} \cdot \pmb{\bar{f}} + \log Z\right).\]
+
+<p>Now, using the relation between the partial derivatives of $\log \hat{Z}$ and the expected values ${\bar{f}_j}$, we find that</p>
+
+\[\frac{\partial \hat{S}}{\partial \bar{f}_j} = k_B \left(\lambda_j + \pmb{\bar{f}} \cdot \frac{\partial \hat{\lambda_j}}{\partial \bar{f}_j} + \frac{\partial \log \hat{Z}}{\partial \lambda_j} \frac{\partial \hat{\lambda_j}}{\partial \bar{f}_j}\right) = k_B \lambda_j \\
+\frac{\partial \hat{S}}{\partial \alpha} = k_B \left(\pmb{\bar{f}} \cdot \frac{\partial \hat{\lambda_j}}{\partial \alpha} + \frac{\partial \log \hat{Z}}{\partial \lambda_j} \frac{\partial \hat{\lambda_j}}{\partial \bar{f}_j} + \frac{\partial \log \hat{Z}}{\partial \alpha} \right) = k_B \frac{\partial \log \hat{Z}}{\partial \alpha}\]
+
+<p>Thus we find that</p>
+
+\[S = \hat{S}(\pmb{\bar{f}}, \alpha) =  k_B \log \hat{Z} + \sum_{j=1}^m \frac{\partial \hat{S}}{\partial \bar{f}_j} \bar{f}_j, \\
+d S = k_B \frac{\partial \log \hat{Z}}{\partial \alpha} dV + \sum_{j=1}^m \frac{\partial \hat{S}}{\partial \bar{f}_j} d \bar{f}_j.\]
+
+<p>Now, this is almost Euler relation, except the term $k_B \log \hat{Z}$. If we are to make a full comparison with classical thermodynamics, we must handle this term. Before doing that, we use the theory to get a “first law of thermodynamics” for the information entropy. Assume we have only one function of the states $f(\cdot, \alpha)$, therefore only one set ${f_i}_i$ and $\bar{f}$. We find that</p>
+
+\[\delta \bar{f} = \sum_{i} p_i \delta f_i + \sum_i f_i \delta p_i.\]
+
+<p>If we define $\delta Q_I := \sum_i f_i \delta p_i$, we find that</p>
+
+\[\delta \bar{f} - \bar{\delta f} = \delta Q_I.\]
+
+<p>Moreover, since we have</p>
+
+\[\delta S = -\sum_i \delta (p_i \log p_i) = - \sum_i \delta p_i - \sum_i \log p_i \delta p_i =
+\sum_i \lambda f_i \delta p_i + \log Z \delta \sum_i p_i = \sum_i \lambda f_i \delta p_i,\]
+
+<p>since $\delta \sum_i p_i = \delta 1 = 0$, we find that</p>
+
+\[\frac{1}{\lambda} d S = d Q_I,\]
+
+<p>and that</p>
+
+<p>\(\bar{\delta f} = k_B \frac{\log \hat{Z}}{\frac \partial \alpha} dV,\)
+which can also be directly derived from the properties of $\log Z$ described previously.</p>
+
+<p>Finally, to get to Euler’s relation, we will need to <em>assume</em> that</p>
+
+\[\log \hat{Z} \propto \alpha.\]
+
+<p>Notice that this assumption may not hold, although the rest of the theory above is valid, we will not get Euler’s relation. Yet, assuming the above relation, we will find that,</p>
+
+\[k \frac{\partial \log \hat{Z}}{\partial \alpha} = \frac{\partial \hat{S}}{\partial \alpha} = \text{cte},\]
+
+<p>and arrive at Euler’s relation</p>
+
+\[\hat{S} = \frac{\partial \hat{S}}{\partial \alpha} \alpha + \sum_{j=1}^m \frac{\partial \hat{S}}{\partial \bar{f}_j} \bar{f}_j,\]
+
+<p>thus finding that the entropy function is extensive, so that</p>
+
+\[\hat{S}(a \pmb{\bar{f}}, a \alpha) = a \hat{S}(\pmb{\bar{f}}, \alpha).\]
+
+<p>That is enough for now. It should be noted that, although we assumed some enumerable set $\theta_1, \theta_2, \ldots$, the same theory also holds if we assume the continuous case of the maximum entropy principle. With that said, we go back to the physical.</p>
+
+<h1 id="information-entropy-and-physical-entropy">Information entropy and physical entropy</h1>
+
+<p>We go back to being a text on thermodynamics. Let us apply the maximum entropy principle to a physical situation. Suppose we are studying some macroscopic system. We know that our system has some volume $V$, and, given $V$, our macroscopic system is associated with some microscopic system $\Theta$, that at any given time takes the value of some microscopic state $\theta_1(V), \theta_2(V), \ldots$. Now, let’s assume that “being in state $\theta_i(V)$” is a random variable $\Theta$. This is reasonable to do because, from a subjective perspective, we cannot know in which state $\Theta$ for a given time. We can think of $\Theta$ as quickly jumping between the states $\theta_1(V), \theta_2(V), \ldots$ with some probability $p^{(true)}$ that we do not have access to.</p>
+
+<p>However, suppose can measure the internal energy $U = \mathbb{E}{u(\Theta)}$, that is, thinking of $\Theta$ as jumping through states, the time-averaged measurement of the energy associated with $\Theta$. Then, we can use the maximum entropy principle. We want to make our best guess about P(\Theta = \theta_i(V)). We are under the constraint that $U = \mathbb{E} u(\Theta)$. By the maximum entropy principle, we find that</p>
+
+\[p_i = \frac{1}{Z} e^{-\lambda U} \\
+S = k_B \log Z + \lambda U
+d S = k_B \frac{\partial Z}{\partial \alpha} dV + \lambda U.\]
+
+<p>Now, renaming the variables $\lambda$ and $k_B \frac{\partial \log Z}{\partial \alpha}$ as</p>
+
+\[\lambda = \frac{1}{T} \\
+k_B \frac{\partial \log Z}{\partial \alpha} = \frac{P}{T}\]
+
+<p>and find that</p>
+
+\[d S = \frac{1}{T} dU + \frac{P}{T} dV,\]
+
+<p>Finally, if we assume that $\log Z \propto V$, we find that</p>
+
+\[S = \frac{1}{T} U + \frac{P}{T} V.\]
+
+<p>Thus, $S$ is an extensive function of the internal energy $U$ and volume $V$, that always takes a maximum under some possible constraints (since it is the result of a maximization). If we assume $\lambda &gt; 0$ for every $U$ and $V$, it is also a monotonically increasing function of the internal energy. We arrive at all the axioms of the thermodynamic entropy, so we can equate the thermodynamic entropy $S$ with the information entropy $S$.</p>
+
+<p>Assuming that $\lambda &gt; 0$ is the same as assuming that microstates are more unlikely the higher their energy. As for why $\log Z \propto V$, it can be proven for a variety of systems under very general assumptions, although for some systems such that this is untrue, then classical thermodynamics cannot describe this system. Those are not the main problems</p>
+
+<h1 id="why-does-this-work-at-all">Why does this work at all?</h1>
+
+<p>Why this works at all? We arrived at this equation by assuming the maximum information entropy principle. However, the maximum entropy principle is mostly a logical derivation or some sort of “best practice”. There is no principled reason why the true distribution $p^{(true)}$ should <em>be</em> the one we find by the maximum information entropy principle. After all, we arrive at $p^{(true)}$ through some physical process on the microstates, and this process should <em>not care at all for the maximum information entropy principle</em>. Yet, we go out there and make our measurements, and it seems that it follows exactly this principle, since we know classical thermodynamics holds.</p>
+
+<p>So, the maximum entropy principle works, but it seems it should not. There is something to be investigated here. This will be the focus of the second part.</p>
+
+  </div><a class="u-url" href="/2024/03/13/thoughts-on-entropy-1.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="http://localhost:4000/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Danilo Naiff&#39;s personal website.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+  <a rel="me" href="https://github.com/DFNaiff" target="_blank" title="github">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#github"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://www.linkedin.com/in/danilo-naiff" target="_blank" title="linkedin">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#linkedin"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://scholar.google.com/citations?user=UgDxpKgAAAAJ&hl" target="_blank" title="google_scholar">
+    <svg class="svg-icon grey">
+      <use xlink:href="/assets/minima-social-icons.svg#google_scholar"></use>
+    </svg>
+  </a>
+</li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
