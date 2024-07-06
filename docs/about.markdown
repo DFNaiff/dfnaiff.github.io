@@ -18,3 +18,23 @@ Danilo is also involved with the Effective Altruism community in Brazil, with a 
 [Github](https://github.com/DFNaiff) \
 [Linkedin](https://www.linkedin.com/in/danilo-naiff) \
 [Google Scholar](https://scholar.google.com/citations?user=UgDxpKgAAAAJ&hl)
+
+# Research
+
+## Papers
+
+1. Ali Al‑Aradi, Adolfo Correia, Gabriel Jardim, Danilo de Freitas Naiff and Yuri Saporito, *Extensions of the deep Galerkin Method*, Applied Mathematics and Computation, 2022.
+2. Paulo R. Silveira, Danilo de F. Naiff, Claudio M.N.A. Pereira, Roberto Schirru *Reconstruction of radiation dose rate profiles by autonomous robot with active learning and Gaussian process regression*, Annals of Nuclear Energy, 2018
+
+## Reports
+
+1. Ali Al‑Aradi, Adolfo Correia, Danilo de Freitas Naiff, Gabriel Jardim, and Yuri Saporito, *Solving Nonlinear and High‑Dimensional Partial Differential Equations via Deep Learning*, 2020
+
+## Pre-prints
+
+1. Danilo Naiff, Shashwat Goel, *Low Impact Agency: Review and Discussion*, 2023.
+2. Ali Al‑Aradi, Adolfo Correia, Danilo de Freitas Naiff, Gabriel Jardim, and Yuri Saporito, *Applications of the deep Galerkin method to solving partial integro‑differential and Hamilton—Jacobi–Bellman equations*, 2018
+
+## Others
+1. Simon Fischer, benjaminko, jazcarretao, DFNaiff, Jeremy Gillen, *AISC team report:
+Soft‑optimization, Bayes and Goodhart*, LessWrong, 2022         

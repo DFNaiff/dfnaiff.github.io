@@ -1,11 +1,12 @@
 ---
 layout: post
 title:  "A mathematical tutorial on diffusion models."
-date:   2024-08-28 12:00:00 -0300
+date:   2024-07-06 12:00:00 -0300
 categories:
 ---
 
 <h1> Preamble </h1>
+In this series, we will give an introduction to diffusion models from a mathematical viewpoint. This post is the first in the series, where we give the very basics of the theory of diffusion models, mainly following [the EDM framework](https://arxiv.org/abs/2206.00364). In the second part, we will build on this theory to implement a diffusion model from scratch, following this modern framework.
 
 <h1> Introduction </h1>
 
@@ -27,7 +28,7 @@ Since "for every $y$" may be too ambitious for a goal, we will substitute it ins
 >    1. The distribution $p(x, y) := p(x \mid y) q(y)$ is close to $q(x, y)$ in some relevant sense.
 
 
-Notice that, although we are dealing with labeled data here, the problem is conceptually different than supervised learning. In particular, we are not interested in giving a label $y$ for some given $x$, but instead, _given_ $y$, generating samples $x$ such that $y$ is a correct label for $x$. Of course, conditional generation is reduced to unconditional generation when we are dealing with a single null label $y$.
+Notice that, although we are dealing with labeled data here, the problem is conceptually different from supervised learning. In particular, we are not interested in giving a label $y$ for some given $x$, but instead, _given_ $y$, generating samples $x$ such that $y$ is a correct label for $x$. Of course, conditional generation is reduced to unconditional generation when we are dealing with a single null label $y$.
 
 When dealing with neural networks, our task (when considering the more general case of conditional generation) simplifies to:
 
@@ -204,15 +205,134 @@ $$
 
 backward with $X_{\sigma_\max} \sim \mathcal{N}(0, \sigma_\max^2 I)$ as terminal condition. In this case, we have that, for each $\sigma$, $X_\sigma \sim p(x; \sigma)$. Therefore, it stands to reason that, for each $\sigma$, we want our solution to be accurate where $p(x; \sigma)$ is concentrated.
 
-Thinking as a regression problem, we then want to minimize the difference between $s_\theta(X_\sigma, \sigma)$ and $s(X_\sigma, \sigma)$ with $X_\sigma \sim p(x; \sigma)$. However, we have that $X_\sigma = X + \sigma Z$, with $X \sim q(x)$, $Z \sim \mathcal{N}(0, I)$. For this to work out, we need also to define a distribution $\lambda(\sigma)$ such that $\sigma \sim \lambda(\sigma)$, ideally with the support of $\sigma$ concentrated in $(0, \sigma_{\max})$.
+Thinking as a regression problem, we then want to minimize the difference between $s_\theta(X_\sigma, \sigma)$ and $s(X_\sigma, \sigma)$ with $X_\sigma \sim p(x; \sigma)$. However, we have that $X_\sigma = X + \sigma Z$, with $X \sim q(x)$, $Z \sim \mathcal{N}(0, I)$, so $X_\sigma \mid X, \sigma \sim \mathcal{N}(X, \sigma^2 I)$. For this to work out, we need also to define a distribution $\lambda(\sigma)$ such that $\sigma \sim p_\sigma(\sigma)$, ideally with the support of $\sigma$ concentrated in $(0, \sigma_{\max})$. Nothing impedes us from adding a loss weight $\lambda^{\text{ideal}}(\sigma)$ for the noise, which will prove useful later.
 
 Finally, we need a way of measuring the distance between $s(x, \sigma)$ and $s_\theta(x, \sigma)$. Since they are both vectors in $\mathbb{R}^N$, the natural way of measuring the distance in the squared Euclidean norm $\norm{s_\theta(x, \sigma) - s(x, \sigma)}^2$. Therefore, we arrive at an ideal loss function for our neural network.
 
 $$
-L^{\text{ideal}}(\theta) = \mathbb{E}_{\sigma \sim \lambda(\sigma)} \mathbb{E}_{X \sim q(x)} \mathbb{E}_{X_\sigma \sim \mathcal{N}(X, \sigma^2 I)} \norm{s_\theta(x, \sigma) - s(x, \sigma)}^2.
+L^{\text{ideal}}(\theta) = \mathbb{E}_{\sigma \sim p_\sigma(\sigma)} \lambda^{\text{ideal}} (\sigma) \mathbb{E}_{X \sim q(x)} \mathbb{E}_{X_\sigma \sim \mathcal{N}(X, \sigma^2 I)} \norm{s_\theta(X_\sigma, \sigma) - s(X_\sigma, \sigma)}^2.
 $$
 
 The obvious problem here is that we cannot compute $L^{\text{ideal}}(\theta)$, since we cannot compute $s(x, \sigma)$. However, the second main theorem of diffusion models will come to help us, saying that minimizing $L^{\text{ideal}}(\theta)$ is equivalent to minimizing a much easier loss function.
 
-<h2> Score matching </h2>   
+<h2> The score matching tracking </h2>   
 
+Here is our second main theorem, which will allow us to minimize $L^{\text{ideal}}(\theta)$ without actually computing it.
+
+<blockquote>
+
+We have that $L^{\text{ideal}}(\theta)$ defined as above satisfies
+
+$$
+L^{\text{ideal}}(\theta) = L(\theta) + C,
+$$
+
+where $L(\theta)$ is given by
+
+$$
+\mathbb{E}_{\sigma \sim p_\sigma(\sigma)} \lambda^{\text{ideal}}(\sigma) \mathbb{E}_{X \sim q(x)} \mathbb{E}_{X_\sigma \sim \mathcal{N}(X, \sigma^2 I)} \norm{s_\theta(X_\sigma, \sigma) - \nabla_{X_\sigma} \log p(X_\sigma|X, \sigma)}^2,
+$$
+
+and $C$ is a constant independent of $\theta$. Therefore, minimizing $L^{\text{ideal}}(\theta)$ in respect to $\theta$ is equivalent of minimizing $L(\theta)$ in respect to $\theta$.
+
+</blockquote>
+
+Before moving to the (optional) proof, marvel at how much easier this theorem makes our task. Because, unlike $L^{ideal}$, there is no term here that we cannot compute. This is because we have
+
+$$
+\nabla_{X_\sigma} \log p(X_\sigma|X, \sigma) = \nabla_{X_\sigma} \log \mathcal{N}(X_\sigma|X, \sigma^2 I) = \frac{X - X_\sigma}{\sigma^2}.
+$$
+
+Thus, our loss $L(\theta)$ becomes
+
+$$
+\mathbb{E}_{\sigma \sim p_\sigma(\sigma)} \lambda^{\text{ideal}}(\sigma) \mathbb{E}_{X \sim q(x)} \mathbb{E}_{X_\sigma \sim \mathcal{N}(X, \sigma^2 I)} \norm{s_\theta(X_\sigma, \sigma) - \frac{X - X_\sigma}{\sigma^2}}^2.
+$$
+
+This suggests a natural reparameterization for $s_\theta(X_\sigma, \sigma)$. We write
+
+$$
+s_\theta(X_\sigma, \sigma) = \frac{D_\theta(X_\sigma, \sigma) - X_\sigma}{\sigma^2},
+$$
+
+and our loss becomes
+
+$$
+\mathbb{E}_{\sigma \sim p_\sigma(\sigma)} \lambda(\sigma) \mathbb{E}_{X \sim q(x)} \mathbb{E}_{X_\sigma \sim \mathcal{N}(X, \sigma^2 I)} \norm{D_\theta(X_\sigma, \sigma) - X}^2,
+$$
+
+where we define $\lambda(\sigma) := \sigma^{-2} \lambda^{\text{ideal}}(\sigma)$. Therefore, the interpretation for $D_\theta(X_\sigma, \sigma)$ is clearer: if perfectly trainer, $s_\theta(X_\sigma, \sigma)$ will be the optimal predictor for $X$, in expectation of $(X_\sigma, X, \sigma)$, according to the squared Euclidean norm $\norm{\cdot}^2$. Notice that $D_\theta(X_\sigma, \sigma)$ will only predict well $X$ if $\sigma$ is small, since, for large $\sigma$, there will not be enough information since the sample $X_\sigma$ is too noised. In fact, for $\sigma$ large, we have that $X_\sigma$ approximately follows $\mathcal{N}(0, \sigma^2)$, thus the minimum of $D_\theta(X_\sigma, \sigma)$ will be equal to the minimum of
+
+$$
+\mathbb{E}_{X \sim q(x)} \norm{D_\theta(X_\sigma, \sigma) - X}^2,
+$$
+
+thus, the optimal prediction will be $D_\theta(X_\sigma, \sigma) = \mathbb{E}_{X \sim q(x)} \left[X\right]$.
+
+<h1> Proof of the score-matching trick </h1>
+
+To prove the validity of the score-matching trick, we state a more general result
+
+<blockquote>
+Let $s: \mathbb{R}^n \to \mathbb{R}^n$ be a score function that satisfies [whatever regularity conditions we need for the following calculations to be valid]. Let $q(x_0)$ be a continuous distribution supported on $\mathbb{R}^n$, and $q_\sigma(x_\sigma \mid x_0)$ be a family of conditional distributions, also continuous and supported on $\mathbb{R}^n$, such that
+
+$$
+q_\sigma(x_\sigma) = \int_{\mathbb{R}^n} q_\sigma(x_\sigma \mid x_0) q(x_0) dx_0.
+$$
+
+Let $L^0[s]$ and $L[s]$ be functionals defined as
+
+$$
+L^0[s] := \mathbb{E}_{q_{\sigma}(x_\sigma)} \norm{s(x_\sigma) - \nabla \log q(x_\sigma)}^2 \\
+L[s] := \mathbb{E}_{q_0(x_0) q_\sigma(x_\sigma \mid x_0)} \norm{s(x_\sigma) - \nabla \log q(x_\sigma \mid x_0)}^2.
+$$
+
+Then $L^0[s] = L[s] + C$, where the constant $C$ does not depend on $s$.
+
+</blockquote>
+
+To prove this result, we expand $L^0[s]$ and $L[s]$ as
+
+$$
+L^0[s] = \mathbb{E}_{q_{\sigma}(x_\sigma)} \norm{s(x_\sigma)}^2 \\ + \mathbb{E}_{q_{\sigma}(x_\sigma)} \norm{\nabla \log q(x_\sigma)}^2 \\ + \mathbb{E}_{q_{\sigma}(x_\sigma)} \inner{s(x_\sigma)}{\nabla \log q(x_\sigma)} 
+$$
+
+$$
+L[s] = \mathbb{E}_{q(x_0) q_{\sigma}(x_\sigma|x_0)} \norm{s(x_\sigma)}^2 \\ + \mathbb{E}_{q(x_0) q_{\sigma}(x_\sigma|x_0)} \norm{\nabla \log q(x_\sigma|x_0)}^2 \\ + \mathbb{E}_{q(x_0) q_{\sigma}(x_\sigma|x_0)} \inner{s(x_\sigma)}{\nabla \log q(x_\sigma)}.
+$$
+
+The law of total expectation gives us
+
+$$
+\mathbb{E}_{q(x_0) q_{\sigma}(x_\sigma|x_0)} \norm{s(x_\sigma)}^2 = \mathbb{E}_{q_{\sigma}(x_\sigma)} \norm{s(x_\sigma)}^2,
+$$
+
+and, should we show that
+
+$$
+\mathbb{E}_{q_{\sigma}(x_\sigma)} \inner{s(x_\sigma)}{\nabla \log q(x_\sigma)} = \mathbb{E}_{q(x_0) q_{\sigma}(x_\sigma|x_0)} \inner{s(x_\sigma)}{\nabla \log q(x_\sigma|x_0)},
+$$
+
+we find that
+
+$$
+L^0[s] - L[s] = \mathbb{E}_{q_{\sigma}(x_\sigma)} \norm{\nabla \log q(x_\sigma)}^2 - \mathbb{E}_{q(x_0) q_{\sigma}(x_\sigma|x_0)} \norm{\nabla \log q(x_\sigma|x_0)}^2,
+$$
+
+which does not depend on $s$. Thus, we show the second inequality above, completing the proof. This is done by straightforward calculation, together with the property $f \nabla \log f = \nabla f$:
+
+$$
+\mathbb{E}_{q_{\sigma}(x_\sigma)} \inner{s(x_\sigma)}{\nabla \log q(x_\sigma)} = \\
+\int \inner{s(x_\sigma)}{\nabla \log q(x_\sigma)} q(x_\sigma) d x_\sigma = \\
+\int \inner{s(x_\sigma)}{\nabla q(x_\sigma)} d x_\sigma = \\
+\int \inner{s(x_\sigma)}{\nabla \int q(x_\sigma \mid x_0) q(x_0) dx_0} d x_\sigma = \\
+\int \int \inner{s(x_\sigma)}{\nabla q(x_\sigma \mid x_0)} q(x_0) dx_\sigma dx_0 = \\
+\int \int \inner{s(x_\sigma)}{\nabla \log q(x_\sigma \mid x_0)} q(x_\sigma \mid x_0) q(x_0) dx_\sigma dx_0 = \\
+\mathbb{E}_{q(x_0) q_{\sigma}(x_\sigma|x_0)} \inner{s(x_\sigma)}{\nabla \log q(x_\sigma|x_0)}.
+$$
+
+<h1> Conclusion </h1>
+
+Now we have all the theory needed to train and sample from a diffusion model. However, we are still missing some heuristic tricks that will make our training much easier, as well as an actual implementation. Just as an example, we will again reparameterize our denoiser $D_\theta(x_\sigma, \sigma)$ to make training much easier. Those are going to be the topics of the second part of this series.
+
+Having said that, notice that, in theory, our problem is complete, the rest is just about improving our training and sampling efficiency.
