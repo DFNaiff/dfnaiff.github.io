@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "A mathematical tutorial on diffusion models."
+title:  "A mathematical tutorial on diffusion models. - Part 1"
 date:   2024-07-06 12:00:00 -0300
 categories:
 ---
@@ -12,7 +12,7 @@ In this series, we will give an introduction to diffusion models from a mathemat
 
 We can state the objective of a generative model can be stated, for unconditional generation, as follows:
 
-> Given some unlabeled data $\mathcal{D} = \\{x\_1, \ldots, x\_D\\}$ sampled from a true distribution $q(x)$ _unknown_ to us, how can we, from $\mathcal{D}$, create a distribution $p(x)$ such that:
+> Given some unlabeled data $\mathcal{D} = \\{x\_1, \ldots, x\_D\\}$ sampled from a true distribution $q(x)$ _that is unknown_ to us, how can we, from $\mathcal{D}$, create a distribution $p(x)$ such that:
 >    1. The distribution $p(x)$ is close to $q(x)$ in some relevant sense.
 >    2. We can easily sample from $p(x)$.
 
@@ -28,14 +28,14 @@ Since "for every $y$" may be too ambitious for a goal, we will substitute it ins
 >    1. The distribution $p(x, y) := p(x \mid y) q(y)$ is close to $q(x, y)$ in some relevant sense.
 
 
-Notice that, although we are dealing with labeled data here, the problem is conceptually different from supervised learning. In particular, we are not interested in giving a label $y$ for some given $x$, but instead, _given_ $y$, generating samples $x$ such that $y$ is a correct label for $x$. Of course, conditional generation is reduced to unconditional generation when we are dealing with a single null label $y$.
+Notice that, although we are dealing with labeled data here, the problem is conceptually different from supervised learning. In particular, we are not interested in giving a label $y$ for some given $x$. Instead, when given $y$, we want to generate samples $x$ such that $y$ is an accurate label for $x$. Of course, conditional generation is reduced to unconditional generation when we are dealing with a single null label $y$.
 
 When dealing with neural networks, our task (when considering the more general case of conditional generation) simplifies to:
 
 <ol>
-<li> Creating a distribution $p_\theta(x \mid y)$, parameterized by some set $\theta \in \mathbb{R}^M$ of neural network weights, such that we have an algorithm for sampling from $p_\theta(x \mid y)$ when given $\theta$ and a label $y$. </li>
+<li> Creating a distribution $p_\theta(x \mid y)$, parameterized by some set $\theta \in \mathbb{R}^M$ of neural network weights, such that we have a method for sampling from $p_\theta(x \mid y)$ when given $\theta$ and a label $y$. </li>
 
-<li> Creating a differentiable loss function $\mathcal{L}(x, y;\theta)$ such that we are led to $p_\theta(x, y) := p_\theta(x \mid y) q(y)$ being approximately equal to when minimizing
+<li> Creating a differentiable loss function $\mathcal{L}(x, y;\theta)$ such that we are led to $p_\theta(x, y) := p_\theta(x \mid y) q(y)$ being approximately equal to $q(x, y)$ when minimizing
 
 $$
 L(\theta) := \mathbb{E}_{x \sim q(x)} L(x; \theta)
@@ -45,13 +45,13 @@ $$
 
 <li> Minimizing $L(\theta)$ by stochastic gradient descent using minibatches of $\mathcal{D}$. </li> </ol>
 
- This is the problem that diffusion models will aim to solve. Diffusion models are not alone in trying to do so, and they are accompanied by techniques such as [Generative Adversarial Networks](https://en.wikipedia.org/wiki/Flow-based_generative_model), [Variational Autoencoders](https://en.wikipedia.org/wiki/Variational_autoencoder), and [Flow-based generative models](https://en.wikipedia.org/wiki/Flow-based_generative_model). It is not the task of this tutorial to explain why diffusion models currently work better than those other models, as I am still confused about this. Therefore, I will instead work on the easier task of just describing diffusion models.
+ This is the problem that diffusion models will aim to solve. Diffusion models are not alone in trying to do so but are accompanied by techniques such as [Generative Adversarial Networks](https://en.wikipedia.org/wiki/Flow-based_generative_model), [Variational Autoencoders](https://en.wikipedia.org/wiki/Variational_autoencoder), and [Flow-based generative models](https://en.wikipedia.org/wiki/Flow-based_generative_model). It is not the task of this tutorial to explain why diffusion models currently work better than those other models, as I am still confused about this. Therefore, I will instead work on the easier task of just describing diffusion models.
 
  <h1> Sampling through denoising </h1>
 
- For now, let us forget about the full problem. Better, let us forget about learning itself. Consider instead the problem of sampling from some distribution $q(x)$. We will assume that $q(x)$ is a probability distribution in $\mathbb{R}^N$, and devise a method of sampling from $q(x)$ which we will call _sampling through denoising_.
+ For now, let us forget about the full problem stated above. Better, let us forget about learning itself. Consider instead the problem of sampling from some distribution $q(x)$. We will assume that $q(x)$ is a probability distribution in $\mathbb{R}^N$, and devise a method of sampling from $q(x)$ which we will call _sampling through denoising_.
  
- Even with access to the probability density function $q(x)$, sampling is not a trivial task, as the [huge](https://en.wikipedia.org/wiki/Variational_Bayesian_methods) [amount of](https://en.wikipedia.org/wiki/Rejection_sampling) [developed](https://en.wikipedia.org/wiki/Importance_sampling) [sampling](https://en.wikipedia.org/wiki/Inverse_transform_sampling) [techniques](https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm), both approximate and exact, can attest. In some senses, our sampling technique will be a particularly ill-suited one, since it will depend on objects whose evaluation will be intractable. However, we will find out that these objects can be _learned_ fairly well by neural networks, and our sampling technique will become very useful in this case.
+ Even with access to the probability density function $q(x)$, sampling is not a trivial task, as the [huge](https://en.wikipedia.org/wiki/Variational_Bayesian_methods) [amount of](https://en.wikipedia.org/wiki/Rejection_sampling) [developed](https://en.wikipedia.org/wiki/Importance_sampling) [sampling](https://en.wikipedia.org/wiki/Inverse_transform_sampling) [techniques](https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm), both approximate and exact, can attest. In some sense, our sampling technique will be a particularly ill-suited one, since it will depend on objects whose evaluation will be intractable. However, we will find out that these objects can be _learned_ fairly well by neural networks, and our sampling technique will become very useful in this case.
 
  <h2> Noised distributions </h2>
 
@@ -128,7 +128,7 @@ Assume we want to construct a sequence of random variables $X_\sigma$, indexed b
 
 <ul>
 <li> $X_\sigma \sim p(x;\sigma)$. </li>
-<li> When given some $X_\tau$, $X_\sigma|X_\tau$ is given by evolving _some_ ordinary differential equation
+<li> When given some $X_\tau$, $X_\sigma|X_\tau$ is given by evolving some ordinary differential equation
 
 $$
 \frac{d x}{d \sigma} = f(x, \sigma),
@@ -335,4 +335,4 @@ $$
 
 Now we have all the theory needed to train and sample from a diffusion model. However, we are still missing some heuristic tricks that will make our training much easier, as well as an actual implementation. Just as an example, we will again reparameterize our denoiser $D_\theta(x_\sigma, \sigma)$ to make training much easier. Those are going to be the topics of the second part of this series.
 
-Having said that, notice that, in theory, our problem is complete, the rest is just about improving our training and sampling efficiency.
+Having said that, notice that, in theory, our problem is complete, the rest is just about improving our training and sampling efficiency. That being said, improving training and sampling efficiency _is_ what we are after, so we are going back to these topics in part 2, where we go on and implement an actual diffusion model, building on the theory above.
