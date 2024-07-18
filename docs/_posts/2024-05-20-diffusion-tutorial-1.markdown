@@ -38,7 +38,7 @@ When dealing with neural networks, our task (when considering the more general c
 <li> Creating a differentiable loss function $\mathcal{L}(x, y;\theta)$ such that we are led to $p_\theta(x, y) := p_\theta(x \mid y) q(y)$ being approximately equal to $q(x, y)$ when minimizing
 
 $$
-L(\theta) := \mathbb{E}_{x \sim q(x)} L(x; \theta)
+L(\theta) := \mathbb{E}_{(x, y) \sim q(x, y)} L(x, y; \theta)
 $$
 
 </li>
