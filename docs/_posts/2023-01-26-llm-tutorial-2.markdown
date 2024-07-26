@@ -7,6 +7,10 @@ categories:
 
 [Part 1]({% link _posts/2023-01-14-llm-tutorial-1.markdown %})
 
+# Update (22/07 (of 2024))
+
+By looking into the text after a long time, while preparing for giving a class in Reinforcement Learning, I realized that the text is... quite subpar, to be honest. I'm giving a major overhaul to it, so until then, consider this document as sort of deprecated (not the theory, just the usefulness).
+
 # Update (23/06)
 
 I turned this into a general interlude for RL and RLHF, and I decided to write the next part of actually applying this to language models.
@@ -26,7 +30,17 @@ To comprehend reinforcement learning from human feedback (RLHF), it is essential
 
 ## The building blocks.
 
-Consider an agent that interacts with an environment through a sequence of steps. The environment begins in a state $$s_0 \in \mathcal{S}$$ with probability $$p(s_0)$$. At each step $$t$$, the agent receives an observation $$o_t \in \mathcal{O}$$ and a reward $$r_t$$ based on a reward function of the form $$r_t = r(a_t, o_t)$$. The agent takes an action $$a_t$$, causing the environment to transition from state $$s_t$$ to another state $$s_{t+1}$$ with a probability $$p(s_{t+1} \mid s_t, a_t)$$ (not necessarily known to the agent). The observation $$o_t$$ is also dependent on the environment's state, given by $$s_t \sim p(o_t \mid s_t)$$. If $$o_t = s_t$$, the environment is *fully observable*; otherwise, it is *partially observable*. Notably, if we have a prior $$p(s)$$ on the state, we can expand $$p(o_{t+1} \mid o_t,a_t)$$ as follows:
+Consider an agent that interacts with an environment through a sequence of steps. We will model this interaction as follows:
+
+- At each time $t$, the environment (which includes the agent itself) is found in a state $s_t \in \mathcal{S}$, where $\mathcal{S}$ is the set of possible states the environment can be found in.
+- Crucially, the agent never has access to the environment itself, but instead, at each time $t$, it receives an observation $o_t \in \mathcal{O}$ from the environment, that follows some distribution $\rho(o_t|s_t)$.
+- Given an observation $o_t$, the agent decides to take an action $a_t$ following some policy distribution $\pi(a_t|o_t)$.
+- The action $a_t$, together with the state $s_t$ of the environment, influences the next state of environment $s_{t+1}$ with probability $p(s_{t+1}|s_t, a_t)$.
+
+Cru
+
+
+The environment begins in a state $$s_0 \in \mathcal{S}$$ with probability $$p(s_0)$$. At each step $$t$$, the agent receives an observation $$o_t \in \mathcal{O}$$ and a reward $$r_t$$ based on a reward function of the form $$r_t = r(a_t, o_t)$$. The agent takes an action $$a_t$$, causing the environment to transition from state $$s_t$$ to another state $$s_{t+1}$$ with a probability $$p(s_{t+1} \mid s_t, a_t)$$ (not necessarily known to the agent). The observation $$o_t$$ is also dependent on the environment's state, given by $$s_t \sim p(o_t \mid s_t)$$. If $$o_t = s_t$$, the environment is *fully observable*; otherwise, it is *partially observable*. Notably, if we have a prior $$p(s)$$ on the state, we can expand $$p(o_{t+1} \mid o_t,a_t)$$ as follows:
 
 $$
 p(o_{t+1} \mid o_t,a_t) = \int p(o_{t+1} \mid s_{t+1})p(s_{t+1} \mid a_t,o_t) ds_{t+1} \\
@@ -118,7 +132,7 @@ $$
 In practice, we can substitute $$R(\tau_i)$$ with $$R_t(\tau_i)$$ and further replace $$R_t(\tau_i)$$ with $$R_t(\tau_i) - b(s_t)$$, where $$b(s_t)$$ is a function that only depends on the state. We can approximate $$b(s_t)$$ using a neural network $$V_\phi(s_t)$$, which estimates the true value function $$V_{\pi_\theta}(s_t)$$. The estimation is done by minimizing the following residual:
 
 $$
-V_\phi(s_t) = \argmin_\phi \sum_{i=1}^N \sum_{t=1}^T (V_\phi(s^{(i)}_t) - R_t(\tau_i))^2
+V_\phi(s_t) = \operatorname{argmin}_\phi \sum_{i=1}^N \sum_{t=1}^T (V_\phi(s^{(i)}_t) - R_t(\tau_i))^2
 $$
 
 using stochastic gradient descent. These substitutions improve the stability of RL optimization. An annotated example of this algorithm applied to the CartPole environment can be found in [this notebook](https://colab.research.google.com/drive/1lz_FFlWFOexvU_LY80O5qqJGllPE_Ryo?usp=sharing) I created earlier for other purposes.

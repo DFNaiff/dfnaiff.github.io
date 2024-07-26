@@ -5,7 +5,7 @@ categories: Info
 permalink: /about/
 ---
 
-<img src="/figs/profilepicture.png" alt="drawing" width="200"/>
+<img src="/figs/profilepicture.jpeg" alt="drawing" width="200"/>
 
 Hi, I'm Danilo Naiff, and this is a personal website of mine where I share some personal writings, mainly technical ones on deep learning, although I delve into other topics as well.
 
