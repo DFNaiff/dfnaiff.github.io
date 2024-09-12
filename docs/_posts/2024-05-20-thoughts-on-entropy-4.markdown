@@ -1,9 +1,13 @@
 ---
 layout: post
 title:  "Entropy and the world - Part 4."
-date:   2024-08-28 12:00:00 -0300
+date:   2024-10-28 12:00:00 -0300
 categories:
 ---
+
+# Preamble
+
+In the previous part, we made a very quick run on quantum mechanics paradigm and density operators. In this part, we will use this to derive a quantum-mechanical approach for entropy and statistical mechanics, at least at equilibrium.
 
 # The maximum Von-Neumann entropy principle
 
