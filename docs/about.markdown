@@ -13,7 +13,7 @@ Hi, I'm Danilo Naiff, and this is a personal website of mine where I share some 
 
 Danilo Naiff is a Materials Engineer and holds a Master's degree in Mathematics from the Federal University of Rio de Janeiro. He is currently pursuing a Ph.D. in Mechanical Engineering at the Federal University of Rio de Janeiro. His main line of work involves using machine learning for various scientific applications. Currently, he focuses on the use of generative models for generating porous media and predicting ocean currents. Additionally, he has worked in radioactive field dose estimation, calcium carbonate fouling, and solutions to finance equations, among other areas.
 
-Danilo is also involved with the Effective Altruism community in Brazil, with a particular interest in AI Safety. He has participated in programs such as the AI Safety Camp, AI Safety Fundamentals, and partially in SERI MATS. He is now actively mentoring in various AI alignment programs in Brazil.
+Danilo is also involved with the Effective Altruism community in Brazil, with a particular interest in AI Safety. He has participated in programs such as the AI Safety Camp, AI Safety Fundamentals, and the first phase in SERI MATS. He is now actively mentoring in various AI alignment programs in Brazil.
 
 [Github](https://github.com/DFNaiff) \
 [Linkedin](https://www.linkedin.com/in/danilo-naiff) \
@@ -37,4 +37,4 @@ Danilo is also involved with the Effective Altruism community in Brazil, with a 
 
 ## Others
 1. Simon Fischer, benjaminko, jazcarretao, DFNaiff, Jeremy Gillen, *AISC team report:
-Soft‑optimization, Bayes and Goodhart*, LessWrong, 2022         
+Soft‑optimization, Bayes and Goodhart*, LessWrong, 2022.         
