@@ -152,7 +152,7 @@ $$
 So we have a toy explanation for phase transitions. Namely, as $\beta$ changes, the "dominant" $F_i$ changes. Since the free energy determines every thermodynamic property of our system, macroscopically, we see our system changing phases.
 
 # 
-Good. There is nothing new here, just regular statistical mechanics, from a quantum point of view. What I am more interested here is what has happened. Here is a story:
+Good. There is nothing new here, just regular statistical mechanics, from a quantum point of view. From now on I could derive things like [Bose-Einstein](https://en.wikipedia.org/wiki/Fermi%E2%80%93Dirac_statistics) or [Fermi-Dirac](https://en.wikipedia.org/wiki/Bose%E2%80%93Einstein_statistics) statistics, or do many other fun things. But, this in not the point of this series of essay. What I am more interested here is _what has happened_. Here is a story:
 
 1. The system enters in contact with the world, and gives its mean energy $\mean{H}$.
 2. The best information the world has of the density matrix is given by maximizing the Von-Neumann entropy of the system, given $\mean{H}$.
