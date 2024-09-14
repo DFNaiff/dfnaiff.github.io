@@ -81,19 +81,7 @@ S := \hat{S}_I(\rho) = \beta \mean{H} + \log Z \\
 d S = \beta d \mean{H} - \beta \mean{\pderiv{H[V]}{V}} d V.
 $$
 
-In particular, by comparison to classical thermodynamics, we find that $\beta = 1/T$ is the inverse temperature. Notice that we need only to be given the partition function to derive all these quantities. In practice, it is easier to calculate the partition function with a given $\beta$ and $V$. For that, we can deploy the Helmholtz free energy
-
-$$
-F(\beta, V) = \mean{H} - \frac{1}{\beta} S = -\frac{1}{\beta} \log Z(\beta, V),
-$$
-
-and, since it is a Legendre transformation, we can derive all thermodynamic calculations with $F(\beta, V)$. We arrive at one of the goals of statistical thermodynamics: calculating state functions for classical thermodynamics. Moreover, we need only to look at
-
-$$
-\log Z(\beta, V) = \log \trace{e^{-\beta H[V]}}
-$$
-
-in our analysis.
+In particular, by comparison to classical thermodynamics, we find that $\beta = 1/T$ is the inverse temperature. Notice that we need only to be given the partition function to derive all these quantities. Also, in comparison to classical thermodynamics, we find that the pressure term $P$ equals to $-\mean{\pderiv{H[V]}{V}}$.
 
 Consider the eigendecomposition in eigenstates $\ket{\phi_i(V)}$ of the Hamiltonian $H[V]$.
 
@@ -116,10 +104,48 @@ $$
 The nice thing here is that now we removed the reference to the individual enumeration of eigenstates, which, as discussed before, is relatively arbitrary given inside an eigenspace. We can also calculate the probability that our system will have energy $E_j(V)$ when measured as
 
 $$
-\trace{\rho Q_j} = \frac{1}{Z} n_j e^{-\beta E_j(V)}.
+p(E_j) = \trace{\rho Q_j} = \frac{1}{Z} n_j e^{-\beta E_j(V)}.
 $$
 
 So, for every energy level, we have a balance between the multiplicity $n_j$ of that energy level, and the value of the energy level itself, modulated by the inverse temperature $\beta$.
+
+In fact, at least for free particles, we have that $n_j \propto E_j^N$, where $N$ is the number of particles in the system. Therefore, for $N$ very large, $p(E_k) \approx 1$ for some maximum $E_k$. In this case, the overwhelming probable macrostate is the one associated with $E_k$, with all microstates $\ket{\phi}_i$ in the eigenspace of $E_k$ being equally probable.  In this case, the entropy will be given by
+
+$$
+S = \log n_j,
+$$
+
+# The first law
+
+The second law is just the statement that, under whatever information the system gives to the world, and constraints that the world places on the system, the information entropy is maximized. What about the first law? By straightforward calculation
+
+$$
+d \mean{H} = \trace{H d \rho} + \trace{ \mean{\pderiv{H[V]}{V}} \rho} dV = \trace{H d \rho} - P dV.
+$$
+
+On the other hand, we find that (using the fact that $d \trace{\rho} = d 1 = 0$)
+
+$$
+\frac{1}{\beta} d S = -\frac{1}{\beta} \trace{d\rho \log \rho} = \trace{H d\rho}. 
+$$
+
+Associating back with classical thermodynamics, the heat term $dQ$ refers to the change in energy that arises in the change of the density matrix itself, in contrast to the useful predictable work, and, that $dQ = \frac{1}{\beta} dS$, thus having one more correspondence with classical thermodynamics.
+
+# Free energy and phase transitions
+
+It is easier to calculate the partition function with a given $\beta$ and $V$. For that, we can deploy the Helmholtz free energy
+
+$$
+F(\beta, V) = \mean{H} - \frac{1}{\beta} S = -\frac{1}{\beta} \log Z(\beta, V),
+$$
+
+and, since it is a Legendre transformation, we can derive all thermodynamic calculations with $F(\beta, V)$. We arrive at one of the goals of statistical thermodynamics: calculating state functions for classical thermodynamics. Moreover, we need only to look at
+
+$$
+\log Z(\beta, V) = \log \trace{e^{-\beta H[V]}}
+$$
+
+in our analysis.
 
 We can rewrite $\log Z(\beta, V)$ as
 
