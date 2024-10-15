@@ -32,8 +32,9 @@ Danilo is also involved with the Effective Altruism community in Brazil, with a 
 
 ## Pre-prints
 
-1. Danilo Naiff, Shashwat Goel, *Low Impact Agency: Review and Discussion*, 2023.
-2. Ali Al‑Aradi, Adolfo Correia, Danilo de Freitas Naiff, Gabriel Jardim, and Yuri Saporito, *Applications of the deep Galerkin method to solving partial integro‑differential and Hamilton—Jacobi–Bellman equations*, 2018
+1. Gabriel Sanfins, Fabio Ramos, Danilo Naiff, *Similarity Learning with neural networks*.
+2. Danilo Naiff, Shashwat Goel, *Low Impact Agency: Review and Discussion*, 2023.
+3. Ali Al‑Aradi, Adolfo Correia, Danilo de Freitas Naiff, Gabriel Jardim, and Yuri Saporito, *Applications of the deep Galerkin method to solving partial integro‑differential and Hamilton—Jacobi–Bellman equations*, 2018
 
 ## Others
 1. Simon Fischer, benjaminko, jazcarretao, DFNaiff, Jeremy Gillen, *AISC team report:
