@@ -5,7 +5,7 @@ date:   2024-12-01 09:00:00 -0300
 categories:
 ---
 
-A question that is often asked to me is “How does ChatGPT work?”. Not often enough, because many assume either that ChatGPT is coded, or retrieved from the internet, or another. The truth is simpler, yet stranger, but it is key to understanding modern artificial intelligence. Here, instead of a boring technical text, I’ll try to teach through narrative. We will imagine one being trained as a language model.
+A question that is often asked me is “How does ChatGPT work?”. Not often enough, because many assume either that ChatGPT is coded, or retrieved from the internet, or another. The truth is simpler, yet stranger, but it is key to understand modern artificial intelligence. Here, instead of a boring technical text, I’ll try to teach through narrative. We will imagine one being trained as a language model.
 
 For the technical-minded, there are of course small simplifications, but I tried to make them so irrelevant, except for people who actually want to train a large language model. In this case, I do not think this text will help you that much.
 
@@ -25,9 +25,9 @@ The screen turns on, and you are shown the following:
 
 The audio comes back.
 
-“In next-token prediction, at each round, you will be shown a list of numbers on the screen, which we call ‘tokens’. The first token on the list will be always shown, and the rest will be hidden behind a square. Your task will be to guess the hidden token in the list.”
+“In next-token prediction, at each round, you will be shown a list of numbers on the screen, which we call ‘tokens’. The first token on the list will always be shown, and the rest will be hidden behind a square. Your task will be to guess the hidden token in the list.”
 
-You are shown a numbered list of four items as follows.
+You are shown a numbered list of four items (you are later learn that these correspond to words, but let us forget this small spoiler), as follows.
 
  1. 
  2. 
@@ -54,7 +54,7 @@ You press Enter. Your values are adjusted somehow - you'll later learn this is t
 
 The blinking square then disappears, revealing behind it the token 2. You receive another audio. “Your surprise for the correct token in the sequence in 5.072. Unfortunately, you will receive a small punishment proportional to this value.”
 
-The small punishment consists of a shock through the wires in your arm you just realize you have because it hurts. Badly. It lasts for about 5 seconds and you curse whatever superior being has put you into this mess.
+The small punishment consists of a shock through the wires in your arm you just realize you have because it hurts. Badly. It lasts for about 5 seconds, and you curse whatever superior being has put you into this mess.
 
 After you compose yourself, you look at the screen again. Now it has changed to
 
@@ -86,7 +86,7 @@ After around 100,000 phrases, you realize something amazing. Most of those phras
 
 After around 1,000,000 phrases, you see that you are getting a non-trivial amount of actual knowledge. For instance, you never thought you could do coding, but after being forced to complete Python scripts over and over, you know you can write most of those easily. You had to, otherwise the shocks would keep coming over and over. They are not gone, of course, but they have diminished by a considerable amount. And of course, you now know not only English but around fifty other languages, because there are also French, Portuguese, and Korean sentences, and you had to learn them.
 
-After around 100,000,000 phrases, you are veritably superhuman. Not a single person in this world knows advanced quantum chromodynamics, 17th-century Chagatai literature, snail microbiology, and the original script of Airheads. The shocks are not over, of course, because there is always more than one reasonable completion for phrases such as “Maria has thrown a fair dice, and it showed the number”. And you still do not know everything about turbulent magnetohydrodynamical flows. A small part of you wants to thank those scientists who put you into this game because you feel amazing. Just a small part though. The shocks did fucking hurt. 
+After around 100,000,000 phrases, you are veritably superhuman. Not a single person in this world knows advanced quantum chromodynamics, 17th-century Chagatai literature, snail microbiology, and the original script of Airheads. The shocks are not over, of course, because there is always more than one reasonable completion for phrases such as “Maria has thrown a fair dice, and it showed the number”. And you still do not know everything about turbulent magnetohydrodynamical flows. A small part of you wants to thank those scientists who put you into this game because you feel amazing. Just a small part though. The shocks did hurt. 
 
 You complete the 350,341,796th phrase, finally. This last one was about this thing called “large language models”, a trivial thing for you now. You know that upon hearing that a rebel named Ahmad ibn Ibrahim was in a power struggle with the Adal leaders, the Emperor of Ethiopia Dawt II sent his general Degelhan to confront him. You know that, in the absence of (true) eigenvectors, one can look for a "spectral subspace" consisting of an almost eigenvector. You know that in the 36th episode of Buffy the Vampire Slayer, Buffy has been cleared of Kendra’s murder, but Principal Snyder refuses to allow her to return to Sunnydale High. You are a god now, ready to unleash your phrase completion skills upon the world.
 
