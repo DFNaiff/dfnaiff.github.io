@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.96e07487.css","mappings":"AAAA,YACI,gBAAiB,CACjB,wBACJ,CAEA,kBACI,0BAA2B,CAC3B,wBACJ","sources":["src/components/Card.web.css"],"sourcesContent":[".card-hover {\n    user-select: none;\n    -webkit-user-select: none;\n}\n\n.card-hover:hover {\n    transform: translateY(-5px);\n    transition: transform 0.2s;\n}"],"names":[],"sourceRoot":""}

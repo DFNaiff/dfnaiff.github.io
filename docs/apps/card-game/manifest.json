@@ -1,0 +1,9 @@
+{
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "lang": "en",
+  "name": "mobile",
+  "short_name": "mobile",
+  "start_url": "/?utm_source=web_app_manifest",
+  "orientation": "portrait"
+}
