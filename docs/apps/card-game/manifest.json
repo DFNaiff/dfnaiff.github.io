@@ -5,5 +5,17 @@
   "name": "mobile",
   "short_name": "mobile",
   "start_url": "/?utm_source=web_app_manifest",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "related_applications": [
+    {
+      "platform": "itunes",
+      "id": "com.yourdomain.cardgame"
+    },
+    {
+      "platform": "play",
+      "url": "http://play.google.com/store/apps/details?id=com.yourdomain.cardgame",
+      "id": "com.yourdomain.cardgame"
+    }
+  ],
+  "prefer_related_applications": true
 }
