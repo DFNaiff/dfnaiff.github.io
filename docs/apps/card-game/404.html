@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script>
+    // Parse the URL
+    var pathSegments = window.location.pathname.split('/');
+    var pathName = window.location.pathname;
+    
+    // Look for 'game' in the path
+    var gameIndex = pathSegments.indexOf('game');
+    
+    if (gameIndex !== -1 && gameIndex < pathSegments.length - 1) {
+      // Extract the gameId from the path
+      var gameId = pathSegments[gameIndex + 1];
+      
+      // Create a redirect URL with query params instead
+      var redirectUrl = window.location.origin;
+      
+      // Preserve the base path before 'game'
+      for (var i = 0; i < gameIndex; i++) {
+        if (pathSegments[i]) {
+          redirectUrl += '/' + pathSegments[i];
+        }
+      }
+      
+      // Add query parameter for game ID
+      redirectUrl += '?gameId=' + gameId;
+      
+      // Redirect to the main app with the gameId as a query parameter
+      window.location.replace(redirectUrl);
+    } else {
+      // If no game ID is found, redirect to the main app
+      window.location.replace(window.location.origin + window.location.pathname.split('/game')[0]);
+    }
+  </script>
+</head>
+<body>
+  <p>Redirecting to the game...</p>
+</body>
+</html>
