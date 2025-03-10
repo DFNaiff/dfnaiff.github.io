@@ -4,36 +4,26 @@
   <meta charset="utf-8">
   <title>Redirecting...</title>
   <script>
-    // Parse the URL
-    var pathSegments = window.location.pathname.split('/');
-    var pathName = window.location.pathname;
-    
-    // Look for 'game' in the path
-    var gameIndex = pathSegments.indexOf('game');
-    
-    if (gameIndex !== -1 && gameIndex < pathSegments.length - 1) {
-      // Extract the gameId from the path
-      var gameId = pathSegments[gameIndex + 1];
-      
-      // Create a redirect URL with query params instead
-      var redirectUrl = window.location.origin;
-      
-      // Preserve the base path before 'game'
-      for (var i = 0; i < gameIndex; i++) {
-        if (pathSegments[i]) {
-          redirectUrl += '/' + pathSegments[i];
-        }
-      }
-      
-      // Add query parameter for game ID
-      redirectUrl += '?gameId=' + gameId;
-      
-      // Redirect to the main app with the gameId as a query parameter
-      window.location.replace(redirectUrl);
-    } else {
-      // If no game ID is found, redirect to the main app
-      window.location.replace(window.location.origin + window.location.pathname.split('/game')[0]);
+    // Extract query parameters from URL
+    const queryParams = {};
+    window.location.search.substring(1).split('&').forEach(pair => {
+      if (pair === '') return;
+      const parts = pair.split('=');
+      queryParams[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+    });
+
+    // If gameId exists in URL, save it to sessionStorage
+    if (queryParams.gameId) {
+      sessionStorage.setItem('gameId', queryParams.gameId);
     }
+
+    // Get the current path and redirect to the root with preserved path
+    const segmentCount = window.location.pathname.split('/').length;
+    const basePath = window.location.pathname.split('/').slice(0, -1).join('/');
+    const redirectUrl = window.location.origin + basePath;
+    
+    console.log('Redirecting to:', redirectUrl);
+    window.location.replace(redirectUrl);
   </script>
 </head>
 <body>
