@@ -1,7 +1,8 @@
-<h1> Preamble </h1>
+## Preamble
+
 In this series, we will give an introduction to diffusion models from a mathematical viewpoint. This post is the first in the series, where we give the very basics of the theory of diffusion models, mainly following [the EDM framework](https://arxiv.org/abs/2206.00364). In the second part, we will build on this theory to implement a diffusion model from scratch, following this modern framework.
 
-<h1> Introduction </h1>
+## Introduction
 
 We can state the objective of a generative model can be stated, for unconditional generation, as follows:
 
@@ -40,13 +41,13 @@ $$
 
  This is the problem that diffusion models will aim to solve. Diffusion models are not alone in trying to do so but are accompanied by techniques such as [Generative Adversarial Networks](https://en.wikipedia.org/wiki/Flow-based_generative_model), [Variational Autoencoders](https://en.wikipedia.org/wiki/Variational_autoencoder), and [Flow-based generative models](https://en.wikipedia.org/wiki/Flow-based_generative_model). It is not the task of this tutorial to explain why diffusion models currently work better than those other models, as I am still confused about this. Therefore, I will instead work on the easier task of just describing diffusion models.
 
- <h1> Sampling through denoising </h1>
+ ## Sampling through denoising
 
  For now, let us forget about the full problem stated above. Better, let us forget about learning itself. Consider instead the problem of sampling from some distribution $q(x)$. We will assume that $q(x)$ is a probability distribution in $\mathbb{R}^N$, and devise a method of sampling from $q(x)$ which we will call _sampling through denoising_.
  
  Even with access to the probability density function $q(x)$, sampling is not a trivial task, as the [huge](https://en.wikipedia.org/wiki/Variational_Bayesian_methods) [amount of](https://en.wikipedia.org/wiki/Rejection_sampling) [developed](https://en.wikipedia.org/wiki/Importance_sampling) [sampling](https://en.wikipedia.org/wiki/Inverse_transform_sampling) [techniques](https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm), both approximate and exact, can attest. In some sense, our sampling technique will be a particularly ill-suited one, since it will depend on objects whose evaluation will be intractable. However, we will find out that these objects can be _learned_ fairly well by neural networks, and our sampling technique will become very useful in this case.
 
- <h2> Noised distributions </h2>
+ ### Noised distributions
 
 For devising our technique, we will first need to define the process of _noising_, in which we create a random variable $X_\sigma$, for $\sigma \geq 0$, through the following process:
 
@@ -79,7 +80,7 @@ $$
 
 As a spoiler, _these_ are the objects that our neural network will be approximating, since they will be the building blocks of our sampling techniques. To see why, we will take a look at the probability flow ODE.
 
-<h2> The probability flow ODE </h2>
+### The probability flow ODE
 
 Consider the following differential equation, which we will call (surprise) the probability flow ODE
 
@@ -115,7 +116,7 @@ But, we cannot calculate this quantity, because it is a complicated integral dep
 
 So, why are we studying this method at all? Because of an amazing property of that, although the calculation of the noised score functions $s(x, \sigma)$ are intractable, they can be fairly well _approximated_ by neural networks, through the second key result in which diffusion models depend.
 
-<h2> A sketch of a derivation of the probability flow ODE </h2>
+### A sketch of a derivation of the probability flow ODE
 
 Assume we want to construct a sequence of random variables $X_\sigma$, indexed by $\sigma \geq 0$, with the following properties:
 
@@ -180,7 +181,7 @@ thus showing that the RHS and the LHS side of the Fokker-Planck equation are equ
 </ol>
 
 
-<h1> Approximating the noised score functions </h1>
+## Approximating the noised score functions
 
 Good. Now, we need to approximate the score function
 
@@ -208,7 +209,7 @@ $$
 
 The obvious problem here is that we cannot compute $L^{\text{ideal}}(\theta)$, since we cannot compute $s(x, \sigma)$. However, the second main theorem of diffusion models will come to help us, saying that minimizing $L^{\text{ideal}}(\theta)$ is equivalent to minimizing a much easier loss function.
 
-<h2> The score matching tracking </h2>   
+### The score matching tracking   
 
 Here is our second main theorem, which will allow us to minimize $L^{\text{ideal}}(\theta)$ without actually computing it.
 
@@ -262,7 +263,7 @@ $$
 
 thus, the optimal prediction will be $D_\theta(X_\sigma, \sigma) = \mathbb{E}_{X \sim q(x)} \left[X\right]$.
 
-<h1> Proof of the score-matching trick </h1>
+## Proof of the score-matching trick
 
 To prove the validity of the score-matching trick, we state a more general result
 
@@ -324,7 +325,7 @@ $$
 \mathbb{E}_{q(x_0) q_{\sigma}(x_\sigma|x_0)} \inner{s(x_\sigma)}{\nabla \log q(x_\sigma|x_0)}.
 $$
 
-<h1> Conclusion </h1>
+## Conclusion
 
 Now we have all the theory needed to train and sample from a diffusion model. However, we are still missing some heuristic tricks that will make our training much easier, as well as an actual implementation. Just as an example, we will again reparameterize our denoiser $D_\theta(x_\sigma, \sigma)$ to make training much easier. Those are going to be the topics of the second part of this series.
 
