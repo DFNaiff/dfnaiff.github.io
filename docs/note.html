@@ -54,6 +54,10 @@ var KATEX_MACROS = {
   "\\pastfuture": "\\overleftrightarrow{#1}"
 };
 
+// KaTeX (unlike the old MathJax) rejects a bare operator as a sub/superscript, e.g.
+// \sigma_\max. Auto-brace them (\sigma_\max -> \sigma_{\max}) so such formulas still render.
+var KATEX_OPS = /([_^])\\(max|min|sup|inf|limsup|liminf|lim|arg|det|gcd|deg|dim|ker|hom|Pr|sin|cos|tan|cot|sec|csc|sinh|cosh|tanh|coth|exp|log|ln|lg)(?![A-Za-z])/g;
+
 (function () {
   var params = new URLSearchParams(location.search);
   var slug = (params.get("slug") || "").replace(/[^a-z0-9\-_]/gi, "");
@@ -109,7 +113,13 @@ var KATEX_MACROS = {
     var html = marked.parse(md);
 
     // 5) put the untouched math back, then render it
-    html = html.replace(mathRe, function (_, i) { return math[+i]; });
+    html = html.replace(mathRe, function (_, i) {
+      // restore any code sentinels that landed inside math (e.g. `` in \text{``...''}),
+      // then auto-brace bare operators, before KaTeX renders it
+      return math[+i]
+        .replace(codeRe, function (_, j) { return store[+j]; })
+        .replace(KATEX_OPS, "$1{\\$2}");
+    });
     contentEl.innerHTML = html;
 
     if (window.renderMathInElement) {

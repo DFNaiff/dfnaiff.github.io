@@ -12,7 +12,7 @@ Before moving on to formal definitions, we explain microstates and macrostates i
 
 Now, the truth is, we don't care about the state of each of these particles. We only care about questions like "How many of these particles have kinetic energy above some value $u_0$" or "How many of these particles can I find at distance $r$ from position $x_0$?". Equivalently, we care about the probability (density) $p(\theta) \in \mathcal{P}(\theta)$ that I will find some particle at position $(\pmb{x_i}, \pmb{v}_i)$. We will call such probability density $q \in \mathcal{P}(\mathbb{R}^6)$. We will call this probability the macrostate of our system.
 
-Notice that the important bit here is that the dimensionality of the random variable we care about is just $\mathbb{R}^{6}$, which is much less than $\mathbb{R}^{6N}$. Sure, care in fact about the space of probability distributions $p \in \mathcal{P}(\mathbb{R}^6)$, which lives in another type of space, so such comparisons cannot be done so easily. However, assume we divided $\mathbb{R}^{6}$ in a set of $M$ boxes, labeled by $m=1, \ldots, M$, such that our individual states $\theta_i$ are given by "$(\pmb{x}_i, \pmb{v}_i)$ is in box $m$". In other words, our individual state space is now a finite set $\[M\] = \{1, \ldots, M}$, and our microstate space is $\[M\]^N$, whose size is given by $M^N$. Crucially, the possible probabilities can only be given by
+Notice that the important bit here is that the dimensionality of the random variable we care about is just $\mathbb{R}^{6}$, which is much less than $\mathbb{R}^{6N}$. Sure, care in fact about the space of probability distributions $p \in \mathcal{P}(\mathbb{R}^6)$, which lives in another type of space, so such comparisons cannot be done so easily. However, assume we divided $\mathbb{R}^{6}$ in a set of $M$ boxes, labeled by $m=1, \ldots, M$, such that our individual states $\theta_i$ are given by "$(\pmb{x}_i, \pmb{v}_i)$ is in box $m$". In other words, our individual state space is now a finite set $[M] = \{1, \ldots, M\}$, and our microstate space is $[M]^N$, whose size is given by $M^N$. Crucially, the possible probabilities can only be given by
 
 $$
 \{(q_1 = n_1/N, \ldots, q_m = n_m/N); n_j \geq 0, n_1 + \ldots + n_M = N\}
@@ -32,11 +32,11 @@ $$
 
 which is smaller than $M^N$. Therefore, _many microstates will correspond to the same microstate_. This is the crucial setting in which we will make our argument.
 
-Just to formalize better, we will then consider a set $\Theta$ of individual states, whose elements are $\theta$, and, for $N$ copies of the state, we will consider the microstate set as $\Theta^N$, whose elements are given by $\theta^{(N)}$. Finally, the macrostate set will be $\mathcal{P}(\Theta)$, with an element $q \in \mathcal{P}(\Theta)$ being the macrostate of our system. If we consider $\Theta = \[M\]$, we will then consider also $C[N, M]$ as described above, which, for simplicity, we will also call the macrostate of our system, with each macrostate being a set $\pmb{n} = (n_1, \ldots, n_M) \in C[N, M]$.
+Just to formalize better, we will then consider a set $\Theta$ of individual states, whose elements are $\theta$, and, for $N$ copies of the state, we will consider the microstate set as $\Theta^N$, whose elements are given by $\theta^{(N)}$. Finally, the macrostate set will be $\mathcal{P}(\Theta)$, with an element $q \in \mathcal{P}(\Theta)$ being the macrostate of our system. If we consider $\Theta = [M]$, we will then consider also $C[N, M]$ as described above, which, for simplicity, we will also call the macrostate of our system, with each macrostate being a set $\pmb{n} = (n_1, \ldots, n_M) \in C[N, M]$.
 
 # A counting argument.
 
-With that in mind, we can imagine that we have $N$ copies of our physical system, each labeled $i=1, \ldots, N$, such that each of these systems can be in one of $M$ possible states, labeled $j=1, \ldots, M$. Each individual state is given by $\theta_i \in \[M\]$, and we let the microstate be $\pmb{\theta} \in \[M\]^N$. Therefore, we can ask for each macrostate $\pmb{n} \in C[N, M]$ the following question:
+With that in mind, we can imagine that we have $N$ copies of our physical system, each labeled $i=1, \ldots, N$, such that each of these systems can be in one of $M$ possible states, labeled $j=1, \ldots, M$. Each individual state is given by $\theta_i \in [M]$, and we let the microstate be $\pmb{\theta} \in [M]^N$. Therefore, we can ask for each macrostate $\pmb{n} \in C[N, M]$ the following question:
 
 > How many possible set of macrostates $\pmb{\theta}$ of each individual copy are compatible with a fixed $\pmb{n}$?
 
@@ -52,7 +52,7 @@ $$
 S_I(\mathbf{n};N) := \frac{1}{N} \log W(\pmb{n};N) = - \sum_{j} \frac{n_j}{N} \log \frac{n_j}{N}.
 $$
 
-Therefore, we find that $S_I(\mathbf{n};N)$ is the information entropy of the distribution $\{q_j = n_j/N}_{j=1}^M$. So, we find that, when maximizing the information entropy for $\{q_j\}$, for $N$ copies of the physical system, we find the macrostate $\pmb{n} = (n_1, \ldots, n_j)$ that is realizable by most microstates. Moreover, for large $N$, this is overwhelmingly larger, because, for any other $\mathbf{n}'$ with $S_I(\mathbf{n}';N) < S_I(\mathbf{n}';N)$, we find that
+Therefore, we find that $S_I(\mathbf{n};N)$ is the information entropy of the distribution $\{q_j = n_j/N\}_{j=1}^M$. So, we find that, when maximizing the information entropy for $\{q_j\}$, for $N$ copies of the physical system, we find the macrostate $\pmb{n} = (n_1, \ldots, n_j)$ that is realizable by most microstates. Moreover, for large $N$, this is overwhelmingly larger, because, for any other $\mathbf{n}'$ with $S_I(\mathbf{n}';N) < S_I(\mathbf{n}';N)$, we find that
 
 $$
 \frac{W(\pmb{n}';N)}{W(\pmb{n};N)} \approx e^{-N \left(S_I(\mathbf{n};N) - S_I(\mathbf{n}';N)\right)}

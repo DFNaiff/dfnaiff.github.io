@@ -101,8 +101,8 @@ We will give a rough demonstration of this result below, but before, let us just
 
 Why is this a great recipe? Because remember, our original problem is to sample from $q(x) = p(x;0)$. And we _know_ how to (approximately) sample from $p(x;\sigma)$ when $\sigma$ is large, since in this case $p(x;\sigma) \approx \mathcal{N}(0, \sigma^2 I)$, and we know very well how to sample from normal distributions. Therefore, here is a recipe on how to sample from $q(x)$:
 
-1. Sample $X_{\sigma_\max}$ from $\mathcal{N}(0, \sigma_\max^2 I)$, for $\sigma_\max$ large.
-2. Solve the probability flow ODE backward from $\sigma_\max$ to $0$, with terminal condition $X_\sigma$, using some numerical method.
+1. Sample $X_{\sigma_{\max}}$ from $\mathcal{N}(0, \sigma_{\max}^2 I)$, for $\sigma_{\max}$ large.
+2. Solve the probability flow ODE backward from $\sigma_{\max}$ to $0$, with terminal condition $X_\sigma$, using some numerical method.
 3. The solution $X_0$ is sampled from $q(x)$.
 
 We will call this amazing sampling process _denoising_. Well... it would be amazing, _if_ we had access to the noised score functions $s(x, \sigma)$. However, remember that
@@ -196,7 +196,7 @@ $$
 \frac{d x}{d \sigma} = -\sigma s(x, \sigma)
 $$
 
-backward with $X_{\sigma_\max} \sim \mathcal{N}(0, \sigma_\max^2 I)$ as terminal condition. In this case, we have that, for each $\sigma$, $X_\sigma \sim p(x; \sigma)$. Therefore, it stands to reason that, for each $\sigma$, we want our solution to be accurate where $p(x; \sigma)$ is concentrated.
+backward with $X_{\sigma_{\max}} \sim \mathcal{N}(0, \sigma_{\max}^2 I)$ as terminal condition. In this case, we have that, for each $\sigma$, $X_\sigma \sim p(x; \sigma)$. Therefore, it stands to reason that, for each $\sigma$, we want our solution to be accurate where $p(x; \sigma)$ is concentrated.
 
 Thinking as a regression problem, we then want to minimize the difference between $s_\theta(X_\sigma, \sigma)$ and $s(X_\sigma, \sigma)$ with $X_\sigma \sim p(x; \sigma)$. However, we have that $X_\sigma = X + \sigma Z$, with $X \sim q(x)$, $Z \sim \mathcal{N}(0, I)$, so $X_\sigma \mid X, \sigma \sim \mathcal{N}(X, \sigma^2 I)$. For this to work out, we need also to define a distribution $\lambda(\sigma)$ such that $\sigma \sim p_\sigma(\sigma)$, ideally with the support of $\sigma$ concentrated in $(0, \sigma_{\max})$. Nothing impedes us from adding a loss weight $\lambda^{\text{ideal}}(\sigma)$ for the noise, which will prove useful later.
 
