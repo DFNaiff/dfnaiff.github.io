@@ -1,0 +1,88 @@
+{
+  "notes": [
+    {
+      "slug": "welcome",
+      "title": "Rebuilding this place",
+      "date": "2026",
+      "kind": "note",
+      "summary": "Why the site changed, and how the new notebook works — markdown, math, and code, with no build step."
+    },
+    {
+      "slug": "computational-mechanics",
+      "title": "Struggling with Computational Mechanics",
+      "date": "2025",
+      "kind": "note",
+      "summary": "In the following, I'll base myself mainly on four papers:"
+    },
+    {
+      "slug": "being-a-language-model",
+      "title": "Being a language model",
+      "date": "2024",
+      "kind": "note",
+      "summary": "A question that is often asked me is “How does ChatGPT work?”. Not often enough, because many assume either that ChatGPT is coded, or retrieved from the…"
+    },
+    {
+      "slug": "entropy-4",
+      "title": "Entropy and the world - Part 4.",
+      "date": "2024",
+      "kind": "note",
+      "summary": "In the previous part, we made a very quick run on quantum mechanics paradigm and density operators. In this part, we will use this to derive a…"
+    },
+    {
+      "slug": "diffusion-tutorial-1",
+      "title": "A mathematical tutorial on diffusion models. - Part 1",
+      "date": "2024",
+      "kind": "note",
+      "summary": "Preamble In this series, we will give an introduction to diffusion models from a mathematical viewpoint. This post is the first in the series, where we give…"
+    },
+    {
+      "slug": "entropy-3",
+      "title": "Entropy and the world - Part 3: Interlude on QM.",
+      "date": "2024",
+      "kind": "note",
+      "summary": "Previously, we justified the maximum entropy principle being an actual physical principle for \"most physics\", when we consider coarse measurements in time…"
+    },
+    {
+      "slug": "entropy-2",
+      "title": "Entropy and the world - Part 2",
+      "date": "2024",
+      "kind": "note",
+      "summary": "So, in the previous post, we concluded that, if we assume the maximum entropy principle, we arrive at classical thermodynamics. This is the basis of…"
+    },
+    {
+      "slug": "entropy-1",
+      "title": "Entropy and the world - Part 1",
+      "date": "2024",
+      "kind": "note",
+      "summary": "2024-03-15 - Understood a bit more of the theory, in particular the relation with the volume. The text reflects that chance. Also, the first version of this…"
+    },
+    {
+      "slug": "gravitational-golf",
+      "title": "Gravitational Golf - A game with GPT-4",
+      "date": "2023",
+      "kind": "note",
+      "summary": "GPT-4 just launched yesterday, if you didn't already knew of it. I used it to create a minigame and I'm truly amazed. I acted mostly as a supervisor than…"
+    },
+    {
+      "slug": "llm-tutorial-2",
+      "title": "A technical tutorial on Large Language Models - Interlude on Reinforcement Learning",
+      "date": "2023",
+      "kind": "note",
+      "summary": "By looking into the text after a long time, while preparing for giving a class in Reinforcement Learning, I realized that the text is... quite subpar, to be…"
+    },
+    {
+      "slug": "visualizing-layer-normalization",
+      "title": "Visualizing Layer Normalization",
+      "date": "2023",
+      "kind": "note",
+      "summary": "Here, I explore some geometric intuition of layer normalization, that are found in transformers. I’ve been in general trying to “imagine” operations on…"
+    },
+    {
+      "slug": "llm-tutorial-1",
+      "title": "A technical tutorial on Large Language Models - Part 1",
+      "date": "2023",
+      "kind": "note",
+      "summary": "This text has been revised and edited by ChatGPT 3.5 to improve grammar and overall structure."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes — Danilo Naiff</title>
+<meta name="description" content="Technical notes by Danilo Naiff.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="topbar">
+  <button class="toggle" id="lang-toggle" aria-label="Toggle language">
+    <span class="en"><span class="on">EN</span> · PT</span>
+    <span class="pt">EN · <span class="on">PT</span></span>
+  </button>
+  <button class="toggle" id="theme-toggle" aria-label="Toggle theme">THEME</button>
+</nav>
+
+<main class="wrap">
+  <p class="backlink"><a href="index.html">← <span class="en">home</span><span class="pt">início</span></a></p>
+  <header class="hero" style="margin-bottom:2rem;">
+    <p class="eyebrow"><span class="en">Technical notebook</span><span class="pt">Caderno técnico</span></p>
+    <h1 class="name" style="font-size:2rem;"><span class="en">Notes</span><span class="pt">Notas</span></h1>
+    <p class="tagline" style="font-size:1.05rem;"><span class="en">Longer, mathematical pieces on the machinery itself. For essays on AI and the world, see <a class="link" href="https://dfnaiff.substack.com" target="_blank" rel="noopener">Espaço Orientado</a>.</span><span class="pt">Textos mais longos e matemáticos sobre a maquinaria em si. Para ensaios sobre IA e o mundo, veja o <a class="link" href="https://dfnaiff.substack.com" target="_blank" rel="noopener">Espaço Orientado</a>.</span></p>
+  </header>
+
+  <section style="margin-top:1rem;">
+    <div class="sec-head"><p class="sec-label" id="count">…</p></div>
+    <div class="list" id="all-notes"></div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+<script>
+fetch("notes/index.json", { cache: "no-cache" })
+  .then(function (r) { return r.json(); })
+  .then(function (index) {
+    var notes = (index.notes || []).slice();
+    var wrap = document.getElementById("all-notes");
+    document.getElementById("count").textContent =
+      notes.length + (notes.length === 1 ? " note" : " notes");
+    wrap.innerHTML = notes.map(function (n) {
+      var meta = [n.date, n.kind || "note"].filter(Boolean).join(" · ").toUpperCase();
+      var desc = n.summary ? '<p class="item-desc">' + escapeHtml(n.summary) + "</p>" : "";
+      return '<a class="item" href="note.html?slug=' + encodeURIComponent(n.slug) + '">' +
+             '<p class="item-meta">' + escapeHtml(meta) + "</p>" +
+             '<p class="item-title">' + escapeHtml(n.title) + "</p>" + desc + "</a>";
+    }).join("");
+  })
+  .catch(function () {
+    document.getElementById("count").textContent = "Could not load notes";
+  });
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+</script>
+</body>
+</html>
