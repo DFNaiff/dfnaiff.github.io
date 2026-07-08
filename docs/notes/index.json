@@ -8,13 +8,6 @@
       "summary": "Why the site changed, and how the new notebook works — markdown, math, and code, with no build step."
     },
     {
-      "slug": "computational-mechanics",
-      "title": "Struggling with Computational Mechanics",
-      "date": "2025",
-      "kind": "note",
-      "summary": "In the following, I'll base myself mainly on four papers:"
-    },
-    {
       "slug": "being-a-language-model",
       "title": "Being a language model",
       "date": "2024",

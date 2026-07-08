@@ -32,6 +32,28 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <script>
+// Custom LaTeX macros carried over from the old MathJax config, so shorthands like
+// \inner, \norm, \trace, \pastfuture keep working. KaTeX renders each math fragment in
+// isolation, so these must be supplied here (a \newcommand inside one $$...$$ would not
+// carry to the next).
+var KATEX_MACROS = {
+  "\\ket": "\\left| #1 \\right\\rangle",
+  "\\bra": "\\left\\langle #1 \\right|",
+  "\\braket": "\\left\\langle #1 \\middle| #2 \\right\\rangle",
+  "\\inner": "\\left\\langle #1 , #2 \\right\\rangle",
+  "\\mean": "\\left\\langle #1 \\right\\rangle",
+  "\\abs": "\\left| #1 \\right|",
+  "\\norm": "\\left\\| #1 \\right\\|",
+  "\\trace": "\\text{tr}\\left( #1 \\right)",
+  "\\ptrace": "\\text{tr}_{#1}\\left( #2 \\right)",
+  "\\pderiv": "\\frac{\\partial #1}{\\partial #2}",
+  "\\evalat": "\\left. #1 \\right|_{#2}",
+  "\\pderivat": "\\left. \\frac{\\partial #1}{\\partial #2} \\right|_{#3}",
+  "\\past": "\\overleftarrow{#1}",
+  "\\future": "\\overrightarrow{#1}",
+  "\\pastfuture": "\\overleftrightarrow{#1}"
+};
+
 (function () {
   var params = new URLSearchParams(location.search);
   var slug = (params.get("slug") || "").replace(/[^a-z0-9\-_]/gi, "");
@@ -98,7 +120,9 @@
           { left: "$", right: "$", display: false },
           { left: "\\(", right: "\\)", display: false }
         ],
-        throwOnError: false
+        macros: KATEX_MACROS,
+        throwOnError: false,
+        strict: false
       });
     }
   }
