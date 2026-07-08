@@ -61,7 +61,7 @@ $$
 dU = \frac{\partial{\hat{U}}}{\partial S} dS + \frac{\partial{\hat{U}}}{\partial V} dV + \sum_{j=1}^r \frac{\partial{\hat{U}}}{\partial N_j} dN_j.
 $$
 
-Now, we _define_ the temperature $T$, pressure $P$ and chemical potentials $\\{\mu_j\\}$ as
+Now, we _define_ the temperature $T$, pressure $P$ and chemical potentials $\{\mu_j\}$ as
 
 $$
 T := \frac{\partial{\hat{U}}}{\partial S} \\
@@ -106,7 +106,7 @@ $$
 \pmb{p}^{(\text{true})} = ( p_i^{(\text{true}}); \ p_i = P(\Theta = \theta_i).
 $$
 
-Suppose that we do not know $\pmb{p}^{(\text{true})}$, although we may know some constraints on $\pmb{p}^{(\text{true})}$. We want to then estimate some probability $\pmb{p} \\{p_i\\}$ such that $\pmb{p}$ is a good estimate for $\pmb{p}^{(\text{true})}$.From a Bayesian epistemological point of view, what even means for $\Theta$ to have a \pmb{p}^{(\text{true})} assigned by nobody is odd, but we will not consider this for now. We bypass this important problem for now and instead just ask
+Suppose that we do not know $\pmb{p}^{(\text{true})}$, although we may know some constraints on $\pmb{p}^{(\text{true})}$. We want to then estimate some probability $\pmb{p} \{p_i\}$ such that $\pmb{p}$ is a good estimate for $\pmb{p}^{(\text{true})}$.From a Bayesian epistemological point of view, what even means for $\Theta$ to have a \pmb{p}^{(\text{true})} assigned by nobody is odd, but we will not consider this for now. We bypass this important problem for now and instead just ask
 
 > What is the best way to choose an probability distribution $\pmb{p}$?", possibly under sume contraints on $\pmb{p}$, such as we will treat $\Theta$ as being distributed according to $\pmb{p}$?
 
@@ -145,16 +145,16 @@ $$
 p^{(\text{true})}_i(\alpha) := P(\Theta = \theta_i(\alpha))
 $$
 
-associated with the random variable $\Theta$. However, we have a set of real-value functions $\\{f_j(\theta)\\}_{j=1}^m$ such that we know or have measured the expected value of $f_j(\Theta)$
+associated with the random variable $\Theta$. However, we have a set of real-value functions $\{f_j(\theta)\}_{j=1}^m$ such that we know or have measured the expected value of $f_j(\Theta)$
 
 $$
 \bar{f}_j = \mathbb{E}_{\Theta \sim p(\alpha)} f_j(\Theta(\alpha)) = \sum_i f_{ij}(\alpha) \\
 f_{ij}(\alpha) := f_j(\theta_i(\alpha))
 $$
 
-for every $j=1, \ldots, m$. We want to them make a probability assignment $\pmb{p} = \\{p_i\\}_{i=1}$ such that $\pmb{p} \approx \pmb{p}^{(\text{true})}$. That is, we want again to answer the question
+for every $j=1, \ldots, m$. We want to them make a probability assignment $\pmb{p} = \{p_i\}_{i=1}$ such that $\pmb{p} \approx \pmb{p}^{(\text{true})}$. That is, we want again to answer the question
 
-> For some $\alpha$, what is the best way to choose an probability distribution $\pmb{p}$?", such as we will treat some random variable $\Theta$, taking values in $\{\theta_i(\alpha)\}$, as being distributed according to $\pmb{p}$, such that $\pmb{p}$ should obey the constraints $\bar{f}\_j = \mathbb{E}\_{\pmb{p}} [f_j(\Theta)]$ associated with our measured values $\bar{f}_j$?.
+> For some $\alpha$, what is the best way to choose an probability distribution $\pmb{p}$?", such as we will treat some random variable $\Theta$, taking values in $\{\theta_i(\alpha)\}$, as being distributed according to $\pmb{p}$, such that $\pmb{p}$ should obey the constraints $\bar{f}_j = \mathbb{E}_{\pmb{p}} [f_j(\Theta)]$ associated with our measured values $\bar{f}_j$?.
 
 It is important to notice that, in this maximization problem, $\{\bar{f}_j\}$ are, together with $\alpha$, our fixed variables, since they are the results of our measurements. The principle of maximum entropy dictates that we should choose $\pmb{p}$ such that it is the solution of following the maximization problem:
 
@@ -233,7 +233,7 @@ S = \hat{S}(\pmb{\bar{f}}, \alpha) =  k_B \log \hat{Z} + \sum_{j=1}^m \frac{\par
 d S = k_B \frac{\partial \log \hat{Z}}{\partial \alpha} dV + \sum_{j=1}^m \frac{\partial \hat{S}}{\partial \bar{f}_j} d \bar{f}_j.
 $$
 
-Now, this is almost Euler relation, except the term $k_B \log \hat{Z}$. If we are to make a full comparison with classical thermodynamics, we must handle this term. Before doing that, we use the theory to get a "first law of thermodynamics" for the information entropy. Assume we have only one function of the states $f(\cdot, \alpha)$, therefore only one set $\{f_i\}\_i$ and $\bar{f}$. We find that
+Now, this is almost Euler relation, except the term $k_B \log \hat{Z}$. If we are to make a full comparison with classical thermodynamics, we must handle this term. Before doing that, we use the theory to get a "first law of thermodynamics" for the information entropy. Assume we have only one function of the states $f(\cdot, \alpha)$, therefore only one set $\{f_i\}_i$ and $\bar{f}$. We find that
 
 $$
 \delta \bar{f} = \sum_{i} p_i \delta f_i + \sum_i f_i \delta p_i.
@@ -293,7 +293,7 @@ That is enough for now. It should be noted that, although we assumed some enumer
 
 # Information entropy and physical entropy
 
-We go back to being a text on thermodynamics. Let us apply the maximum entropy principle to a physical situation. Suppose we are studying some macroscopic system. We know that our system has some volume $V$, and, given $V$, our macroscopic system is associated with some microscopic system $\Theta$, that at any given time takes the value of some microscopic state $\theta_1(V), \theta_2(V), \ldots$. Now, let's assume that "being in state $\theta\_i(V)$" is a random variable $\Theta$. This is reasonable to do because, from a subjective perspective, we cannot know in which state $\Theta$ for a given time. We can think of $\Theta$ as quickly jumping between the states $\theta_1(V), \theta_2(V), \ldots$ with some probability $p^{(true)}$ that we do not have access to.
+We go back to being a text on thermodynamics. Let us apply the maximum entropy principle to a physical situation. Suppose we are studying some macroscopic system. We know that our system has some volume $V$, and, given $V$, our macroscopic system is associated with some microscopic system $\Theta$, that at any given time takes the value of some microscopic state $\theta_1(V), \theta_2(V), \ldots$. Now, let's assume that "being in state $\theta_i(V)$" is a random variable $\Theta$. This is reasonable to do because, from a subjective perspective, we cannot know in which state $\Theta$ for a given time. We can think of $\Theta$ as quickly jumping between the states $\theta_1(V), \theta_2(V), \ldots$ with some probability $p^{(true)}$ that we do not have access to.
 
 However, suppose can measure the internal energy $U = \mathbb{E}{u(\Theta)}$, that is, thinking of $\Theta$ as jumping through states, the time-averaged measurement of the energy associated with $\Theta$. Then, we can use the maximum entropy principle. We want to make our best guess about P(\Theta = \theta_i(V)). We are under the constraint that $U = \mathbb{E} u(\Theta)$. By the maximum entropy principle, we find that
 

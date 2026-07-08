@@ -5,7 +5,7 @@ In this series, we will give an introduction to diffusion models from a mathemat
 
 We can state the objective of a generative model can be stated, for unconditional generation, as follows:
 
-> Given some unlabeled data $\mathcal{D} = \\{x\_1, \ldots, x\_D\\}$ sampled from a true distribution $q(x)$ _that is unknown_ to us, how can we, from $\mathcal{D}$, create a distribution $p(x)$ such that:
+> Given some unlabeled data $\mathcal{D} = \{x_1, \ldots, x_D\}$ sampled from a true distribution $q(x)$ _that is unknown_ to us, how can we, from $\mathcal{D}$, create a distribution $p(x)$ such that:
 >    1. The distribution $p(x)$ is close to $q(x)$ in some relevant sense.
 >    2. We can easily sample from $p(x)$.
 
@@ -13,7 +13,7 @@ Notice that we are _not_ looking for any other information from $p(x)$ in princi
 
 In this case of conditional generation, the problem is stated as follows:
 
-> Given some labeled data $\mathcal{D} = \\{(x\_1, y\_1), \ldots, (x\_D, y\_D)\\}$ sampled from a true distribution $q(x,y) = q(x \mid y) q(y)$ _unknown_ to us, how can we, from $\mathcal{D}$, create a family of distributions distribution $p(x \mid y)$ such that:
+> Given some labeled data $\mathcal{D} = \{(x_1, y_1), \ldots, (x_D, y_D)\}$ sampled from a true distribution $q(x,y) = q(x \mid y) q(y)$ _unknown_ to us, how can we, from $\mathcal{D}$, create a family of distributions distribution $p(x \mid y)$ such that:
 >    1. The distribution $p(x \mid y)$ is close to $q(x \mid y)$ in some relevant sense for every $y$.
 >    2. We can easily sample from $p(x \mid y)$, given some label $y$.
 

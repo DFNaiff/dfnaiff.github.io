@@ -10,7 +10,7 @@ In the previous post, we considered a finite number of states $\theta_1, \ldots,
 
 Before moving on to formal definitions, we explain microstates and macrostates intuitively. Imagine a system of $N$ particles with unit mass, labeled each as $i=1, \ldots, N$. Assume that these particles are moving in a three-dimensional space (for instance, a closed box), following standard Newtonian mechanics. The individual state of each particle $i$ are its position $\mathbf{x}_i$ and velocity $\mathbf{v}_i$, so that its state is given by $\theta_i = (\pmb{x}_i, \pmb{v}_i) \in \mathbb{R}^6$. Our microstate, which in Newtonian mechanics we would call just state, is then the position and velocity of each of these $N$ particles, or, in other words, our microstates $\xi$ are vectors $\theta^{(N)} \in \mathbb{R}^{6N}$.
 
-Now, the truth is, we don't care about the state of each of these particles. We only care about questions like "How many of these particles have kinetic energy above some value $u_0$" or "How many of these particles can I find at distance $r$ from position $x_0$?". Equivalently, we care about the probability (density) $p(\theta) \in \mathcal{P}(\theta)$ that I will find some particle at position $(\pmb{x\_i}, \pmb{v}\_i)$. We will call such probability density $q \in \mathcal{P}(\mathbb{R}^6)$. We will call this probability the macrostate of our system.
+Now, the truth is, we don't care about the state of each of these particles. We only care about questions like "How many of these particles have kinetic energy above some value $u_0$" or "How many of these particles can I find at distance $r$ from position $x_0$?". Equivalently, we care about the probability (density) $p(\theta) \in \mathcal{P}(\theta)$ that I will find some particle at position $(\pmb{x_i}, \pmb{v}_i)$. We will call such probability density $q \in \mathcal{P}(\mathbb{R}^6)$. We will call this probability the macrostate of our system.
 
 Notice that the important bit here is that the dimensionality of the random variable we care about is just $\mathbb{R}^{6}$, which is much less than $\mathbb{R}^{6N}$. Sure, care in fact about the space of probability distributions $p \in \mathcal{P}(\mathbb{R}^6)$, which lives in another type of space, so such comparisons cannot be done so easily. However, assume we divided $\mathbb{R}^{6}$ in a set of $M$ boxes, labeled by $m=1, \ldots, M$, such that our individual states $\theta_i$ are given by "$(\pmb{x}_i, \pmb{v}_i)$ is in box $m$". In other words, our individual state space is now a finite set $\[M\] = \{1, \ldots, M}$, and our microstate space is $\[M\]^N$, whose size is given by $M^N$. Crucially, the possible probabilities can only be given by
 
@@ -46,16 +46,16 @@ $$
 W(\pmb{n};N) = \frac{N!}{n_1! \ldots n_M!}.
 $$
 
-Now, if we assume $N$ to be _very_ large, each $\pmb{n}$ with $W(\pmb{n}; N)$ will also have $n_j$ large for every $j$. Therefore, defining $S\_I(\mathbf{n};N) := \frac{1}{N} \log W(\pmb{n};N)$, we can deploy Stirling's approximation to find that 
+Now, if we assume $N$ to be _very_ large, each $\pmb{n}$ with $W(\pmb{n}; N)$ will also have $n_j$ large for every $j$. Therefore, defining $S_I(\mathbf{n};N) := \frac{1}{N} \log W(\pmb{n};N)$, we can deploy Stirling's approximation to find that 
 
 $$
-S\_I(\mathbf{n};N) := \frac{1}{N} \log W(\pmb{n};N) = - \sum_{j} \frac{n_j}{N} \log \frac{n_j}{N}.
+S_I(\mathbf{n};N) := \frac{1}{N} \log W(\pmb{n};N) = - \sum_{j} \frac{n_j}{N} \log \frac{n_j}{N}.
 $$
 
-Therefore, we find that $S\_I(\mathbf{n};N)$ is the information entropy of the distribution $\{q_j = n_j/N}_{j=1}^M$. So, we find that, when maximizing the information entropy for $\{q_j\}$, for $N$ copies of the physical system, we find the macrostate $\pmb{n} = (n_1, \ldots, n_j)$ that is realizable by most microstates. Moreover, for large $N$, this is overwhelmingly larger, because, for any other $\mathbf{n}'$ with $S\_I(\mathbf{n}';N) < S\_I(\mathbf{n}';N)$, we find that
+Therefore, we find that $S_I(\mathbf{n};N)$ is the information entropy of the distribution $\{q_j = n_j/N}_{j=1}^M$. So, we find that, when maximizing the information entropy for $\{q_j\}$, for $N$ copies of the physical system, we find the macrostate $\pmb{n} = (n_1, \ldots, n_j)$ that is realizable by most microstates. Moreover, for large $N$, this is overwhelmingly larger, because, for any other $\mathbf{n}'$ with $S_I(\mathbf{n}';N) < S_I(\mathbf{n}';N)$, we find that
 
 $$
-\frac{W(\pmb{n}';N)}{W(\pmb{n};N)} \approx e^{-N \left(S\_I(\mathbf{n};N) - S\_I(\mathbf{n}';N)\right)}
+\frac{W(\pmb{n}';N)}{W(\pmb{n};N)} \approx e^{-N \left(S_I(\mathbf{n};N) - S_I(\mathbf{n}';N)\right)}
 $$
 
 Therefore, one tentative answer to the question "Why is the maximum entropy principle valid?" can be as follows:

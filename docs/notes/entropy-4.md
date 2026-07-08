@@ -36,7 +36,7 @@ $$
 \hat{S}_I(\{w_j n_j\}) + \sum_j w_j n_j \log n_j.
 $$
 
-so we interpret $\hat{S}\_I(\rho)$ as the information entropy associated with the distribution "being in state $\ket{\psi}\_{jk}$ with probability $w\_j$". However, as discussed, we cannot so easily interpret the above distribution in this way. When considering degenerate spectra, the interpretation "the system's state is in subspace $Q_j$ with probability $w_j n_j$" works better, with the caveat that we also have extra entropy terms $\hat{S}_I(\{1/n_j\})$ associated with each subspace itself. In fact, if $\rho = \frac{1}{n} Q$, with $Q$ being a projection into a subspace of dimension $n$, then $\hat{S}_I(\rho) = \log n$.
+so we interpret $\hat{S}_I(\rho)$ as the information entropy associated with the distribution "being in state $\ket{\psi}_{jk}$ with probability $w_j$". However, as discussed, we cannot so easily interpret the above distribution in this way. When considering degenerate spectra, the interpretation "the system's state is in subspace $Q_j$ with probability $w_j n_j$" works better, with the caveat that we also have extra entropy terms $\hat{S}_I(\{1/n_j\})$ associated with each subspace itself. In fact, if $\rho = \frac{1}{n} Q$, with $Q$ being a projection into a subspace of dimension $n$, then $\hat{S}_I(\rho) = \log n$.
 
 Well, having an entropy, we can again consider the maximum entropy principle for estimating $\rho$. We will only talk about energy and volumes for now. Assume that our system is described by a Hamiltonian $H[V]$, which is dependent on the volume $V$ of the system. Macroscopically, we have access to the expected value $\mean{H}$ of $H[V]$. We perform the same maximization procedure for the von Neumann entropy:
 

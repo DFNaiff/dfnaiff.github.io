@@ -60,7 +60,7 @@ $$
 
 Thus, we can use the density operator $\rho$ in place of the state vector $\ket{\psi}$ when defining our physical system. An advantage of the density operator is that the state vectors $\ket{\psi}$ and $e^{i \theta} \ket{\psi}$ describe the same physical system, so we do not have a unique representation. However, since we have that $\ket{e^{i \theta} \ket{\psi}} \bra{e^{i \theta} \ket{\psi}} = \ket{\psi} \bra{\psi}$, we do have a unique representation of our physical system state when given by the density matrix $\rho$.
 
-Now, suppose that we do not know in which quantum state our system is in. That is, our system can be in many possible orthogonal states $\{\ket{\psi_j}\}$, with probabilities $\{w\_j\}$, such that $\sum\_j w\_j = 1$. Those are associated with pure density matrices $\{\ket{\psi\_j} \bra{\psi\_j}\}$. Now, when making a measurement $A$ of this system, we need to consider not only the probabilities given by Born's rule but also the ones given by our lack of knowledge. We define then the density matrix $\rho$, encoding the state of our system _given the uncertainty_ as
+Now, suppose that we do not know in which quantum state our system is in. That is, our system can be in many possible orthogonal states $\{\ket{\psi_j}\}$, with probabilities $\{w_j\}$, such that $\sum_j w_j = 1$. Those are associated with pure density matrices $\{\ket{\psi_j} \bra{\psi_j}\}$. Now, when making a measurement $A$ of this system, we need to consider not only the probabilities given by Born's rule but also the ones given by our lack of knowledge. We define then the density matrix $\rho$, encoding the state of our system _given the uncertainty_ as
 
 $$
 \rho := \sum_j w_j \rho_j, \quad \rho_j := \ket{\psi_j} \bra{\psi_j}.
@@ -117,7 +117,7 @@ $$
 \trace{\rho} = \sum_j w_j n_j = 1.
 $$
 
-This way we are given a unique representation of the density matrix $\rho$ given $\{w_j\}$ and $\{Q_j\}$. If, for each subspace $\{Q_j\}$, of dimension $n_j$, we choose a basis $\{\ket{\psi}\_{jk}\}\_{k=1}^{n_j}$, we can diagonalize $\rho$ as
+This way we are given a unique representation of the density matrix $\rho$ given $\{w_j\}$ and $\{Q_j\}$. If, for each subspace $\{Q_j\}$, of dimension $n_j$, we choose a basis $\{\ket{\psi}_{jk}\}_{k=1}^{n_j}$, we can diagonalize $\rho$ as
 
 $$
 \rho = \sum_j \sum_{j=1}^{n_j} w_j \ket{\psi}_{jk} \bra{\psi}_{jk} \quad n_j := \operatorname{rank}{Q_j}.
